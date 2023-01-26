@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { Client } from '@twilio/conversations'
+import { z } from 'zod'
+
 const conversations = [
   {
     id: 1,
@@ -78,6 +81,47 @@ const sendMessage = async () => {
   } finally {
     sendingMessage.value = false
   }
+}
+
+const getInitialConversation = async () => {
+  const { data } = await useFetch('/api/get-conversation')
+  return data
+}
+const initConversation = await getInitialConversation()
+console.log('Init Conversations', initConversation)
+
+const isOpen = ref(false)
+
+const newConversation = async (safeName: string) => {
+  const { data: newConversation } = await useFetch('/api/create-chat', {
+    body: {
+      safeName,
+    },
+  })
+  console.log('Returned Conversation', newConversation)
+}
+
+function startConversation() {
+  $q.dialog({
+    title: 'Start A New Conversation',
+    message: 'Enter the Phone Number ',
+    prompt: {
+      model: '',
+      type: 'text',
+    },
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(async (data: string) => {
+      console.log('>>>> OK, received', data)
+      await newConversation(data)
+    })
+    .onCancel(() => {
+      // console.log('>>>> Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    })
 }
 </script>
 
@@ -161,7 +205,7 @@ const sendMessage = async () => {
 
           <q-space />
 
-          <q-btn round flat icon="message" />
+          <q-btn round flat icon="message" @click="startConversation" />
           <q-btn round flat icon="more_vert">
             <q-menu auto-close :offset="[110, 8]">
               <q-list style="min-width: 150px">
@@ -251,7 +295,12 @@ const sendMessage = async () => {
               :text="['hey, how are you?']"
               sent
             />
-            <q-chat-message bg-color="grey-4" name="Jane" :text="[message]" />
+            <q-chat-message
+              v-for="item in initConversation"
+              bg-color="grey-4"
+              :name="item.author"
+              :text="[item.body]"
+            />
           </div>
         </div>
       </q-page-container>
@@ -272,6 +321,9 @@ const sendMessage = async () => {
           <q-btn @click="sendMessage" round flat icon="send" />
         </q-toolbar>
       </q-footer>
+      <q-dialog v-model="isOpen">
+        <Autocomplete />
+      </q-dialog>
     </q-layout>
   </div>
 </template>

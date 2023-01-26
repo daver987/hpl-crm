@@ -11,10 +11,12 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { message, to } = body
   //send message to the client
-  await client.messages.create({
-    body: message,
-    messagingServiceSid: messagingServiceSid,
-    to: to,
-  })
+  await client.messages
+    .create({
+      body: message,
+      messagingServiceSid: messagingServiceSid,
+      to: to,
+    })
+    .then((message) => console.log(message.sid))
   return message.sid
 })

@@ -1,6 +1,7 @@
 <!--suppress ES6PreferShortImport -->
 <script setup lang="ts">
 import { Database } from '~/types/supabase'
+import { z } from 'zod'
 const supabase = useSupabaseAuthClient<Database>()
 const props = defineProps({
   signUp: {
@@ -30,6 +31,12 @@ const credentials = ref({
   password: '',
 })
 
+const identitySchema = z
+  .object({
+    identity: z.string(),
+  })
+  .strip()
+
 const loading = ref(false)
 const login = async () => {
   loading.value = true
@@ -39,9 +46,14 @@ const login = async () => {
       password: credentials.value.password,
     })
     await console.log(data)
-    setTimeout(() => {
+    setTimeout(async () => {
       navigateTo('/')
       loading.value = false
+      const { data } = await useFetch('/api/create-user')
+      console.log('Chat Id', data)
+      const { identity } = identitySchema.parse(data.value)
+      console.log(identity)
+      localStorage.setItem('chat_id', identity)
     }, 2000)
   } catch (error) {
     console.error(error)
