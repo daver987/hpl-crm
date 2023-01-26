@@ -1,3 +1,86 @@
+<script setup lang="ts">
+const conversations = [
+  {
+    id: 1,
+    person: 'Razvan Stoenescu',
+    avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
+    caption: "I'm working on Quasar!",
+    time: '15:00',
+    sent: true,
+  },
+  {
+    id: 2,
+    person: 'Dan Popescu',
+    avatar: 'https://cdn.quasar.dev/team/dan_popescu.jpg',
+    caption: "I'm working on Quasar!",
+    time: '16:00',
+    sent: true,
+  },
+  {
+    id: 3,
+    person: 'Jeff Galbraith',
+    avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
+    caption: "I'm working on Quasar!",
+    time: '18:00',
+    sent: true,
+  },
+  {
+    id: 4,
+    person: 'Allan Gaunt',
+    avatar: 'https://cdn.quasar.dev/team/allan_gaunt.png',
+    caption: "I'm working on Quasar!",
+    time: '17:00',
+    sent: true,
+  },
+]
+
+const $q = useQuasar()
+const leftDrawerOpen = ref(false)
+const search = ref('')
+const sentMessage = ref('')
+const message = ref('')
+const currentConversationIndex = ref(0)
+const currentConversation = computed(() => {
+  return conversations[currentConversationIndex.value]
+})
+const style = computed(() => ({
+  height: $q.screen.height + 'px',
+}))
+console.log(style.value)
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+function setCurrentConversation(index: any) {
+  currentConversationIndex.value = index
+}
+
+const sendingMessage = ref(false)
+const sendMessage = async () => {
+  sendingMessage.value = true
+  try {
+    const { data } = await useFetch('/api/send-message', {
+      method: 'POST',
+      body: {
+        message: sentMessage.value,
+        to: '12894009408',
+      },
+    })
+    setTimeout(async () => {
+      await console.log('Returned Messaging:', data.value)
+      message.value = sentMessage.value
+      $q.notify('Message Sent')
+      sentMessage.value = ''
+    }, 1500)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    sendingMessage.value = false
+  }
+}
+</script>
+
 <template>
   <div class="position-relative" style="height: 93.5vh">
     <q-layout view="lHh Lpr lFf" container>
@@ -160,16 +243,12 @@
         <div class="q-pa-md row justify-center">
           <div style="width: 100%; max-width: 400px">
             <q-chat-message
-              bg-color="grey-4"
+              bg-color="blue-8"
               name="me"
               :text="['hey, how are you?']"
               sent
             />
-            <q-chat-message
-              bg-color="blue-8"
-              name="Jane"
-              :text="['doing fine, how r you?']"
-            />
+            <q-chat-message bg-color="grey-4" name="Jane" :text="[message]" />
           </div>
         </div>
       </q-page-container>
@@ -183,71 +262,13 @@
             dense
             bg-color="white"
             class="col-grow q-mr-sm"
-            v-model="message"
+            v-model="sentMessage"
             placeholder="Type a message"
             input-class="text-grey-8"
           />
-          <q-btn round flat icon="send" />
+          <q-btn @click="sendMessage" round flat icon="send" />
         </q-toolbar>
       </q-footer>
     </q-layout>
   </div>
 </template>
-
-<script setup lang="ts">
-const conversations = [
-  {
-    id: 1,
-    person: 'Razvan Stoenescu',
-    avatar: 'https://cdn.quasar.dev/team/razvan_stoenescu.jpeg',
-    caption: "I'm working on Quasar!",
-    time: '15:00',
-    sent: true,
-  },
-  {
-    id: 2,
-    person: 'Dan Popescu',
-    avatar: 'https://cdn.quasar.dev/team/dan_popescu.jpg',
-    caption: "I'm working on Quasar!",
-    time: '16:00',
-    sent: true,
-  },
-  {
-    id: 3,
-    person: 'Jeff Galbraith',
-    avatar: 'https://cdn.quasar.dev/team/jeff_galbraith.jpg',
-    caption: "I'm working on Quasar!",
-    time: '18:00',
-    sent: true,
-  },
-  {
-    id: 4,
-    person: 'Allan Gaunt',
-    avatar: 'https://cdn.quasar.dev/team/allan_gaunt.png',
-    caption: "I'm working on Quasar!",
-    time: '17:00',
-    sent: true,
-  },
-]
-
-const $q = useQuasar()
-const leftDrawerOpen = ref(false)
-const search = ref('')
-const message = ref('')
-const currentConversationIndex = ref(0)
-const currentConversation = computed(() => {
-  return conversations[currentConversationIndex.value]
-})
-const style = computed(() => ({
-  height: $q.screen.height + 'px',
-}))
-console.log(style.value)
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
-
-function setCurrentConversation(index: any) {
-  currentConversationIndex.value = index
-}
-</script>
