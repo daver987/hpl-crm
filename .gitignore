@@ -1,0 +1,10 @@
+*.log
+.idea
+.nuxt
+.output
+coverage
+dist
+node_modules
+nuxt.d.ts
+.env
+.vscode
