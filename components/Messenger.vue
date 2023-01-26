@@ -87,11 +87,20 @@ const sendMessage = async () => {
       <q-header elevated>
         <q-toolbar>
           <q-btn
+            v-if="leftDrawerOpen"
             round
             flat
             icon="keyboard_arrow_left"
             class="q-mr-sm"
             @click="toggleLeftDrawer"
+          />
+          <q-btn
+            v-if="!leftDrawerOpen"
+            round
+            flat
+            icon="keyboard_arrow_right"
+            @click="toggleLeftDrawer"
+            class="q-mr-sm"
           />
 
           <q-btn round flat>
@@ -178,13 +187,7 @@ const sendMessage = async () => {
             </q-menu>
           </q-btn>
 
-          <q-btn
-            round
-            flat
-            icon="close"
-            class="WAL__drawer-close"
-            @click="toggleLeftDrawer"
-          />
+          <q-btn round flat icon="close" @click="toggleLeftDrawer" />
         </q-toolbar>
 
         <q-toolbar>
