@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const $q = useQuasar()
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
@@ -9,8 +10,6 @@ const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
 
-const loading = ref(false)
-const rowData = ref()
 const getQuotes = async () => {
   loading.value = true
   try {
@@ -27,6 +26,7 @@ const getQuotes = async () => {
   }
 }
 await getQuotes()
+const rowData = ref()
 
 const pagination = {
   rowsPerPage: 12,
@@ -43,10 +43,6 @@ function convertDate(dateString: string) {
     year: 'numeric',
   })
 }
-
-console.log(convertDate('17-02-2023')) // Feb 17, 2023
-console.log(convertDate('40-40-4040')) // 40-40-4040
-
 function convertDateTime(dateString: string) {
   const date = new Date(dateString)
   return date.toLocaleString('default', {
@@ -60,8 +56,7 @@ function convertDateTime(dateString: string) {
   })
 }
 
-console.log(convertDate('2023-01-20T21:34:00.595')) // Jan 20, 2023 4:34 PM
-
+const filter = ref('')
 const columns = [
   {
     name: 'submitted',
@@ -167,10 +162,53 @@ const columns = [
     label: 'Remove',
   },
 ]
+const loading = ref(false)
+
 const bookOrder = () => {
   console.log('Order Booked')
 }
-const filter = ref('')
+function bookOrderWarning() {
+  $q.dialog({
+    title: 'Warning!',
+    message: 'Are you sure that you want to book this order?',
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(async () => {
+      console.log('>>>> OK, received')
+      await deleteQuote()
+    })
+    .onCancel(() => {
+      // console.log('>>>> Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    })
+}
+const deleteQuote = async () => {
+  const { data } = await useFetch('/api/delete-quote', {
+    body: {},
+  })
+  console.log('Quote Deleted')
+}
+function deleteQuoteWarning() {
+  $q.dialog({
+    title: 'Warning!',
+    message: 'Are you sure that you want to delete this quote?',
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(async () => {
+      console.log('>>>> OK, received')
+      await bookOrder()
+    })
+    .onCancel(() => {
+      // console.log('>>>> Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    })
+}
 </script>
 
 <template>
@@ -263,7 +301,7 @@ const filter = ref('')
         <q-chip
           clickable
           dense
-          @click="bookOrder"
+          @click="bookOrderWarning"
           :color="[props.row.isBooked ? 'green' : 'pink']"
           text-color="white"
         >
@@ -279,11 +317,15 @@ const filter = ref('')
     <template #body-cell-delete="props">
       <q-td key="details" :props="props" auto-width>
         <div class="q-gutter-sm">
-          <q-btn icon="delete" size="sm" round color="negative" />
+          <q-btn
+            @click="deleteQuoteWarning"
+            icon="delete"
+            size="sm"
+            round
+            color="negative"
+          />
         </div>
       </q-td>
     </template>
   </q-table>
 </template>
-
-<style scoped></style>

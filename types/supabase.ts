@@ -17,7 +17,7 @@ export interface Database {
           company_name: string | null
           company_phone: string | null
           created_at: string | null
-          id: number
+          id: string
         }
         Insert: {
           company_account_number?: number | null
@@ -26,7 +26,7 @@ export interface Database {
           company_name?: string | null
           company_phone?: string | null
           created_at?: string | null
-          id?: number
+          id?: string
         }
         Update: {
           company_account_number?: number | null
@@ -35,7 +35,7 @@ export interface Database {
           company_name?: string | null
           company_phone?: string | null
           created_at?: string | null
-          id?: number
+          id?: string
         }
       }
       airport_surcharges: {
@@ -68,6 +68,55 @@ export interface Database {
           isTaxable?: boolean | null
           surchargeFee?: number | null
           surchargeName?: string | null
+        }
+      }
+      conversation: {
+        Row: {
+          created_at: string | null
+          creator_id: string | null
+          deleted_at: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          creator_id?: string | null
+          deleted_at?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          creator_id?: string | null
+          deleted_at?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+      }
+      messages: {
+        Row: {
+          conversation_id: string | null
+          created_at: string | null
+          deleted_at: string | null
+          id: number
+          message: string | null
+          sender_id: string | null
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: number
+          message?: string | null
+          sender_id?: string | null
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: number
+          message?: string | null
+          sender_id?: string | null
         }
       }
       profiles: {
