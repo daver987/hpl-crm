@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
   ],
   build: {
-    transpile: ['quasar'],
+    transpile: ['quasar', '@quasar/quasar-ui-qcalendar'],
   },
   quasar: {
     // Optional string | boolean
@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     css: [
       '@quasar/extras/material-icons/material-icons.css',
       '@quasar/extras/fontawesome-v6/fontawesome-v6.css',
+      '@quasar/quasar-ui-qcalendar/dist/QCalendarDay.min.css',
     ],
     // List of extra Quasar Plugins
     // auto-installed: [Platform, Body, Dark, Screen, History, Lang, IconSet]

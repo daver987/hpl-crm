@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { Client } from '@twilio/conversations'
-import { z } from 'zod'
-
 const conversations = [
   {
     id: 1,

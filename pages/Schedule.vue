@@ -1,13 +1,9 @@
 <script lang="ts" setup>
-definePageMeta({
-  name: 'Schedule',
-  layout: 'default',
-  middleware: 'auth',
-})
+//scripts
 </script>
 
 <template>
-  <q-page padding> Page: foo </q-page>
+  <q-page padding> </q-page>
 </template>
 
 <style scoped></style>

@@ -1,6 +1,4 @@
 import twilio from 'twilio'
-// import { serverSupabaseUser } from '#supabase/server'
-// import { z } from 'zod'
 
 const config = useRuntimeConfig()
 const accountSid = config.TWILIO_ACCOUNT_SID

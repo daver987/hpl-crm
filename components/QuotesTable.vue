@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 const $q = useQuasar()
+const rowData = ref()
+const loading = ref(false)
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
@@ -26,7 +28,6 @@ const getQuotes = async () => {
   }
 }
 await getQuotes()
-const rowData = ref()
 
 const pagination = {
   rowsPerPage: 12,
@@ -162,7 +163,6 @@ const columns = [
     label: 'Remove',
   },
 ]
-const loading = ref(false)
 
 const bookOrder = () => {
   console.log('Order Booked')
