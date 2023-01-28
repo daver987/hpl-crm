@@ -3,7 +3,6 @@ import { navigation } from '~/data/navigation'
 
 const route = useRoute()
 console.log(route)
-const supabase = useSupabaseClient()
 const client = useSupabaseAuthClient()
 const loading = ref(false)
 
@@ -36,7 +35,7 @@ const toggleDarkMode = () => {
 </script>
 
 <template>
-  <q-layout view="lHh lpR fFf">
+  <q-layout view="hHh lpR fFf">
     <q-header class="bg-black text-white">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -55,11 +54,11 @@ const toggleDarkMode = () => {
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       side="left"
       bordered
       :width="200"
       :mini="miniMode"
+      show-if-above
     >
       <q-item>
         <q-item-section avatar>

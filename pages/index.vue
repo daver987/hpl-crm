@@ -5,12 +5,25 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const getQuoteCount = async () => {
-  const { data: quoteCount } = await useFetch('/api/quote-count')
-  return quoteCount
-}
-const quoteCount = await getQuoteCount()
-console.log(quoteCount)
+const { data: quotes } = await useFetch('/api/get-quotes')
+
+const filteredObjects = quotes?.value?.filter((obj) => {
+  const utcDate = new Date(obj.createdAt)
+  const estDate = new Date(
+    utcDate.getTime() - utcDate.getTimezoneOffset() * 60000
+  )
+  const currentDay = estDate.toISOString().slice(0, 10)
+  const currentHour = new Date().getUTCHours() - 4
+  return (
+    currentDay === estDate.toISOString().slice(0, 10) &&
+    currentHour === estDate.getUTCHours()
+  )
+})
+const dailyQuotes = filteredObjects?.length
+const orderCount = filteredObjects?.filter(
+  (obj) => obj.isBooked === true
+).length
+const quoteCount = quotes?.value?.length
 </script>
 
 <template>
@@ -20,7 +33,7 @@ console.log(quoteCount)
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
             <div class="text-h6">Today's Quotes</div>
-            <div class="text-h6">6</div>
+            <div class="text-h6">{{ dailyQuotes }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
             <q-icon name="request_quote" size="4rem" />
@@ -31,7 +44,7 @@ console.log(quoteCount)
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
             <div class="text-h6">Today's Orders</div>
-            <div class="text-h6">6</div>
+            <div class="text-h6">{{ orderCount }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
             <q-icon name="request_quote" size="4rem" />

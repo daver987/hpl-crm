@@ -1,11 +1,5 @@
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
-  app: {
-    head: {
-      title: 'Nuxt3 + Pinia + Quasar',
-    },
-  },
-  ssr: false,
   css: ['assets/styles/main.scss'],
   modules: [
     '@pinia/nuxt',

@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
     const { count } = await supabase
       .from('quotes')
       .select('*', { count: 'exact', head: true })
+      .eq('isBooked', true)
     return count
   } catch (e) {
     console.log(e)
