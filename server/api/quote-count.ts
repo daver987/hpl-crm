@@ -4,12 +4,12 @@ import { Database } from '~/types/supabase'
 export default defineEventHandler(async (event) => {
   try {
     const supabase = serverSupabaseClient<Database>(event)
-    const { data } = await supabase
+    const { count, error } = await supabase
       .from('quotes')
-      .select()
-      .order('quote_number', { ascending: false })
-    return data
+      .select('*', { count: 'exact', head: true })
+    return count
   } catch (e) {
     console.log(e)
+    return 'Something Went Wrong'
   }
 })
