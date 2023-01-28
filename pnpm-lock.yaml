@@ -19,6 +19,7 @@ specifiers:
   nuxt: ^3.1.1
   nuxt-quasar-vite: ^1.0.10
   nuxt-vitest: ^0.6.2
+  pinia: ^2.0.29
   prettier: ^2.8.3
   quasar: ^2.11.5
   sass: 1.32.12
@@ -30,6 +31,7 @@ specifiers:
 dependencies:
   '@vitejs/plugin-vue': 4.0.0_vite@4.0.4+vue@3.2.45
   '@vue/compiler-dom': 3.2.45
+  pinia: 2.0.29_vue@3.2.45
   vite: 4.0.4_sass@1.32.12
   vue: 3.2.45
 
@@ -1651,7 +1653,6 @@ packages:
 
   /@vue/devtools-api/6.5.0:
     resolution: {integrity: sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==}
-    dev: true
 
   /@vue/reactivity-transform/3.2.45:
     resolution: {integrity: sha512-BHVmzYAvM7vcU5WmuYqXpwaBHjsS8T63jlKGWVtHxAHIoMIlmaMyurUSEs1Zcg46M4AYT5MtB1U274/2aNzjJQ==}
@@ -4439,7 +4440,6 @@ packages:
       '@vue/devtools-api': 6.5.0
       vue: 3.2.45
       vue-demi: 0.13.11_vue@3.2.45
-    dev: true
 
   /pkg-types/1.0.1:
     resolution: {integrity: sha512-jHv9HB+Ho7dj6ItwppRDDl0iZRYBD0jsakHXtFgoLr+cHSF6xC+QL54sJmWxyGxOLYSHm0afhXhXcQDQqH9z8g==}
@@ -5979,7 +5979,6 @@ packages:
         optional: true
     dependencies:
       vue: 3.2.45
-    dev: true
 
   /vue-devtools-stub/0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
