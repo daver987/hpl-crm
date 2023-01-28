@@ -1,5 +1,3 @@
-import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
-const quasarModules = ['quasar', '@quasar/extras', '@quasar/extras']
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
   app: {
@@ -14,9 +12,10 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     'nuxt-quasar-vite',
     '@vueuse/nuxt',
+    'nuxt-vitest',
   ],
   build: {
-    transpile: ['quasar', '@quasar/quasar-ui-qcalendar'],
+    transpile: ['quasar'],
   },
   quasar: {
     // Optional string | boolean
@@ -26,7 +25,6 @@ export default defineNuxtConfig({
     css: [
       '@quasar/extras/material-icons/material-icons.css',
       '@quasar/extras/fontawesome-v6/fontawesome-v6.css',
-      '@quasar/quasar-ui-qcalendar/dist/QCalendarDay.min.css',
     ],
     // List of extra Quasar Plugins
     // auto-installed: [Platform, Body, Dark, Screen, History, Lang, IconSet]
@@ -48,6 +46,7 @@ export default defineNuxtConfig({
     TWILIO_CHAT_SERVICE_SID: process.env.TWILIO_CHAT_SERVICE_SID,
     TWILIO_API_SECRET: process.env.TWILIO_API_SECRET,
     ZAPIER_WEBHOOK_SECRET: process.env.ZAPIER_WEBHOOK_SECRET,
+    ZAPIER_WEBHOOK_BOOK_ORDER: process.env.ZAPIER_WEBHOOK_BOOK_ORDER,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,

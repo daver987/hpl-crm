@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   try {
     const supabase = serverSupabaseClient<Database>(event)
     const body = await readBody(event)
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('quotes')
       .delete()
       .eq('id', body.id)

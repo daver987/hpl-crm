@@ -94,13 +94,12 @@ const filter = ref('')
 
 <template>
   <q-table
-    :rows="rowData"
+  :rows="rowData"
     :columns="columns"
     :loading="loading"
+    :pagination="pagination"
     square
     flat
-    title="Contacts"
-    :pagination="pagination"
     :grid="isGrid"
     :dense="isCompact"
     :filter="filter"
@@ -189,4 +188,6 @@ const filter = ref('')
   </q-table>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

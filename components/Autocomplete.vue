@@ -1,12 +1,4 @@
 <script lang="ts" setup>
-// import { z } from 'zod'
-// const contactSchema = z
-//   .object({
-//     firstName: z.string(),
-//     lastName: z.string(),
-//     phoneNumber: z.string(),
-//   })
-//   .strip()
 const stringOptions = ['Google', 'Facebook', 'Twitter', 'Apple', 'Oracle']
 
 const options = ref(stringOptions)
@@ -22,15 +14,6 @@ const filterFn = (val: any, update: any, abort: any) => {
     )
   })
 }
-// const getContacts = async () => {
-//   try {
-//     const { data: contacts, refresh } = await useFetch('/api/get-contacts')
-//     console.log(contactSchema.parse(contacts))
-//   } catch (error) {
-//     alert(error)
-//   }
-// }
-// await getContacts()
 </script>
 
 <template>
@@ -69,4 +52,6 @@ const filterFn = (val: any, update: any, abort: any) => {
   </q-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

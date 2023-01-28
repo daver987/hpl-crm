@@ -12,20 +12,17 @@ export default defineEventHandler(async (event) => {
   const client = twilio(accountSid, authToken)
   const body = await readBody(event)
   const { message, to } = body
-  //send message to the client
   await client.messages.create({
     body: message,
     messagingServiceSid: messagingServiceSid,
     to: to,
   })
-  const { data, error } = await supabase
-    .from('messages')
-    .insert([
-      {
-        message: message,
-        conversation_id: 'otherValue',
-        sender_id: 'otherValue',
-      },
-    ])
+  const { data, error } = await supabase.from('messages').insert([
+    {
+      message: message,
+      conversation_id: 'otherValue',
+      sender_id: 'otherValue',
+    },
+  ])
   return message.sid
 })

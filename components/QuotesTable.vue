@@ -12,14 +12,15 @@ const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
 
+const refreshQuoteData = ref<any>()
+
 const getQuotes = async () => {
   loading.value = true
   try {
-    const { data, refresh: refreshQuoteData } = await useFetch(
-      '/api/get-quotes'
-    )
+    const { data, refresh } = await useFetch('/api/get-quotes')
     console.log(rowData.value)
     rowData.value = data.value
+    refreshQuoteData.value = refresh
     loading.value = false
   } catch (error) {
     alert(error)
@@ -29,10 +30,9 @@ const getQuotes = async () => {
 }
 await getQuotes()
 
-const pagination = {
-  rowsPerPage: 12,
-  sortBy: 'quote_number',
-}
+const pagination = ref({
+  rowsPerPage: 0,
+})
 
 function convertDate(dateString: string) {
   const parts = dateString.split('-')
@@ -58,12 +58,12 @@ function convertDateTime(dateString: string) {
 }
 
 const filter = ref('')
-const columns = [
+const columns = () => [
   {
     name: 'submitted',
     align: 'left',
     label: 'Submitted',
-    field: (row: any) => convertDateTime(row.createdAt),
+    field: (row: any) => convertDateTime(row.updatedAt),
     sortable: true,
   },
   {
@@ -73,7 +73,6 @@ const columns = [
     align: 'left',
     field: (row: any) => `HPL-${row.quote_number}`,
     sortable: true,
-    sortOrder: 'da',
     classes: 'text-red',
   },
   {
@@ -164,34 +163,65 @@ const columns = [
   },
 ]
 
-const bookOrder = () => {
-  console.log('Order Booked')
+async function bookOrder(event: any) {
+  loading.value = true
+  try {
+    const { data } = await useFetch('/api/book-order', {
+      method: 'POST',
+      body: { row: event.row },
+    })
+    setTimeout(async () => {
+      await getQuotes()
+    }, 1500)
+    console.log('Order Booked Data', data)
+  } catch (e) {
+    console.log('Error Occurred', e)
+  } finally {
+    loading.value = false
+  }
 }
-function bookOrderWarning() {
+
+const onClickBookOrder = async (event: any) => {
+  console.log('Book Order event', event)
   $q.dialog({
-    title: 'Warning!',
+    title: 'Book Order!',
     message: 'Are you sure that you want to book this order?',
     cancel: true,
     persistent: true,
   })
     .onOk(async () => {
-      console.log('>>>> OK, received')
-      await deleteQuote()
+      console.log('Order Booked')
+      await bookOrder(event)
     })
     .onCancel(() => {
-      // console.log('>>>> Cancel')
+      console.log('>>>> Cancel')
     })
     .onDismiss(() => {
       // console.log('I am triggered on both OK and Cancel')
     })
 }
-const deleteQuote = async () => {
-  const { data } = await useFetch('/api/delete-quote', {
-    body: {},
-  })
-  console.log('Quote Deleted')
+
+const tableRef = ref(null)
+async function deleteQuote(event: any) {
+  loading.value = true
+  try {
+    const { data } = await useFetch('/api/delete-quote', {
+      method: 'POST',
+      body: { id: event.id },
+    })
+    setTimeout(async () => {
+      await getQuotes()
+    }, 1500)
+    console.log('Quote Deleted Data', data)
+  } catch (e) {
+    console.log('Error Occurred', e)
+  } finally {
+    loading.value = false
+  }
 }
-function deleteQuoteWarning() {
+
+const onClickDeleteQuote = async (event: any) => {
+  console.log('Delete Quote event', event)
   $q.dialog({
     title: 'Warning!',
     message: 'Are you sure that you want to delete this quote?',
@@ -199,11 +229,11 @@ function deleteQuoteWarning() {
     persistent: true,
   })
     .onOk(async () => {
-      console.log('>>>> OK, received')
-      await bookOrder()
+      console.log('Deleted Order')
+      await deleteQuote(event.row)
     })
     .onCancel(() => {
-      // console.log('>>>> Cancel')
+      console.log('>>>> Cancel')
     })
     .onDismiss(() => {
       // console.log('I am triggered on both OK and Cancel')
@@ -214,15 +244,19 @@ function deleteQuoteWarning() {
 <template>
   <q-table
     :rows="rowData"
-    :columns="columns"
+    :columns="columns()"
     :loading="loading"
     square
     flat
-    :pagination="pagination"
+    ref="tableRef"
+    :binary-state-sort="true"
+    column-sort-order="da"
+    style="height: 738px"
     :grid="isGrid"
     :dense="isCompact"
     :filter="filter"
-    row-key="name"
+    row-key="index"
+    v-model:pagination="pagination"
     table-header-class="bg-grey-9"
   >
     <template v-slot:top="props">
@@ -301,9 +335,9 @@ function deleteQuoteWarning() {
         <q-chip
           clickable
           dense
-          @click="bookOrderWarning"
           :color="[props.row.isBooked ? 'green' : 'pink']"
           text-color="white"
+          @click="onClickBookOrder(props)"
         >
           {{ props.row.isBooked ? 'Booked' : 'Quoted' }}
         </q-chip>
@@ -318,7 +352,7 @@ function deleteQuoteWarning() {
       <q-td key="details" :props="props" auto-width>
         <div class="q-gutter-sm">
           <q-btn
-            @click="deleteQuoteWarning"
+            @click="onClickDeleteQuote(props)"
             icon="delete"
             size="sm"
             round

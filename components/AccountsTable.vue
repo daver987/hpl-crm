@@ -10,13 +10,13 @@ const toggleCompact = () => {
 }
 //get the data for the tables from supabase
 const loading = ref(false)
-const accounts = ref({})
+const accounts = ref<any>({})
 
 async function getAccounts() {
   try {
     const { data, error, pending } = await useFetch('/api/accounts')
     loading.value = true
-    await console.log('Returned Accounts', data.value)
+    console.log('Returned Accounts', data.value)
     accounts.value = data.value
   } catch (error) {
     alert(error)
@@ -26,13 +26,13 @@ async function getAccounts() {
 }
 await getAccounts()
 
-const pagination = {
+const pagination = ref({
   rowsPerPage: 12,
   sortBy: 'company_account_number',
-}
+})
 
 //add the info for the columns in the table
-const columns = [
+const columns = ([
   {
     name: 'account_number',
     required: true,
@@ -78,20 +78,20 @@ const columns = [
     align: 'center',
     label: 'Details',
   },
-]
+])
 const filter = ref('')
 </script>
 
 <template>
   <q-table
+  :rows="accounts"
     :columns="columns"
-    :rows="accounts"
     :loading="loading"
+    :pagination="pagination"
     square
     flat
-    :dense="isCompact"
     :grid="isGrid"
-    v-model:pagination="pagination"
+    :dense="isCompact"
     :filter="filter"
     row-key="name"
     table-header-class="bg-grey-9"
