@@ -1,5 +1,8 @@
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
+  nitro: {
+    preset: 'cloudflare-pages',
+  },
   css: ['assets/styles/main.scss'],
   modules: [
     '@pinia/nuxt',
