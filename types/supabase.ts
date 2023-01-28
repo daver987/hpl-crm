@@ -520,21 +520,5 @@ export interface Database {
         }
       }
     }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      get_new_quote_number: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      increment_quote_number: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
   }
 }
