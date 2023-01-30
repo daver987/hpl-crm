@@ -32,27 +32,12 @@ const pagination = {
   sortBy: 'quote_number',
 }
 
-function convertDateTime(dateString: string) {
-  const date = new Date(dateString)
-  return date.toLocaleString('default', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-    timeZone: 'America/New_York',
-  })
-}
-
-console.log(convertDateTime('2023-01-20T21:34:00.595')) // Jan 20, 2023 9:34 PM
-
 const columns = [
   {
     name: 'createdAt',
     align: 'left',
     label: 'Created',
-    field: (row: any) => convertDateTime(row.createdAt),
+    field: (row: any) => formatDateTime(row.updatedAt),
     sortable: true,
   },
   {
@@ -94,7 +79,7 @@ const filter = ref('')
 
 <template>
   <q-table
-  :rows="rowData"
+    :rows="rowData"
     :columns="columns"
     :loading="loading"
     :pagination="pagination"
@@ -188,6 +173,4 @@ const filter = ref('')
   </q-table>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
