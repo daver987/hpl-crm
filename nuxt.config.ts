@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     'nuxt-quasar-vite',
     '@vueuse/nuxt',
     'nuxt-vitest',
+    '@unocss/nuxt',
   ],
   build: {
     transpile: ['quasar'],

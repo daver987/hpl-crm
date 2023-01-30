@@ -36,7 +36,7 @@ const toggleDarkMode = () => {
 
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header class="bg-black text-white">
+    <q-header class="bg-dark" bordered>
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
         <q-toolbar-title></q-toolbar-title>

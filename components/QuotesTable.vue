@@ -11,14 +11,13 @@ const isCompact = ref(false)
 const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
-
+const { capitalize } = qformat
 const refreshQuoteData = ref<any>()
 
 const getQuotes = async () => {
   loading.value = true
   try {
     const { data, refresh } = await useFetch('/api/get-quotes')
-    console.log(rowData.value)
     rowData.value = data.value
     refreshQuoteData.value = refresh
     loading.value = false
@@ -34,36 +33,13 @@ const pagination = ref({
   rowsPerPage: 0,
 })
 
-function convertDate(dateString: string) {
-  const parts = dateString.split('-')
-  const date = new Date(parts.reverse().join('/'))
-  if (isNaN(date.getTime())) return dateString
-  return date.toLocaleDateString('default', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
-function convertDateTime(dateString: string) {
-  const date = new Date(dateString)
-  return date.toLocaleString('default', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-    timeZone: 'America/New_York',
-  })
-}
-
 const filter = ref('')
 const columns = () => [
   {
     name: 'submitted',
     align: 'left',
     label: 'Submitted',
-    field: (row: any) => convertDateTime(row.updatedAt),
+    field: (row: any) => formatDateTime(row.updatedAt),
     sortable: true,
   },
   {
@@ -80,18 +56,14 @@ const columns = () => [
     align: 'left',
     label: 'Name',
     field: (row: any) =>
-      row.firstName.toLowerCase().charAt(0).toUpperCase() +
-      row.firstName.toLowerCase().slice(1) +
-      ' ' +
-      row.lastName.toLowerCase().charAt(0).toUpperCase() +
-      row.lastName.toLowerCase().slice(1),
+      capitalize(row.firstName) + ' ' + capitalize(row.lastName),
   },
   {
     name: 'pickupDate',
     align: 'left',
     label: 'Pickup Date & Time',
-    field: (row: any) =>
-      convertDate(row.pickupDate) + ' ' + '@' + ' ' + row.pickupTime,
+    sortable: true,
+    field: (row: any) => concatDateTime(row.pickupDate, row.pickupTime),
   },
 
   {
@@ -110,13 +82,15 @@ const columns = () => [
     name: 'originName',
     align: 'left',
     label: 'Pickup',
-    field: 'originName',
+    field: (row: any) =>
+      formatAddress(row.originName, row.originFormattedAddress),
   },
   {
     name: 'destinationName',
     align: 'left',
     label: 'Drop Off',
-    field: 'destinationName',
+    field: (row: any) =>
+      formatAddress(row.destinationName, row.destinationFormattedAddress),
   },
   {
     name: 'serviceTypeLabel',
@@ -257,7 +231,7 @@ const onClickDeleteQuote = async (event: any) => {
     :filter="filter"
     row-key="index"
     v-model:pagination="pagination"
-    table-header-class="bg-grey-9"
+    table-header-class="light:bg-neutral-200 dark:bg-neutral-900"
   >
     <template v-slot:top="props">
       <q-btn
@@ -327,7 +301,7 @@ const onClickDeleteQuote = async (event: any) => {
     </template>
     <template #body-cell-isRoundTrip="props">
       <q-td key="name" :props="props" auto-width>
-        <q-badge rounded :color="[props.row.isRoundTrip ? 'green' : 'red-7']" />
+        <q-badge rounded :color="props.row.isRoundTrip ? 'green' : 'red-7'" />
       </q-td>
     </template>
     <template #body-cell-status="props">
@@ -335,7 +309,7 @@ const onClickDeleteQuote = async (event: any) => {
         <q-chip
           clickable
           dense
-          :color="[props.row.isBooked ? 'green' : 'pink']"
+          :color="props.row.isBooked ? 'green' : 'pink'"
           text-color="white"
           @click="onClickBookOrder(props)"
         >

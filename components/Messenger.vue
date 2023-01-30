@@ -57,6 +57,7 @@ function setCurrentConversation(index: any) {
 }
 
 const sendingMessage = ref(false)
+
 const sendMessage = async () => {
   sendingMessage.value = true
   try {
