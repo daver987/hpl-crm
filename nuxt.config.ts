@@ -1,7 +1,7 @@
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
   nitro: {
-    preset: 'cloudflare-pages',
+    preset: 'vercel',
   },
   css: ['assets/styles/main.scss'],
   modules: [

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const { capitalize } = qformat
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
@@ -45,11 +46,7 @@ const columns = [
     align: 'left',
     label: 'Name',
     field: (row: any) =>
-      row.firstName.toLowerCase().charAt(0).toUpperCase() +
-      row.firstName.toLowerCase().slice(1) +
-      ' ' +
-      row.lastName.toLowerCase().charAt(0).toUpperCase() +
-      row.lastName.toLowerCase().slice(1),
+      capitalize(row.firstName) + ' ' + capitalize(row.lastName),
   },
   {
     name: 'emailAddress',
