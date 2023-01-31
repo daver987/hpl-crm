@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia'
 const quoteStore = useQuoteStore()
 const { quoteCount, loading, quotes, quoteCountToday, orderCount } =
   storeToRefs(quoteStore)
-console.log('Quotes:', quoteCount)
 quoteStore.getQuoteCount()
 
 definePageMeta({

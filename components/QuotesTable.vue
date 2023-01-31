@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia'
 const quoteStore = useQuoteStore()
 const { quotes, loading } = storeToRefs(quoteStore)
 await quoteStore.getQuotes()
-console.log('Quotes:', quotes)
 
 const filter = ref('')
 const $q = useQuasar()

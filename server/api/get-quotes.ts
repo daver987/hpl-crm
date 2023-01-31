@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
       .from('quotes')
       .select()
       .order('quote_number', { ascending: false })
-    console.log(data)
     return data
   } catch (e) {
     console.log(e)

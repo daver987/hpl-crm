@@ -1,5 +1,6 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { Database } from '~/types/supabase'
+import { format } from 'date-fns'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -44,6 +45,12 @@ export default defineEventHandler(async (event) => {
         body.row.la_service_type_id = serviceType?.filter(
           (type) => type.id === body.row.serviceTypeValue
         )[0].limo_anywhere_id
+        body.row.pickupDate = format(
+          new Date(body.row.pickupDate),
+          'MMM dd, yyyy'
+        )
+        body.row.pickupTime = format(new Date(body.row.pickupTime), 'hh:mm a')
+        console.log('This is the new body', body)
         const { data, error } = await supabase
           .from('quotes')
           .update({ isBooked: true })
