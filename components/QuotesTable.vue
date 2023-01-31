@@ -126,24 +126,6 @@ const columns = () => [
   },
 ]
 
-// async function bookOrder(event: any) {
-//   loading.value = true
-//   try {
-//     const { data } = await useFetch('/api/book-order', {
-//       method: 'POST',
-//       body: { row: event.row },
-//     })
-//     setTimeout(async () => {
-//       await getQuotes()
-//     }, 1500)
-//     console.log('Order Booked Data', data)
-//   } catch (e) {
-//     console.log('Error Occurred', e)
-//   } finally {
-//     loading.value = false
-//   }
-// }
-
 const onClickBookOrder = async (event: any) => {
   console.log('Book Order event', event)
   $q.dialog({

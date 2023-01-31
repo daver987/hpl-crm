@@ -1,34 +1,18 @@
 <script setup lang="ts">
-import { isEqual, isPast, format } from 'date-fns'
+import { useQuoteStore } from '~/stores/useQuoteStore'
+import { storeToRefs } from 'pinia'
+
+const quoteStore = useQuoteStore()
+const { quoteCount, loading, quotes, quoteCountToday, orderCount } =
+  storeToRefs(quoteStore)
+console.log('Quotes:', quoteCount)
+quoteStore.getQuoteCount()
 
 definePageMeta({
   name: 'My Office',
   layout: 'default',
   middleware: 'auth',
 })
-
-const { data: quotes } = await useFetch('/api/get-quotes')
-
-const quoteCount = quotes?.value?.length
-const orderCount = quotes?.value?.filter(
-  (item) =>
-    item.isBooked === true &&
-    isEqual(
-      new Date(format(new Date(item.updatedAt), 'yyyy-MM-dd')),
-      new Date(format(new Date(), 'yyyy-MM-dd'))
-    )
-).length
-const todaysQuotes = quotes?.value?.filter((item) =>
-  isEqual(
-    new Date(format(new Date(item.updatedAt), 'yyyy-MM-dd')),
-    new Date(format(new Date(), 'yyyy-MM-dd'))
-  )
-).length
-const totalOrdersArray = quotes?.value?.filter((item) => item.isBooked === true)
-let total = totalOrdersArray?.reduce(
-  (sum, trip) => sum + trip.roundTripTotal,
-  0
-)
 </script>
 
 <template>
@@ -38,7 +22,7 @@ let total = totalOrdersArray?.reduce(
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
             <div class="text-h6">Today's Quotes</div>
-            <div class="text-h6">{{ todaysQuotes }}</div>
+            <div class="text-h6">{{ quoteCountToday }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
             <q-icon name="request_quote" size="4rem" />
@@ -73,7 +57,7 @@ let total = totalOrdersArray?.reduce(
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
             <div class="text-h6">Today's Quotes</div>
-            <div class="text-h6">{{ todaysQuotes }}</div>
+            <div class="text-h6">{{ quoteCountToday }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
             <q-icon name="request_quote" size="4rem" />
@@ -84,7 +68,7 @@ let total = totalOrdersArray?.reduce(
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
             <div class="text-h6">Total Orders Value</div>
-            <div class="text-h6">${{ total }}</div>
+            <div class="text-h6">${{ orderCount }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
             <q-icon name="request_quote" size="4rem" />
