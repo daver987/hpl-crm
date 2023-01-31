@@ -1,38 +1,29 @@
 <script setup lang="ts">
+import { useAccountStore } from '~/stores/useAccountStore'
+import { storeToRefs } from 'pinia'
+
+const accountsStore = useAccountStore()
+const { accounts, loading } = storeToRefs(accountsStore)
+await accountsStore.getAccounts()
+console.log('Accounts', accounts)
+
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
 }
-
 const isCompact = ref(false)
 const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
-//get the data for the tables from supabase
-const loading = ref(false)
-const accounts = ref<any>({})
 
-async function getAccounts() {
-  try {
-    const { data, error, pending } = await useFetch('/api/accounts')
-    loading.value = true
-    console.log('Returned Accounts', data.value)
-    accounts.value = data.value
-  } catch (error) {
-    alert(error)
-  } finally {
-    loading.value = false
-  }
-}
-await getAccounts()
+const filter = ref('')
 
 const pagination = ref({
   rowsPerPage: 12,
   sortBy: 'company_account_number',
 })
 
-//add the info for the columns in the table
-const columns = ([
+const columns = [
   {
     name: 'account_number',
     required: true,
@@ -78,13 +69,12 @@ const columns = ([
     align: 'center',
     label: 'Details',
   },
-])
-const filter = ref('')
+]
 </script>
 
 <template>
   <q-table
-  :rows="accounts"
+    :rows="accounts"
     :columns="columns"
     :loading="loading"
     :pagination="pagination"

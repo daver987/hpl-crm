@@ -1,39 +1,28 @@
 <script lang="ts" setup>
+import { useQuoteStore } from '~/stores/useQuoteStore'
+import { storeToRefs } from 'pinia'
+
+const quoteStore = useQuoteStore()
+const { quotes, loading } = storeToRefs(quoteStore)
+await quoteStore.getQuotes()
+console.log('Quotes:', quotes)
+
+const filter = ref('')
 const $q = useQuasar()
-const rowData = ref()
-const loading = ref(false)
+const { capitalize } = qformat
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
 }
-
 const isCompact = ref(false)
 const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
-const { capitalize } = qformat
-const refreshQuoteData = ref<any>()
-
-const getQuotes = async () => {
-  loading.value = true
-  try {
-    const { data, refresh } = await useFetch('/api/get-quotes')
-    rowData.value = data.value
-    refreshQuoteData.value = refresh
-    loading.value = false
-  } catch (error) {
-    alert(error)
-  } finally {
-    loading.value = false
-  }
-}
-await getQuotes()
 
 const pagination = ref({
   rowsPerPage: 0,
 })
 
-const filter = ref('')
 const columns = () => [
   {
     name: 'submitted',
@@ -137,23 +126,23 @@ const columns = () => [
   },
 ]
 
-async function bookOrder(event: any) {
-  loading.value = true
-  try {
-    const { data } = await useFetch('/api/book-order', {
-      method: 'POST',
-      body: { row: event.row },
-    })
-    setTimeout(async () => {
-      await getQuotes()
-    }, 1500)
-    console.log('Order Booked Data', data)
-  } catch (e) {
-    console.log('Error Occurred', e)
-  } finally {
-    loading.value = false
-  }
-}
+// async function bookOrder(event: any) {
+//   loading.value = true
+//   try {
+//     const { data } = await useFetch('/api/book-order', {
+//       method: 'POST',
+//       body: { row: event.row },
+//     })
+//     setTimeout(async () => {
+//       await getQuotes()
+//     }, 1500)
+//     console.log('Order Booked Data', data)
+//   } catch (e) {
+//     console.log('Error Occurred', e)
+//   } finally {
+//     loading.value = false
+//   }
+// }
 
 const onClickBookOrder = async (event: any) => {
   console.log('Book Order event', event)
@@ -165,33 +154,11 @@ const onClickBookOrder = async (event: any) => {
   })
     .onOk(async () => {
       console.log('Order Booked')
-      await bookOrder(event)
+      await quoteStore.bookOrder(event.row)
     })
     .onCancel(() => {
       console.log('>>>> Cancel')
     })
-    .onDismiss(() => {
-      // console.log('I am triggered on both OK and Cancel')
-    })
-}
-
-const tableRef = ref(null)
-async function deleteQuote(event: any) {
-  loading.value = true
-  try {
-    const { data } = await useFetch('/api/delete-quote', {
-      method: 'POST',
-      body: { id: event.id },
-    })
-    setTimeout(async () => {
-      await getQuotes()
-    }, 1500)
-    console.log('Quote Deleted Data', data)
-  } catch (e) {
-    console.log('Error Occurred', e)
-  } finally {
-    loading.value = false
-  }
 }
 
 const onClickDeleteQuote = async (event: any) => {
@@ -204,25 +171,21 @@ const onClickDeleteQuote = async (event: any) => {
   })
     .onOk(async () => {
       console.log('Deleted Order')
-      await deleteQuote(event.row)
+      await quoteStore.deleteQuote(event.row.id)
     })
     .onCancel(() => {
       console.log('>>>> Cancel')
-    })
-    .onDismiss(() => {
-      // console.log('I am triggered on both OK and Cancel')
     })
 }
 </script>
 
 <template>
   <q-table
-    :rows="rowData"
+    :rows="quotes"
     :columns="columns()"
     :loading="loading"
     square
     flat
-    ref="tableRef"
     :binary-state-sort="true"
     column-sort-order="da"
     style="height: 738px"

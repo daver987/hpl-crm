@@ -1,17 +1,47 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { Quote } from '~/schema/quote'
 
 export const useQuoteStore = defineStore('useQuoteStore', {
-  state: () => ({
-    quoteNumber: 0 as number | string | null,
-    isRoundTrip: false,
-    quoteData: {} as Quote | null,
-  }),
-  getters: {
-    //
+  state: () => {
+    return {
+      loading: false,
+      quotes: null,
+    }
   },
   actions: {
-    //
+    async getQuotes() {
+      try {
+        const data = await $fetch('/api/get-quotes')
+        this.loading = true
+        this.quotes = data
+        console.log('Quotes:', this.quotes)
+        this.loading = false
+      } catch (error) {
+        alert(error)
+      }
+    },
+    async deleteQuote(id: string) {
+      try {
+        await $fetch('/api/delete-quote', {
+          method: 'POST',
+          body: JSON.stringify({ id }),
+        })
+        //@ts-ignore
+        this.quotes = this.quotes?.filter((quote: any) => quote.id !== id)
+      } catch (error) {
+        alert(error)
+      }
+    },
+    async bookOrder(row: any) {
+      try {
+        await $fetch('/api/book-order', {
+          method: 'POST',
+          body: JSON.stringify({ row }),
+        })
+        await this.getQuotes()
+      } catch (error) {
+        alert(error)
+      }
+    },
   },
 })
 

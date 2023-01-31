@@ -5,12 +5,17 @@ export default defineNuxtConfig({
   },
   css: ['assets/styles/main.scss'],
   modules: [
-    '@pinia/nuxt',
     '@nuxtjs/supabase',
     'nuxt-quasar-vite',
     '@vueuse/nuxt',
     'nuxt-vitest',
     '@unocss/nuxt',
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
+      },
+    ],
   ],
   build: {
     transpile: ['quasar'],

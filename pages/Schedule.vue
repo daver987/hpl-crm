@@ -3,11 +3,9 @@
 </script>
 
 <template>
-  <q-page padding> 
-    <QuoteForm/>
+  <q-page padding>
+    <EntryForm />
   </q-page>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

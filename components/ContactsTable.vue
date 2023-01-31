@@ -1,32 +1,38 @@
 <script lang="ts" setup>
+import { useContactsStore } from '~/stores/useContactsStore'
+import { storeToRefs } from 'pinia'
+
+const contactsStore = useContactsStore()
+const { contacts, loading } = storeToRefs(contactsStore)
+await contactsStore.getContacts()
+console.log('Contacts', contacts)
+
 const { capitalize } = qformat
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
 }
-
 const isCompact = ref(false)
 const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
 
-const loading = ref(false)
-const rowData = ref()
-const getContacts = async () => {
-  loading.value = true
-  try {
-    const { data, refresh: refreshQuoteData } = await useFetch(
-      '/api/get-contacts'
-    )
-    console.log(rowData.value)
-    rowData.value = data.value
-  } catch (error) {
-    alert(error)
-  } finally {
-    loading.value = false
-  }
-}
-await getContacts()
+// const rowData = ref()
+// const getContacts = async () => {
+//   loading.value = true
+//   try {
+//     const { data, refresh: refreshQuoteData } = await useFetch(
+//       '/api/get-contacts'
+//     )
+//     console.log(rowData.value)
+//     rowData.value = data.value
+//   } catch (error) {
+//     alert(error)
+//   } finally {
+//     loading.value = false
+//   }
+// }
+// await getContacts()
 
 const pagination = {
   rowsPerPage: 12,
@@ -76,7 +82,7 @@ const filter = ref('')
 
 <template>
   <q-table
-    :rows="rowData"
+    :rows="contacts"
     :columns="columns"
     :loading="loading"
     :pagination="pagination"

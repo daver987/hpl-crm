@@ -4,7 +4,6 @@ import { Database } from '~/types/supabase'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const supabase = serverSupabaseClient<Database>(event)
-  console.log(body)
   const webhookUrl = useRuntimeConfig().ZAPIER_WEBHOOK_BOOK_ORDER
   try {
     const getVehicleType = async () => {

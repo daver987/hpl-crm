@@ -26,6 +26,11 @@ function toggleLeftDrawer() {
   miniMode.value = !miniMode.value
 }
 
+const rightDrawerOpen = ref(false)
+function toggleRightDrawer() {
+  rightDrawerOpen.value = !rightDrawerOpen.value
+}
+
 const $q = useQuasar()
 const isDark = ref(true)
 const toggleDarkMode = () => {
@@ -35,7 +40,7 @@ const toggleDarkMode = () => {
 </script>
 
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHr lpR fFr">
     <q-header class="bg-dark" bordered>
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -101,6 +106,9 @@ const toggleDarkMode = () => {
           <q-item-section click="signOut"> Log Out</q-item-section>
         </q-item>
       </q-list>
+    </q-drawer>
+    <q-drawer v-model="rightDrawerOpen" side="right" overlay bordered>
+      <!-- drawer content -->
     </q-drawer>
 
     <q-page-container>
