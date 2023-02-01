@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const conversations = [
+import { Client as ConversationsClient } from '@twilio/conversations'
+
+const conversations1 = [
   {
     id: 1,
     person: 'Razvan Stoenescu',
@@ -40,13 +42,85 @@ const search = ref('')
 const sentMessage = ref('')
 const message = ref('')
 const currentConversationIndex = ref(0)
-const currentConversation = computed(() => {
-  return conversations[currentConversationIndex.value]
+
+const name = localStorage.getItem('name') || ''
+const loggedIn = name !== ''
+const token = ref(null)
+const statusString = ref(null)
+const conversationsReady = ref(false)
+const conversations = ref([])
+const selectedConversationSid = ref(null)
+const newMessage = ref('')
+const conversationsClient = ref(null)
+
+const getToken = () => {
+  token.value = '<Your token here>'
+  initConversations()
+}
+
+const initConversations = async () => {
+  conversationsClient.value = await window.ConversationsClient.create(
+    token.value
+  )
+  statusString.value = 'Connecting to Twilio…'
+
+  conversationsClient.value.on('connectionStateChanged', (state: string) => {
+    if (state === 'connecting') {
+      statusString.value = 'Connecting to Twilio…'
+    }
+    if (state === 'connected') {
+      statusString.value = 'You are connected.'
+    }
+    if (state === 'disconnecting') {
+      statusString.value = 'Disconnecting from Twilio…'
+      conversationsReady.value = false
+    }
+    if (state === 'disconnected') {
+      statusString.value = 'Disconnected.'
+      conversationsReady.value = false
+    }
+    if (state === 'denied') {
+      statusString.value = 'Failed to connect.'
+      conversationsReady.value = false
+    }
+  })
+
+  conversationsClient.value.on('conversationJoined', (conversation: any) => {
+    conversations.value = [...conversations.value, conversation]
+  })
+
+  conversationsClient.value.on('conversationLeft', (thisConversation: any) => {
+    conversations.value = [
+      ...conversations.value.filter((it) => it !== thisConversation),
+    ]
+  })
+}
+
+const logIn = (name: string) => {
+  if (name !== '') {
+    localStorage.setItem('name', name)
+    getToken()
+  }
+}
+
+const logOut = (event: { preventDefault: () => void } | undefined) => {
+  if (event) {
+    event.preventDefault()
+  }
+  localStorage.removeItem('name')
+  conversationsClient?.value?.shutdown()
+}
+
+onMounted(() => {
+  if (loggedIn) {
+    getToken()
+    statusString.value = 'Fetching credentials…'
+  }
 })
-const style = computed(() => ({
-  height: $q.screen.height + 'px',
-}))
-console.log(style.value)
+
+onUnmounted(() => {
+  logOut()
+})
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -69,7 +143,6 @@ const sendMessage = async () => {
       },
     })
     setTimeout(async () => {
-      await console.log('Returned Messaging:', data.value)
       message.value = sentMessage.value
       $q.notify('Message Sent')
       sentMessage.value = ''
@@ -79,24 +152,6 @@ const sendMessage = async () => {
   } finally {
     sendingMessage.value = false
   }
-}
-
-const getInitialConversation = async () => {
-  const { data } = await useFetch('/api/get-conversation')
-  return data
-}
-const initConversation = await getInitialConversation()
-console.log('Init Conversations', initConversation)
-
-const isOpen = ref(false)
-
-const newConversation = async (safeName: string) => {
-  const { data: newConversation } = await useFetch('/api/create-chat', {
-    body: {
-      safeName,
-    },
-  })
-  console.log('Returned Conversation', newConversation)
 }
 
 function startConversation() {
@@ -110,10 +165,7 @@ function startConversation() {
     cancel: true,
     persistent: true,
   })
-    .onOk(async (data: string) => {
-      console.log('>>>> OK, received', data)
-      await newConversation(data)
-    })
+    .onOk(async (data: string) => {})
     .onCancel(() => {
       // console.log('>>>> Cancel')
     })
@@ -268,7 +320,7 @@ function startConversation() {
                 </q-item-label>
                 <q-item-label class="conversation__summary" caption>
                   <q-icon name="check" v-if="conversation.sent" />
-                  <q-icon name="not_interested" v-if="conversation.deleted" />
+                  <q-icon name="not_interested" v-if="conversation" />
                   {{ conversation.caption }}
                 </q-item-label>
               </q-item-section>
@@ -319,9 +371,6 @@ function startConversation() {
           <q-btn @click="sendMessage" round flat icon="send" />
         </q-toolbar>
       </q-footer>
-      <q-dialog v-model="isOpen">
-        <Autocomplete />
-      </q-dialog>
     </q-layout>
   </div>
 </template>
