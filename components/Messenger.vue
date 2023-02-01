@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Client as ConversationsClient } from '@twilio/conversations'
-
-const conversations1 = [
+import { format } from 'date-fns'
+const conversations = [
   {
     id: 1,
     person: 'Razvan Stoenescu',
@@ -43,84 +42,10 @@ const sentMessage = ref('')
 const message = ref('')
 const currentConversationIndex = ref(0)
 
-const name = localStorage.getItem('name') || ''
-const loggedIn = name !== ''
-const token = ref(null)
-const statusString = ref(null)
-const conversationsReady = ref(false)
-const conversations = ref([])
-const selectedConversationSid = ref(null)
-const newMessage = ref('')
-const conversationsClient = ref(null)
-
-const getToken = () => {
-  token.value = '<Your token here>'
-  initConversations()
-}
-
-const initConversations = async () => {
-  conversationsClient.value = await window.ConversationsClient.create(
-    token.value
-  )
-  statusString.value = 'Connecting to Twilio…'
-
-  conversationsClient.value.on('connectionStateChanged', (state: string) => {
-    if (state === 'connecting') {
-      statusString.value = 'Connecting to Twilio…'
-    }
-    if (state === 'connected') {
-      statusString.value = 'You are connected.'
-    }
-    if (state === 'disconnecting') {
-      statusString.value = 'Disconnecting from Twilio…'
-      conversationsReady.value = false
-    }
-    if (state === 'disconnected') {
-      statusString.value = 'Disconnected.'
-      conversationsReady.value = false
-    }
-    if (state === 'denied') {
-      statusString.value = 'Failed to connect.'
-      conversationsReady.value = false
-    }
-  })
-
-  conversationsClient.value.on('conversationJoined', (conversation: any) => {
-    conversations.value = [...conversations.value, conversation]
-  })
-
-  conversationsClient.value.on('conversationLeft', (thisConversation: any) => {
-    conversations.value = [
-      ...conversations.value.filter((it) => it !== thisConversation),
-    ]
-  })
-}
-
-const logIn = (name: string) => {
-  if (name !== '') {
-    localStorage.setItem('name', name)
-    getToken()
-  }
-}
-
-const logOut = (event: { preventDefault: () => void } | undefined) => {
-  if (event) {
-    event.preventDefault()
-  }
-  localStorage.removeItem('name')
-  conversationsClient?.value?.shutdown()
-}
-
-onMounted(() => {
-  if (loggedIn) {
-    getToken()
-    statusString.value = 'Fetching credentials…'
-  }
-})
-
-onUnmounted(() => {
-  logOut()
-})
+const { data } = await useFetch('/api/get-messages')
+const initConversation = sortArrayByDate(data.value)
+console.log(initConversation)
+// const toMessages = data.value
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -173,6 +98,12 @@ function startConversation() {
       // console.log('I am triggered on both OK and Cancel')
     })
 }
+
+function sortArrayByDate(arr: any[]): any[] {
+  return arr.sort(
+    (a: any, b: any) => new Date(a.dateUpdated) - new Date(b.dateUpdated)
+  )
+}
 </script>
 
 <template>
@@ -199,12 +130,12 @@ function startConversation() {
 
           <q-btn round flat>
             <q-avatar>
-              <img :src="currentConversation.avatar" alt="avatar" />
+              <img :src="currentConversation?.avatar" alt="avatar" />
             </q-avatar>
           </q-btn>
 
           <span class="q-subtitle-1 q-pl-md">
-            {{ currentConversation.person }}
+            {{ currentConversation?.person }}
           </span>
 
           <q-space />
@@ -340,17 +271,22 @@ function startConversation() {
         <div class="q-pa-md row justify-center">
           <div style="width: 100%; max-width: 400px">
             <q-chat-message
-              bg-color="blue-8"
-              name="me"
-              :text="['hey, how are you?']"
-              sent
-            />
-            <q-chat-message
               v-for="item in initConversation"
-              bg-color="grey-4"
-              :name="item.author"
+              :key="item.sid"
+              :bg-color="
+                item.direction === 'outbound-api' ? 'blue-8' : 'grey-4'
+              "
+              :name="item.direction === 'outbound-api' ? item.to : item.from"
               :text="[item.body]"
+              :sent="item.direction === 'outbound-api'"
+              :stamp="format(new Date(item.dateUpdated), 'MMM dd, yyyy hh:mm')"
             />
+            <!--              <q-chat-message-->
+            <!--                v-if="item.direction === 'inbound'"-->
+            <!--                bg-color="grey-4"-->
+            <!--                :name="item.from"-->
+            <!--                :text="[item.body]"-->
+            <!--              />-->
           </div>
         </div>
       </q-page-container>

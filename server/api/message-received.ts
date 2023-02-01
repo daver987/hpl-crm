@@ -1,10 +1,14 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { Database } from '~/types/supabase'
+import twilio from 'twilio'
 
 export default defineEventHandler(async (event) => {
   try {
     const supabase = serverSupabaseClient<Database>(event)
     const query = await getQuery(event)
+    const { MessagingResponse } = twilio.twiml
+    const twiml = new MessagingResponse()
+    twiml.message('Successfully Received')
     const { SmsMessageSid, SmsStatus, Body, From } = query
     const { data, error } = await supabase.from('messages').insert([
       {
@@ -15,7 +19,7 @@ export default defineEventHandler(async (event) => {
         status: SmsStatus,
       },
     ])
-    return { success: 201 }
+    return twiml.toString()
   } catch (e) {
     return e
   }

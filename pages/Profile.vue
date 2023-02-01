@@ -7,7 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <q-page padding><QuoteCard /></q-page>
+  <q-page padding><Chat /></q-page>
 </template>
 
 <style scoped></style>
