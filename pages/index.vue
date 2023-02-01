@@ -2,9 +2,17 @@
 import { useQuoteStore } from '~/stores/useQuoteStore'
 import { storeToRefs } from 'pinia'
 
+const supabase = useSupabaseClient()
+const { data: orderData } = await useFetch('/api/order-count')
+//@ts-ignore
+const { count: orderCount, data: totalOrders } = orderData.value
+const totalOrdersValue = totalOrders?.reduce(
+  (sum: any, trip: any) => sum + trip.roundTripTotal,
+  0
+)
 const quoteStore = useQuoteStore()
-const { quoteCount, loading, quotes, quoteCountToday, orderCount } =
-  storeToRefs(quoteStore)
+//@ts-ignore
+const { quoteCount, loading, quotes, quoteCountToday } = storeToRefs(quoteStore)
 quoteStore.getQuoteCount()
 
 definePageMeta({
@@ -31,7 +39,7 @@ definePageMeta({
       <q-card class="col bg-orange">
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
-            <div class="text-h6">Today's Orders</div>
+            <div class="text-h6">Total Orders</div>
             <div class="text-h6">{{ orderCount }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
@@ -66,8 +74,8 @@ definePageMeta({
       <q-card class="col bg-orange">
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
-            <div class="text-h6">Total Orders Value</div>
-            <div class="text-h6">${{ orderCount }}</div>
+            <div class="text-h6">Total Orders from Ads Value</div>
+            <div class="text-h6">${{ totalOrdersValue.toFixed(2) }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
             <q-icon name="request_quote" size="4rem" />
@@ -77,7 +85,7 @@ definePageMeta({
       <q-card class="col bg-purple">
         <q-card-section horizontal class="row justify-between">
           <q-card-section>
-            <div class="text-h6">Active Quotes</div>
+            <div class="text-h6">Total Quotes</div>
             <div class="text-h6">{{ quoteCount }}</div>
           </q-card-section>
           <q-card-section class="flex row justify-end">
