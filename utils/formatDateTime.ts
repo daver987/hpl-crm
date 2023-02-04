@@ -1,36 +1,24 @@
-import { format, isValid, isMatch, parse } from 'date-fns'
+import { format,toDate } from 'date-fns'
 
-export const formatDateTime = (date: string) => {
+
+
+export const formatDateTime = (date: any) => {
   return format(new Date(date), 'MMMM dd, yyyy hh:mm a')
 }
 
-function fixDateString(date: string) {
-  const dateParts = date.split('-')
-  return [dateParts[2], dateParts[1], dateParts[0]].join('-')
+
+
+const formatDate = (date: any) => {
+ return toDate(new Date(date))
 }
 
-export const dateValidator = (dateString: string) => {
-  const isOldFormat = isMatch(dateString, 'dd-MM-yyyy')
-  if (isOldFormat) {
-    const fixedDate = fixDateString(dateString)
-    const newFormattedDate = parse(fixedDate, 'yyyy-MM-dd', new Date())
-    return format(newFormattedDate, 'MMMM dd, yyyy')
-  } else if (isValid(new Date(dateString))) {
-    return formatDate(dateString)
-  } else {
-    return dateString
-  }
-}
-const timeValidator = (timeString: string) => {
-  if (isValid(new Date(timeString))) {
-    return formatTime(timeString)
-  } else {
-    return timeString
-  }
+const formatTime = (time: any) => {
+  return toDate(new Date(time))
 }
 
 export const concatDateTime = (dateString: string, timeString: string) => {
-  const date = dateValidator(dateString)
-  const time = timeValidator(timeString)
+  const date = format(formatDate(dateString), 'MMMM dd, yyyy')
+  const time = format(formatTime(timeString), 'hh:mm a')
   return `${date} ${time}`
 }
+

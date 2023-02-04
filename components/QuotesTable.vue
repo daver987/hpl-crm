@@ -47,13 +47,14 @@ const columns = () => [
       capitalize(row.firstName) + ' ' + capitalize(row.lastName),
   },
   {
-    name: 'pickupDate',
+    name: 'pickup_date',
     align: 'left',
     label: 'Pickup Date & Time',
     sortable: true,
-    field: (row: any) => concatDateTime(row.pickupDate, row.pickupTime),
-  },
+    field: (row: any) => qdate.formatDate(new Date(row.pickupDate),'MMMM D, YYYY') + ' ' + qdate.formatDate(row.pickupTime,'HH:mm A')
+    // field: (row: any) => concatDateTime(row.pickupDate, row.pickupTime)
 
+  },
   {
     name: 'userEmail',
     align: 'left',
@@ -67,18 +68,18 @@ const columns = () => [
     field: 'phone_number',
   },
   {
-    name: 'originName',
+    name: 'origin_name',
     align: 'left',
     label: 'Pickup',
     field: (row: any) =>
-      formatAddress(row.originName, row.originFormattedAddress),
+      formatAddress(row.origin_name, row.origin_formatted_address),
   },
   {
-    name: 'destinationName',
+    name: 'destination_name',
     align: 'left',
     label: 'Drop Off',
     field: (row: any) =>
-      formatAddress(row.destinationName, row.destinationFormattedAddress),
+      formatAddress(row.destination_name, row.destination_formatted_address),
   },
   {
     name: 'serviceTypeLabel',
@@ -105,7 +106,6 @@ const columns = () => [
     label: 'Return',
     field: 'isRoundTrip',
   },
-
   {
     name: 'status',
     align: 'center',

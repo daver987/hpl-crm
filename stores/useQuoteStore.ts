@@ -56,7 +56,6 @@ export const useQuoteStore = defineStore('useQuoteStore', {
           method: 'POST',
           body: JSON.stringify({ id }),
         })
-        //@ts-ignore
         this.quotes = this.quotes?.filter((quote: any) => quote.id !== id)
       } catch (error) {
         alert(error)
