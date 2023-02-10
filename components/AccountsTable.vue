@@ -11,6 +11,7 @@ const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
 }
+
 const isCompact = ref(false)
 const toggleCompact = () => {
   isCompact.value = !isCompact.value

@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     const supabase = serverSupabaseClient<Database>(event)
     const { data } = await supabase
       .from('quotes')
-      .select()
+      .select('*,user(*)')
       .order('quote_number', { ascending: false })
     return data
   } catch (e) {

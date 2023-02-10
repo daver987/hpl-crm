@@ -17,22 +17,22 @@ const toggleCompact = () => {
   isCompact.value = !isCompact.value
 }
 
-// const rowData = ref()
-// const getContacts = async () => {
-//   loading.value = true
-//   try {
-//     const { data, refresh: refreshQuoteData } = await useFetch(
-//       '/api/get-contacts'
-//     )
-//     console.log(rowData.value)
-//     rowData.value = data.value
-//   } catch (error) {
-//     alert(error)
-//   } finally {
-//     loading.value = false
-//   }
-// }
-// await getContacts()
+const rowData = ref()
+const getContacts = async () => {
+  loading.value = true
+  try {
+    const { data, refresh: refreshQuoteData } = await useFetch(
+      '/api/get-contacts'
+    )
+    console.log(rowData.value)
+    rowData.value = data.value
+  } catch (error) {
+    alert(error)
+  } finally {
+    loading.value = false
+  }
+}
+await getContacts()
 
 const pagination = {
   rowsPerPage: 12,
@@ -48,23 +48,23 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'firstName',
+    name: 'first_name',
     align: 'left',
     label: 'Name',
     field: (row: any) =>
-      capitalize(row.firstName) + ' ' + capitalize(row.lastName),
+      capitalize(row.first_name) + ' ' + capitalize(row.last_name),
   },
   {
-    name: 'emailAddress',
+    name: 'email_address',
     align: 'left',
     label: 'Email',
-    field: 'emailAddress',
+    field: 'email_address',
   },
   {
-    name: 'phoneNumber',
+    name: 'phone_number',
     align: 'left',
     label: 'Phone',
-    field: 'phoneNumber',
+    field: 'phone_number',
   },
   {
     name: 'add_remove',
@@ -139,23 +139,23 @@ const filter = ref('')
         </template>
       </q-input>
     </template>
-    <template #body-cell-emailAddress="props">
+    <template #body-cell-email_address="props">
       <q-td key="name" :props="props">
         <NuxtLink
-          :href="`mailto:${props.row.emailAddress}`"
+          :href="`mailto:${props.row.email_address}`"
           style="text-decoration: none"
           class="text-blue-7"
-          >{{ props.row.emailAddress }}
+          >{{ props.row.email_address }}
         </NuxtLink>
       </q-td>
     </template>
 
-    <template #body-cell-phoneNumber="props">
+    <template #body-cell-phone_number="props">
       <q-td key="name" :props="props">
         <NuxtLink
-          :href="`tel:${props.row.phoneNumber}`"
+          :href="`tel:${props.row.phone_number}`"
           class="text-indigo-5 text-bold"
-          >{{ props.row.phoneNumber }}
+          >{{ props.row.phone_number }}
         </NuxtLink>
       </q-td>
     </template>

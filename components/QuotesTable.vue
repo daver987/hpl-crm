@@ -8,7 +8,7 @@ await quoteStore.getQuotes()
 
 const filter = ref('')
 const $q = useQuasar()
-const { capitalize } = qformat
+const { capitalize  } = qformat
 const isGrid = ref(false)
 const toggleGrid = () => {
   isGrid.value = !isGrid.value
@@ -44,7 +44,7 @@ const columns = () => [
     align: 'left',
     label: 'Name',
     field: (row: any) =>
-      capitalize(row.firstName) + ' ' + capitalize(row.lastName),
+      `${capitalize(row.user.firstName.toLowerCase())} ${capitalize(row.user.lastName.toLowerCase())}`,
   },
   {
     name: 'pickup_date',
@@ -59,13 +59,13 @@ const columns = () => [
     name: 'userEmail',
     align: 'left',
     label: 'Email',
-    field: 'userEmail',
+    field: 'user.email_address',
   },
   {
     name: 'phone_number',
     align: 'left',
     label: 'Phone',
-    field: 'phone_number',
+    field: 'user.phone_number',
   },
   {
     name: 'origin_name',

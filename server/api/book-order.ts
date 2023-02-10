@@ -1,6 +1,6 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { Database } from '~/types/supabase'
-import { format } from 'date-fns'
+import { format,add } from 'date-fns'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -47,9 +47,10 @@ export default defineEventHandler(async (event) => {
         )[0].limo_anywhere_id
         body.row.pickupDate = format(
           new Date(body.row.pickupDate),
-          'MMM dd, yyyy'
+          'yyyy-MM-dd'
         )
-        body.row.pickupTime = format(new Date(body.row.pickupTime), 'hh:mm a')
+        //adding 1 hour to time for bug in Limo Anywhere
+        body.row.pickupTime = format(new Date(add(new Date(body.row.pickupTime),{hours:1})), 'kk:mm')
         console.log('This is the new body', body)
         const { data, error } = await supabase
           .from('quotes')

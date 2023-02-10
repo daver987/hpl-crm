@@ -16,10 +16,8 @@ export const useQuoteStore = defineStore('useQuoteStore', {
     async getQuotes() {
       try {
         const data = await $fetch('/api/get-quotes')
-        this.loading = true
         this.quotes = data
         console.log('Quotes:', this.quotes)
-        this.loading = false
       } catch (error) {
         alert(error)
       }
