@@ -5,6 +5,12 @@ import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Stripe } from 'stripe'
 type RowData = Stripe.Customer
 
+type CustomerData = {
+  name?: string
+  email?: string
+  phone?: string
+}
+
 const refTable = ref(null)
 const loading = ref(false)
 const message = useMessage()
@@ -18,6 +24,8 @@ async function getCustomers() {
   }, 500)
   return customers
 }
+
+const customers = await getCustomers()
 
 const deleteCustomer = (stripeCustomerId: string) => {
   const d = dialog.success({
@@ -42,12 +50,6 @@ const deleteCustomer = (stripeCustomerId: string) => {
   })
 }
 
-type CustomerData = {
-  name?: string
-  email?: string
-  phone?: string
-}
-
 const updateCustomer = async (id: string, options: CustomerData) => {
   const updatedCustomer = await useTrpc().customer.update.mutate({
     id,
@@ -55,8 +57,6 @@ const updateCustomer = async (id: string, options: CustomerData) => {
   })
   console.log('Customer Updated', updatedCustomer)
 }
-
-const customers = await getCustomers()
 
 const rowKey = (row: RowData) => row.id
 
