@@ -6,7 +6,7 @@ definePageMeta({
 </script>
 
 <template>
-  <auth-form
+  <!-- <auth-form
     :sign-up="true"
     title="Good to have you"
     subtitle="We just need some details from you"
@@ -23,5 +23,5 @@ definePageMeta({
         >
       </q-card-section>
     </template>
-  </auth-form>
+  </auth-form> -->
 </template>

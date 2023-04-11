@@ -1,9 +1,16 @@
 <script lang="ts" setup>
 import { ref } from '#imports'
+import { NuxtLink } from '#components'
 import { NTag, NButton, useMessage, useDialog } from 'naive-ui'
+
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Stripe } from 'stripe'
 type RowData = Stripe.Customer
+type CustomerData = {
+  name?: string
+  email?: string
+  phone?: string
+}
 
 const refTable = ref(null)
 const loading = ref(false)
@@ -18,6 +25,8 @@ async function getCustomers() {
   }, 500)
   return customers
 }
+
+const customers = await getCustomers()
 
 const deleteCustomer = (stripeCustomerId: string) => {
   const d = dialog.success({
@@ -42,12 +51,6 @@ const deleteCustomer = (stripeCustomerId: string) => {
   })
 }
 
-type CustomerData = {
-  name?: string
-  email?: string
-  phone?: string
-}
-
 const updateCustomer = async (id: string, options: CustomerData) => {
   const updatedCustomer = await useTrpc().customer.update.mutate({
     id,
@@ -55,8 +58,6 @@ const updateCustomer = async (id: string, options: CustomerData) => {
   })
   console.log('Customer Updated', updatedCustomer)
 }
-
-const customers = await getCustomers()
 
 const rowKey = (row: RowData) => row.id
 
@@ -71,18 +72,17 @@ const createColumns = (): DataTableColumns<RowData> => [
       tooltip: true,
     },
   },
-
   {
     key: 'email',
     title: 'Email',
     render(row) {
       return h(
-        'a',
+        NuxtLink,
         {
           href: `mailto:${row.email}`,
           style: { color: '#93c5fd' },
         },
-        row.email
+        { default: () => row.email }
       )
     },
     ellipsis: {
@@ -94,12 +94,13 @@ const createColumns = (): DataTableColumns<RowData> => [
     title: 'Phone',
     render(row) {
       return h(
-        'a',
+        NuxtLink,
         {
           href: `tel:${row.phone}`,
           style: { color: '#93c5fd' },
         },
-        row.phone
+        { default: () => row.phone }
+
       )
     },
     ellipsis: {

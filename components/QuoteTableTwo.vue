@@ -22,7 +22,7 @@ async function handleBook(quoteNumber: number) {
   await useTrpc().ride.book.mutate({ quote_number: quoteNumber })
 }
 
-async function getQuoteResult(): GetQuoteResult {
+async function getQuoteResult() {
   return await useTrpc().quote.getAll.query()
 }
 

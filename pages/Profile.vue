@@ -71,15 +71,12 @@ definePageMeta({
 </script>
 
 <template>
-  <q-page padding>
-    <q-card>
-      <q-card-section> Format Json for DB</q-card-section>
-      <q-card-actions>
-        <!--        <q-btn @click="submitQuotes(modifiedQuotes)" color="blue">Submit</q-btn>-->
-      </q-card-actions>
-    </q-card>
-    <!--    <pre>{{ returnedQuote }}</pre>-->
-  </q-page>
+  <n-layout-content style="padding: 24px">
+    <n-card title="Profile Page">
+      
+    </n-card>
+  </n-layout-content>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

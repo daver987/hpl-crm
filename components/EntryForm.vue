@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <q-layout view="hHh lpR fFf" container style="height: 1000px">
+  <!-- <q-layout view="hHh lpR fFf" container style="height: 1000px">
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title> Create New Quote </q-toolbar-title>
@@ -40,7 +40,8 @@
         </q-card-section>
       </q-card>
     </q-page-container>
-  </q-layout>
+  </q-layout> -->
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
