@@ -50,11 +50,11 @@ model User {
   is_customer          Boolean      @default(false)
   account_id           String?
   notes                String?
-  payment_method       String?
   meta_data            Json?
   full_name            String?
   email_verified       DateTime?
   image                String?
+  payment_method       String?
   sessions             Session[]
   quotes               Quote[]
   account              Account?     @relation(fields: [account_id], references: [id])
@@ -149,7 +149,7 @@ model Quote {
 model Trip {
   id                  String     @id @unique @default(uuid())
   created_at          DateTime   @default(now())
-  updated_at          DateTime   @updatedAt()
+  updated_at          DateTime   @updatedAt
   pickup_date         String?
   pickup_time         String?
   distance_text       String?
@@ -319,7 +319,7 @@ model Vehicle {
 
 model LineItemToQuote {
   A String
-  B Int
+  B String
 
   @@unique([A, B], map: "_LineItemToQuote_AB_unique")
   @@index([B], map: "_LineItemToQuote_B_index")
