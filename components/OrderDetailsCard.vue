@@ -1,7 +1,5 @@
 <template>
-  <q-card>
-    <q-card-section>
-      <div class="text-h5">This is a card</div>
-    </q-card-section>
-  </q-card>
+  <n-card>
+    <div class="text-h5">This is a card</div>
+  </n-card>
 </template>

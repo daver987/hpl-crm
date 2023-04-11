@@ -14,13 +14,13 @@ definePageMeta({
     password-placeholder="Enter your password"
   >
     <template #actions>
-      <q-card-section>
+      <n-card>
         <span class="text-subtitle1">
           Don't have an account?
           <NuxtLink to="/signup" class="font-bold q-ml-sm text-blue-9"
             >Sign up here!</NuxtLink
           ></span
-        ></q-card-section
+        ></n-card
       ></template
     >
   </AuthForm>

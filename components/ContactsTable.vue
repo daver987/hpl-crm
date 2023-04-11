@@ -1,179 +1,134 @@
 <script lang="ts" setup>
-import { useContactsStore } from '~/stores/useContactsStore'
-import { storeToRefs } from 'pinia'
+import { ref } from '#imports'
+import { NButton, useMessage } from 'naive-ui'
+import type { Ref, UnwrapRef } from 'vue'
+import type { DataTableColumns } from 'naive-ui'
 
-const contactsStore = useContactsStore()
-const { contacts, loading } = storeToRefs(contactsStore)
-await contactsStore.getContacts()
-console.log('Contacts', contacts)
+const refTable = ref(null)
+const message = useMessage()
 
-const { capitalize } = qformat
-const isGrid = ref(false)
-const toggleGrid = () => {
-  isGrid.value = !isGrid.value
-}
-const isCompact = ref(false)
-const toggleCompact = () => {
-  isCompact.value = !isCompact.value
-}
+const getTrpcQueryType = () => useTrpc().user.getAll.query()
+type GetUserResult = ReturnType<typeof getTrpcQueryType>
 
-const rowData = ref()
-const getContacts = async () => {
-  loading.value = true
-  try {
-    const { data, refresh: refreshQuoteData } = await useFetch(
-      '/api/get-contacts'
-    )
-    console.log(rowData.value)
-    rowData.value = data.value
-  } catch (error) {
-    alert(error)
-  } finally {
-    loading.value = false
-  }
+type ResolvedGetUserResult = GetUserResult extends Promise<infer T> ? T : never
+
+type UserDataRef = Ref<UnwrapRef<ResolvedGetUserResult>>
+
+type RowData = UserDataRef extends Ref<Array<infer T>> ? T : never
+
+async function getUserResult(): GetUserResult {
+  return await useTrpc().user.getAll.query()
 }
-await getContacts()
+const {
+  data: contactData,
+  suspense,
+  isLoading,
+  refetch: updateContacts,
+} = useQuery({
+  queryKey: ['contacts'],
+  queryFn: getUserResult,
+})
+onServerPrefetch(async () => {
+  await suspense()
+})
+
+const rowKey = (row: RowData) => row.id
 
 const pagination = {
   rowsPerPage: 12,
   sortBy: 'quote_number',
 }
 
-const columns = [
+const createColumns = (): DataTableColumns<RowData> => [
   {
-    name: 'createdAt',
-    align: 'left',
-    label: 'Created',
-    field: (row: any) => formatDateTime(row.updatedAt),
-    sortable: true,
+    key: 'full_name',
+    title: 'Name',
+    render(row) {
+      return `${row.first_name} ${row.last_name}`
+    },
+    ellipsis: {
+      tooltip: true,
+    },
+  },
+
+  {
+    key: 'email',
+    title: 'Email',
+    render(row) {
+      return h(
+        'a',
+        {
+          href: `mailto:${row.email_address}`,
+          style: { color: '#93c5fd' },
+        },
+        row.email_address
+      )
+    },
+    ellipsis: {
+      tooltip: true,
+    },
   },
   {
-    name: 'first_name',
-    align: 'left',
-    label: 'Name',
-    field: (row: any) =>
-      capitalize(row.first_name) + ' ' + capitalize(row.last_name),
+    key: 'phone_number',
+    title: 'Phone',
+    render(row) {
+      return h(
+        'a',
+        {
+          href: `tel:${row.phone_number}`,
+          style: { color: '#93c5fd' },
+        },
+        { default: () => row.phone_number }
+      )
+    },
   },
   {
-    name: 'email_address',
-    align: 'left',
-    label: 'Email',
-    field: 'email_address',
+    title: 'Update',
+    key: 'update',
+    render(row) {
+      return h(
+        NButton,
+        {
+          type: 'info',
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => message.info('Feature Under Construction'),
+        },
+        { default: () => 'Update' }
+      )
+    },
   },
   {
-    name: 'phone_number',
-    align: 'left',
-    label: 'Phone',
-    field: 'phone_number',
-  },
-  {
-    name: 'add_remove',
-    align: 'center',
-    label: 'Edit / Delete',
-  },
-  {
-    name: 'details',
-    align: 'center',
-    label: 'Details',
+    title: 'Delete',
+    key: 'delete',
+    render(row) {
+      return h(
+        NButton,
+        {
+          type: 'error',
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => message.info('Feature Under Construction'),
+        },
+        { default: () => 'Delete' }
+      )
+    },
   },
 ]
-const filter = ref('')
+
+const columns = createColumns()
 </script>
 
 <template>
-  <q-table
-    :rows="contacts"
+  <n-data-table
+    :max-height="625"
+    ref="refTable"
+    remote
+    :data="contactData"
+    :loading="isLoading"
     :columns="columns"
-    :loading="loading"
-    :pagination="pagination"
-    square
-    flat
-    :grid="isGrid"
-    :dense="isCompact"
-    :filter="filter"
-    row-key="name"
-    table-header-class="bg-grey-9"
-  >
-    <template v-slot:top="props">
-      <q-btn
-        :disable="loading"
-        label="Add New"
-        outline
-        color="primary"
-        size="sm"
-      />
-      <q-space />
-      <q-btn
-        flat
-        round
-        dense
-        :icon="isCompact ? 'expand' : 'view_compact_alt'"
-        @click="toggleCompact"
-        class="q-ml-md"
-      />
-      <q-btn
-        flat
-        round
-        dense
-        :icon="isGrid ? 'menu' : 'grid_3x3'"
-        @click="toggleGrid"
-        class="q-ml-md"
-      />
-      <q-btn
-        flat
-        round
-        dense
-        :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-        @click="props.toggleFullscreen"
-        class="q-ml-md"
-      />
-      <q-input
-        dense
-        debounce="300"
-        outlined
-        v-model="filter"
-        placeholder="Search"
-      >
-        <template v-slot:append>
-          <q-icon name="search" />
-        </template>
-      </q-input>
-    </template>
-    <template #body-cell-email_address="props">
-      <q-td key="name" :props="props">
-        <NuxtLink
-          :href="`mailto:${props.row.email_address}`"
-          style="text-decoration: none"
-          class="text-blue-7"
-          >{{ props.row.email_address }}
-        </NuxtLink>
-      </q-td>
-    </template>
-
-    <template #body-cell-phone_number="props">
-      <q-td key="name" :props="props">
-        <NuxtLink
-          :href="`tel:${props.row.phone_number}`"
-          class="text-indigo-5 text-bold"
-          >{{ props.row.phone_number }}
-        </NuxtLink>
-      </q-td>
-    </template>
-    <template #body-cell-details="props">
-      <q-td key="name" :props="props">
-        <q-btn icon="pageview" color="info" size="sm" round />
-      </q-td>
-    </template>
-
-    <template #body-cell-add_remove="props">
-      <q-td key="details" :props="props">
-        <div class="q-gutter-sm">
-          <q-btn icon="edit" size="sm" round color="teal-6" />
-          <q-btn icon="delete" size="sm" round color="negative" />
-        </div>
-      </q-td>
-    </template>
-  </q-table>
+    :row-key="rowKey"
+  />
 </template>
-
-<style scoped></style>

@@ -1,15 +1,13 @@
-// https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
-  nitro: {
-    preset: 'vercel',
-  },
   css: ['assets/styles/main.scss'],
   modules: [
-    '@nuxtjs/supabase',
     'nuxt-quasar-vite',
+    '@nuxtjs/supabase',
     '@vueuse/nuxt',
     'nuxt-vitest',
     '@unocss/nuxt',
+    '@huntersofbook/naive-ui-nuxt',
+    '@nuxtjs/color-mode',
     [
       '@pinia/nuxt',
       {
@@ -18,7 +16,25 @@ export default defineNuxtConfig({
     ],
   ],
   build: {
-    transpile: ['quasar'],
+    transpile: ['quasar', 'libphonenumber-js', 'trpc-nuxt'],
+  },
+  typescript: {
+    strict: true,
+    shim: false,
+  },
+  nitro: {
+    preset: 'vercel',
+  },
+  naiveUI: {
+    themeOverrides: {
+      common: {
+        primaryColor: '#A57C52FF',
+        primaryColorSuppl: 'rgba(165, 124, 82, 1)',
+        primaryColorHover: '#BD9975FF',
+        primaryColorPressed: '#8A6642FF',
+        bodyColor: '#121417',
+      },
+    },
   },
   quasar: {
     // Optional string | boolean
@@ -50,15 +66,15 @@ export default defineNuxtConfig({
     TWILIO_API_SECRET: process.env.TWILIO_API_SECRET,
     ZAPIER_WEBHOOK_SECRET: process.env.ZAPIER_WEBHOOK_SECRET,
     ZAPIER_WEBHOOK_BOOK_ORDER: process.env.ZAPIER_WEBHOOK_BOOK_ORDER,
+    FASTTRACK_PARTNER_ACCESS_KEY: process.env.FASTTRACK_PARTNER_ACCESS_KEY,
+    FASTTRACK_SYSTEM_ID: process.env.FASTTRACK_SYSTEM_ID,
+    FASTTRACK_USER_PASSWORD: process.env.FASTTRACK_USER_PASSWORD,
+    FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
+    NUXT_SECRET: process.env.NUXT_SECRET,
+    EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,
-      siteUrl: 'https://highparklivery.com/',
-      siteName: 'Toronto Car Service | High Park Livery',
-      siteDescription:
-        'A top-rated Toronto car service, High Park Livery provides luxury transportation to and from Toronto Pearson Airport, Billy Bishop Airport, and more.',
-      language: 'en-CA',
-      titleSeparator: '|',
     },
   },
 })

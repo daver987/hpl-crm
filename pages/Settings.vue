@@ -7,7 +7,9 @@ definePageMeta({
 </script>
 
 <template>
-  <q-page padding>Page: foo</q-page>
+  <n-layout-content style="padding: 24px">
+    <n-row>
+      <n-card title="Quote Settings"></n-card>
+    </n-row>
+  </n-layout-content>
 </template>
-
-<style scoped></style>

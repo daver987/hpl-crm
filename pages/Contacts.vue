@@ -7,9 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <q-page>
-    <contacts-table />
-  </q-page>
+  <n-layout-content>
+    <ContactsTable />
+  </n-layout-content>
 </template>
-
-<style scoped></style>

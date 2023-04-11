@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-//scripts
+definePageMeta({
+  middleware: 'auth',
+})
 </script>
 
 <template>
-  <q-page padding>
-    <EntryForm />
-  </q-page>
+  <n-layout-content style="padding: 24px">
+    <n-calendar></n-calendar>
+  </n-layout-content>
 </template>
 
 <style scoped></style>

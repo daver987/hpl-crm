@@ -15,9 +15,9 @@ const options = [
 </script>
 
 <template>
-  <q-page>
+  <n-layout-content>
     <Messenger />
-  </q-page>
+  </n-layout-content>
 </template>
 
 <style scoped></style>

@@ -1,15 +1,11 @@
-import { format,toDate } from 'date-fns'
+import { format, toDate } from 'date-fns'
 
-
-
-export const formatDateTime = (date: any) => {
+export const formatDateTimeTwo = (date: any) => {
   return format(new Date(date), 'MMMM dd, yyyy hh:mm a')
 }
 
-
-
 const formatDate = (date: any) => {
- return toDate(new Date(date))
+  return toDate(new Date(date))
 }
 
 const formatTime = (time: any) => {
@@ -21,4 +17,3 @@ export const concatDateTime = (dateString: string, timeString: string) => {
   const time = format(formatTime(timeString), 'hh:mm a')
   return `${date} ${time}`
 }
-

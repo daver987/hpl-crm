@@ -1,4 +1,19 @@
 <script setup lang="ts">
+const username = useRuntimeConfig().FASTTRACK_USER_EMAIL
+const password = useRuntimeConfig().FASTTRACK_USER_PASSWORD
+
+// async function fetchData() {
+//   try {
+//     await fastTrackApi.authenticate(username, password)
+//     const companies = await fastTrackApi.fetchFastTrackApi('/companies')
+//     console.log(companies)
+//   } catch (error) {
+//     console.error('Error fetching data:', error)
+//   }
+// }
+//
+// fetchData()
+
 // import { Loader } from '@googlemaps/js-api-loader'
 // import { Ref } from 'vue'
 //
