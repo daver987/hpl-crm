@@ -1,7 +1,5 @@
 export default defineNuxtConfig({
-  css: ['assets/styles/main.scss'],
   modules: [
-    'nuxt-quasar-vite',
     '@nuxtjs/supabase',
     '@vueuse/nuxt',
     'nuxt-vitest',

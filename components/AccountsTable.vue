@@ -12,11 +12,6 @@ type CustomerData = {
   phone?: string
 }
 
-type CustomerData = {
-  name?: string
-  email?: string
-  phone?: string
-}
 
 const refTable = ref(null)
 const loading = ref(false)
