@@ -201,7 +201,7 @@ const createColumns = (): DataTableColumns<RowData> => [
   },
   {
     key: 'book',
-    title: 'Book Order',
+    title: 'Book',
     render(row) {
       return h(
         NButton,
