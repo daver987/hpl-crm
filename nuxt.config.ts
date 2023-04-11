@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     ],
   ],
   build: {
-    transpile: ['quasar', 'libphonenumber-js', 'trpc-nuxt'],
+    transpile: ['libphonenumber-js', 'trpc-nuxt'],
   },
   typescript: {
     strict: true,
@@ -34,25 +34,6 @@ export default defineNuxtConfig({
         primaryColorPressed: '#8A6642FF',
         bodyColor: '#121417',
       },
-    },
-  },
-  quasar: {
-    // Optional string | boolean
-    sassVariables: 'assets/styles/variables.scss',
-    // Optional string[]
-    // If you use animations, add Quasar Extra CSS animation URL here.
-    css: [
-      '@quasar/extras/material-icons/material-icons.css',
-      '@quasar/extras/fontawesome-v6/fontawesome-v6.css',
-    ],
-    // List of extra Quasar Plugins
-    // auto-installed: [Platform, Body, Dark, Screen, History, Lang, IconSet]
-    // optional: [AddressbarColor, AppFullscreen, AppVisibility, BottomSheet, Dialog,
-    //            LoadingBar, Loading, Notify, LocalStorage, SessionStorage]
-    plugins: ['Dialog'],
-    /* Quasar UI config -- you'll notice in Quasar docs when you need it */
-    config: {
-      dark: true,
     },
   },
   runtimeConfig: {
@@ -75,6 +56,11 @@ export default defineNuxtConfig({
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,
+    },
+  },
+  vite: {
+    resolve: {
+      alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
     },
   },
 })
