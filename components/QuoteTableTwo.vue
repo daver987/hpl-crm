@@ -277,7 +277,7 @@ async function deleteQuote(quoteNumber: number) {
   if (deletedQuote) {
     message.success('Quote deleted successfully')
     isDeleting.value = false
-    reloadNuxtApp()
+    await await updateQuote()
   } else {
     message.error(
       'Oops Something Went Wrong, Please Reload the page and try again'

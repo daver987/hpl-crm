@@ -12,7 +12,6 @@ type CustomerData = {
   phone?: string
 }
 
-
 const refTable = ref(null)
 const loading = ref(false)
 const message = useMessage()
@@ -101,7 +100,6 @@ const createColumns = (): DataTableColumns<RowData> => [
           style: { color: '#93c5fd' },
         },
         { default: () => row.phone }
-
       )
     },
     ellipsis: {
@@ -171,7 +169,7 @@ const columns = createColumns()
 </script>
 
 <template>
-  <Client>
+  <client-only>
     <n-data-table
       :max-height="625"
       ref="refTable"
@@ -182,5 +180,5 @@ const columns = createColumns()
       :data="customers.data"
       :row-key="rowKey"
     />
-  </Client>
+  </client-only>
 </template>
