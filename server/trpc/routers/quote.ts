@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { formatAddress } from '~/utils/formatAddress'
 import { usePricingEngine } from '~/composables/usePricingEngine'
 import { useFormatDateTime } from '~/composables/useFormatDateTime'
-import { createQuoteFromForm, updateShortLink } from '~/server/utils/trpcUtils'
+import { createQuoteFromForm } from '~/server/utils/trpcUtils'
 import { useLinkShortener } from '~/composables/useLinkShortener'
 import {
   quoteFormReturnSchema,
@@ -268,8 +268,6 @@ export const quoteRouter = router({
         pickup_date,
         pickup_time,
       } = input
-      const aircallSecret = useRuntimeConfig().AIRCALL_API_TOKEN
-      const sendGridKey = useRuntimeConfig().SENDGRID_API_KEY
       const domain = useRuntimeConfig().public.WEBSITE_URL
       const prisma = ctx.prisma
 
