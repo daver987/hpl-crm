@@ -15,7 +15,6 @@ export function createContext(_event: H3Event) {
    */
   return {
     prisma: _event.context.prisma,
-    twilioClient: _event.context.twilioClient,
     stripe: stripe,
   }
 }

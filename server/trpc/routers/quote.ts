@@ -3,9 +3,6 @@ import { z } from 'zod'
 import { formatAddress } from '~/utils/formatAddress'
 import { usePricingEngine } from '~/composables/usePricingEngine'
 import { useFormatDateTime } from '~/composables/useFormatDateTime'
-import { sendQuoteEmail } from '~/server/services/sendGridEmail'
-import { createAircallContact } from '~/server/services/createAircallContact'
-import { sendTwilioSms } from '~/server/services/sendTwilioSms'
 import { createQuoteFromForm, updateShortLink } from '~/server/utils/trpcUtils'
 import { useLinkShortener } from '~/composables/useLinkShortener'
 import {
@@ -275,7 +272,6 @@ export const quoteRouter = router({
       const sendGridKey = useRuntimeConfig().SENDGRID_API_KEY
       const domain = useRuntimeConfig().public.WEBSITE_URL
       const prisma = ctx.prisma
-      const twilioClient = ctx.twilioClient
 
       const pricingEngine = usePricingEngine(
         vehicle,
@@ -394,12 +390,6 @@ export const quoteRouter = router({
       })
       const quote = quoteFormReturnSchema.parse(data)
       shortLink.value = createShortLink(quote.quote_number)
-      await Promise.all([
-        sendQuoteEmail(quote, sendGridKey, shortLink.value),
-        createAircallContact(aircallSecret, quote),
-        updateShortLink(prisma, quote, shortLink.value),
-        sendTwilioSms(twilioClient, first_name, phone_number, shortLink.value),
-      ])
       return quote
     }),
 })
