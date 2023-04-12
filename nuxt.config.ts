@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     shim: false,
   },
   nitro: {
-    preset: 'vercel',
+    preset: 'netlify',
   },
   naiveUI: {
     themeOverrides: {
