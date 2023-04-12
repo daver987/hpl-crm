@@ -2,32 +2,36 @@
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
 import { NTag, NButton, useMessage, useDialog } from 'naive-ui'
+import type { Customer } from '~/composables/fasttrak-api'
 
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
-import type { Stripe } from 'stripe'
-type RowData = Stripe.Customer
+
 type CustomerData = {
   name?: string
   email?: string
   phone?: string
 }
 
+
+const {
+  data: customers,
+  suspense: quoteSuspense,
+  isLoading,
+  refetch: updateCustomers,
+} = useQuery({
+  queryKey: ['customers'],
+  queryFn: () => useTrpc().fasttrak.get.query(),
+})
+onServerPrefetch(async () => {
+  await quoteSuspense()
+})
+
+console.log("Fasttrack Customers", customers)
+
 const refTable = ref(null)
-const loading = ref(false)
 const message = useMessage()
 const dialog = useDialog()
 
-
-async function getCustomers() {
-  loading.value = true
-  const customers = await useTrpc().customer.getAll.query()
-  setTimeout(() => {
-    loading.value = false
-  }, 50)
-  return customers
-}
-
-const customers = await getCustomers()
 
 const deleteCustomer = (stripeCustomerId: string) => {
   const d = dialog.success({
@@ -60,15 +64,27 @@ const updateCustomer = async (id: string, options: CustomerData) => {
   console.log('Customer Updated', updatedCustomer)
 }
 
-const rowKey = (row: RowData) => row.id
+const rowKey = (row: Customer) => row?.customerId
 
-const createColumns = (): DataTableColumns<RowData> => [
+const createColumns = (): DataTableColumns<Customer> => [
+  {
+    key: 'company_name',
+    title: 'Company Name',
+    render(row) {
+      return `${row?.corporateProfileCompanyName}`
+    },
+    ellipsis: {
+      tooltip: true,
+    },
+  },
   {
     key: 'full_name',
     title: 'Name',
     render(row) {
-      return `${row.name}`
+      return `${row.firstName} ${row.lastName}`
     },
+    width: 150,
+    fixed: 'left',
     ellipsis: {
       tooltip: true,
     },
@@ -80,10 +96,10 @@ const createColumns = (): DataTableColumns<RowData> => [
       return h(
         NuxtLink,
         {
-          href: `mailto:${row.email}`,
+          href: `mailto:${row?.emailAddress}`,
           style: { color: '#93c5fd' },
         },
-        { default: () => row.email }
+        { default: () => row?.emailAddress }
       )
     },
     ellipsis: {
@@ -97,40 +113,40 @@ const createColumns = (): DataTableColumns<RowData> => [
       return h(
         NuxtLink,
         {
-          href: `tel:${row.phone}`,
+          href: `tel:${row?.phoneNumber1}`,
           style: { color: '#93c5fd' },
         },
-        { default: () => row.phone }
+        { default: () => row?.phoneNumber1 }
       )
     },
     ellipsis: {
       tooltip: true,
     },
   },
-  {
-    key: 'is_booked',
-    title: 'Card On File',
-    render(row) {
-      return h(
-        NTag,
-        {
-          style: {
-            marginRight: '6px',
-          },
-          type:
-            row.invoice_settings.default_payment_method || row.default_source
-              ? 'success'
-              : 'error',
-        },
-        {
-          default: () =>
-            row.invoice_settings.default_payment_method || row.default_source
-              ? 'Card On File'
-              : 'No Card On File',
-        }
-      )
-    },
-  },
+  // {
+  //   key: 'is_booked',
+  //   title: 'Card On File',
+  //   render(row) {
+  //     return h(
+  //       NTag,
+  //       {
+  //         style: {
+  //           marginRight: '6px',
+  //         },
+  //         type:
+  //           row.invoice_settings.default_payment_method || row.default_source
+  //             ? 'success'
+  //             : 'error',
+  //       },
+  //       {
+  //         default: () =>
+  //           row.invoice_settings.default_payment_method || row.default_source
+  //             ? 'Card On File'
+  //             : 'No Card On File',
+  //       }
+  //     )
+  //   },
+  // },
   {
     title: 'Update',
     key: 'delete',
@@ -159,7 +175,7 @@ const createColumns = (): DataTableColumns<RowData> => [
           strong: true,
           tertiary: true,
           size: 'small',
-          onClick: () => deleteCustomer(row.id),
+          onClick: () => message.info('Feature Under Construction'),
         },
         { default: () => 'Delete' }
       )
@@ -175,10 +191,10 @@ const columns = createColumns()
       :max-height="625"
       ref="refTable"
       remote
-      :loading="loading"
+      :loading="isLoading"
       :columns="columns"
       virtual-scroll
-      :data="customers.data"
+      :data="customers!.items"
       :row-key="rowKey"
     />
   </client-only>

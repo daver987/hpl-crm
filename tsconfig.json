@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "target": "ES2023"
   },
   "vueCompilerOptions": {
     "target": 3

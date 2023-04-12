@@ -92,7 +92,7 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const TripScalarFieldEnumSchema = z.enum(['id','created_at','updated_at','pickup_date','pickup_time','distance_text','duration_text','duration_value','distance_value','calculated_distance','quote_number','service_label','vehicle_label','affiliate_payout','is_farmed_out','is_return','notes','trip_order','price_id','carry_on_luggage','large_luggage','meta_data']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','created_at','updated_at','first_name','last_name','email_address','phone_number','phone_number_country','stripe_customer_id','is_customer','account_id','notes','meta_data','full_name','email_verified','image','payment_method']);
+export const UserScalarFieldEnumSchema = z.enum(['id','created_at','updated_at','first_name','last_name','email_address','phone_number','phone_number_country','stripe_customer_id','is_customer','account_id','notes','payment_method','meta_data','full_name','email_verified','image']);
 
 export const VehicleScalarFieldEnumSchema = z.enum(['id','vehicle_number','created_at','updated_at','max_passengers','max_luggage','per_km','per_hour','min_hours','min_distance','min_rate','is_active','label','limo_anywhere_id','vehicle_image']);
 
@@ -165,11 +165,11 @@ export const UserSchema = z.object({
   is_customer: z.boolean(),
   account_id: z.string().nullable(),
   notes: z.string().nullable(),
+  payment_method: z.string().nullable(),
   meta_data: NullableJsonValue.optional(),
   full_name: z.string().nullable(),
   email_verified: z.coerce.date().nullable(),
   image: z.string().nullable(),
-  payment_method: z.string().nullable(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -591,7 +591,7 @@ export type VehiclePartial = z.infer<typeof VehiclePartialSchema>
 
 export const LineItemToQuoteSchema = z.object({
   A: z.string(),
-  B: z.string(),
+  B: z.number().int(),
 })
 
 export type LineItemToQuote = z.infer<typeof LineItemToQuoteSchema>
@@ -752,11 +752,11 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   is_customer: z.boolean().optional(),
   account_id: z.boolean().optional(),
   notes: z.boolean().optional(),
+  payment_method: z.boolean().optional(),
   meta_data: z.boolean().optional(),
   full_name: z.boolean().optional(),
   email_verified: z.boolean().optional(),
   image: z.boolean().optional(),
-  payment_method: z.boolean().optional(),
   sessions: z.union([z.boolean(),z.lazy(() => SessionFindManyArgsSchema)]).optional(),
   quotes: z.union([z.boolean(),z.lazy(() => QuoteFindManyArgsSchema)]).optional(),
   account: z.union([z.boolean(),z.lazy(() => AccountArgsSchema)]).optional(),
@@ -1423,11 +1423,11 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   is_customer: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   account_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   notes: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  payment_method: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   meta_data: z.lazy(() => JsonNullableFilterSchema).optional(),
   full_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   email_verified: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  payment_method: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   sessions: z.lazy(() => SessionListRelationFilterSchema).optional(),
   quotes: z.lazy(() => QuoteListRelationFilterSchema).optional(),
   account: z.union([ z.lazy(() => AccountRelationFilterSchema),z.lazy(() => AccountWhereInputSchema) ]).optional().nullable(),
@@ -1447,11 +1447,11 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   is_customer: z.lazy(() => SortOrderSchema).optional(),
   account_id: z.lazy(() => SortOrderSchema).optional(),
   notes: z.lazy(() => SortOrderSchema).optional(),
+  payment_method: z.lazy(() => SortOrderSchema).optional(),
   meta_data: z.lazy(() => SortOrderSchema).optional(),
   full_name: z.lazy(() => SortOrderSchema).optional(),
   email_verified: z.lazy(() => SortOrderSchema).optional(),
   image: z.lazy(() => SortOrderSchema).optional(),
-  payment_method: z.lazy(() => SortOrderSchema).optional(),
   sessions: z.lazy(() => SessionOrderByRelationAggregateInputSchema).optional(),
   quotes: z.lazy(() => QuoteOrderByRelationAggregateInputSchema).optional(),
   account: z.lazy(() => AccountOrderByWithRelationInputSchema).optional(),
@@ -1476,11 +1476,11 @@ export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderBy
   is_customer: z.lazy(() => SortOrderSchema).optional(),
   account_id: z.lazy(() => SortOrderSchema).optional(),
   notes: z.lazy(() => SortOrderSchema).optional(),
+  payment_method: z.lazy(() => SortOrderSchema).optional(),
   meta_data: z.lazy(() => SortOrderSchema).optional(),
   full_name: z.lazy(() => SortOrderSchema).optional(),
   email_verified: z.lazy(() => SortOrderSchema).optional(),
   image: z.lazy(() => SortOrderSchema).optional(),
-  payment_method: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => UserCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => UserMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => UserMinOrderByAggregateInputSchema).optional()
@@ -1502,11 +1502,11 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
   is_customer: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   account_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   notes: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  payment_method: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   meta_data: z.lazy(() => JsonNullableWithAggregatesFilterSchema).optional(),
   full_name: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   email_verified: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
   image: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  payment_method: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const AffiliateWhereInputSchema: z.ZodType<Prisma.AffiliateWhereInput> = z.object({
@@ -2606,7 +2606,7 @@ export const LineItemToQuoteWhereInputSchema: z.ZodType<Prisma.LineItemToQuoteWh
   OR: z.lazy(() => LineItemToQuoteWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => LineItemToQuoteWhereInputSchema),z.lazy(() => LineItemToQuoteWhereInputSchema).array() ]).optional(),
   A: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  B: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  B: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
 }).strict();
 
 export const LineItemToQuoteOrderByWithRelationInputSchema: z.ZodType<Prisma.LineItemToQuoteOrderByWithRelationInput> = z.object({
@@ -2622,8 +2622,10 @@ export const LineItemToQuoteOrderByWithAggregationInputSchema: z.ZodType<Prisma.
   A: z.lazy(() => SortOrderSchema).optional(),
   B: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => LineItemToQuoteCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => LineItemToQuoteAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => LineItemToQuoteMaxOrderByAggregateInputSchema).optional(),
-  _min: z.lazy(() => LineItemToQuoteMinOrderByAggregateInputSchema).optional()
+  _min: z.lazy(() => LineItemToQuoteMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => LineItemToQuoteSumOrderByAggregateInputSchema).optional()
 }).strict();
 
 export const LineItemToQuoteScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.LineItemToQuoteScalarWhereWithAggregatesInput> = z.object({
@@ -2631,7 +2633,7 @@ export const LineItemToQuoteScalarWhereWithAggregatesInputSchema: z.ZodType<Pris
   OR: z.lazy(() => LineItemToQuoteScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => LineItemToQuoteScalarWhereWithAggregatesInputSchema),z.lazy(() => LineItemToQuoteScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   A: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  B: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  B: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
 }).strict();
 
 export const AirlineWhereInputSchema: z.ZodType<Prisma.AirlineWhereInput> = z.object({
@@ -2902,11 +2904,11 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   quotes: z.lazy(() => QuoteCreateNestedManyWithoutUserInputSchema).optional(),
   account: z.lazy(() => AccountCreateNestedOneWithoutUsersInputSchema).optional(),
@@ -2926,11 +2928,11 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   is_customer: z.boolean().optional(),
   account_id: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   quotes: z.lazy(() => QuoteUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -2948,11 +2950,11 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   quotes: z.lazy(() => QuoteUpdateManyWithoutUserNestedInputSchema).optional(),
   account: z.lazy(() => AccountUpdateOneWithoutUsersNestedInputSchema).optional(),
@@ -2972,11 +2974,11 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   account_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   quotes: z.lazy(() => QuoteUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2995,11 +2997,11 @@ export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = 
   is_customer: z.boolean().optional(),
   account_id: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
-  image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable()
+  image: z.string().optional().nullable()
 }).strict();
 
 export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyMutationInput> = z.object({
@@ -3014,11 +3016,11 @@ export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyM
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyInput> = z.object({
@@ -3034,11 +3036,11 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   account_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const AffiliateCreateInputSchema: z.ZodType<Prisma.AffiliateCreateInput> = z.object({
@@ -4516,37 +4518,37 @@ export const VehicleUncheckedUpdateManyInputSchema: z.ZodType<Prisma.VehicleUnch
 
 export const LineItemToQuoteCreateInputSchema: z.ZodType<Prisma.LineItemToQuoteCreateInput> = z.object({
   A: z.string(),
-  B: z.string()
+  B: z.number().int()
 }).strict();
 
 export const LineItemToQuoteUncheckedCreateInputSchema: z.ZodType<Prisma.LineItemToQuoteUncheckedCreateInput> = z.object({
   A: z.string(),
-  B: z.string()
+  B: z.number().int()
 }).strict();
 
 export const LineItemToQuoteUpdateInputSchema: z.ZodType<Prisma.LineItemToQuoteUpdateInput> = z.object({
   A: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  B: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  B: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const LineItemToQuoteUncheckedUpdateInputSchema: z.ZodType<Prisma.LineItemToQuoteUncheckedUpdateInput> = z.object({
   A: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  B: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  B: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const LineItemToQuoteCreateManyInputSchema: z.ZodType<Prisma.LineItemToQuoteCreateManyInput> = z.object({
   A: z.string(),
-  B: z.string()
+  B: z.number().int()
 }).strict();
 
 export const LineItemToQuoteUpdateManyMutationInputSchema: z.ZodType<Prisma.LineItemToQuoteUpdateManyMutationInput> = z.object({
   A: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  B: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  B: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const LineItemToQuoteUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LineItemToQuoteUncheckedUpdateManyInput> = z.object({
   A: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  B: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  B: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const AirlineCreateInputSchema: z.ZodType<Prisma.AirlineCreateInput> = z.object({
@@ -4981,11 +4983,11 @@ export const UserCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserCountOrd
   is_customer: z.lazy(() => SortOrderSchema).optional(),
   account_id: z.lazy(() => SortOrderSchema).optional(),
   notes: z.lazy(() => SortOrderSchema).optional(),
+  payment_method: z.lazy(() => SortOrderSchema).optional(),
   meta_data: z.lazy(() => SortOrderSchema).optional(),
   full_name: z.lazy(() => SortOrderSchema).optional(),
   email_verified: z.lazy(() => SortOrderSchema).optional(),
-  image: z.lazy(() => SortOrderSchema).optional(),
-  payment_method: z.lazy(() => SortOrderSchema).optional()
+  image: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const UserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserMaxOrderByAggregateInput> = z.object({
@@ -5001,10 +5003,10 @@ export const UserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserMaxOrderBy
   is_customer: z.lazy(() => SortOrderSchema).optional(),
   account_id: z.lazy(() => SortOrderSchema).optional(),
   notes: z.lazy(() => SortOrderSchema).optional(),
+  payment_method: z.lazy(() => SortOrderSchema).optional(),
   full_name: z.lazy(() => SortOrderSchema).optional(),
   email_verified: z.lazy(() => SortOrderSchema).optional(),
-  image: z.lazy(() => SortOrderSchema).optional(),
-  payment_method: z.lazy(() => SortOrderSchema).optional()
+  image: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const UserMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserMinOrderByAggregateInput> = z.object({
@@ -5020,10 +5022,10 @@ export const UserMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserMinOrderBy
   is_customer: z.lazy(() => SortOrderSchema).optional(),
   account_id: z.lazy(() => SortOrderSchema).optional(),
   notes: z.lazy(() => SortOrderSchema).optional(),
+  payment_method: z.lazy(() => SortOrderSchema).optional(),
   full_name: z.lazy(() => SortOrderSchema).optional(),
   email_verified: z.lazy(() => SortOrderSchema).optional(),
-  image: z.lazy(() => SortOrderSchema).optional(),
-  payment_method: z.lazy(() => SortOrderSchema).optional()
+  image: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregatesFilter> = z.object({
@@ -6043,11 +6045,15 @@ export const VehicleSumOrderByAggregateInputSchema: z.ZodType<Prisma.VehicleSumO
 
 export const LineItemToQuoteABCompoundUniqueInputSchema: z.ZodType<Prisma.LineItemToQuoteABCompoundUniqueInput> = z.object({
   A: z.string(),
-  B: z.string()
+  B: z.number()
 }).strict();
 
 export const LineItemToQuoteCountOrderByAggregateInputSchema: z.ZodType<Prisma.LineItemToQuoteCountOrderByAggregateInput> = z.object({
   A: z.lazy(() => SortOrderSchema).optional(),
+  B: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LineItemToQuoteAvgOrderByAggregateInputSchema: z.ZodType<Prisma.LineItemToQuoteAvgOrderByAggregateInput> = z.object({
   B: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -6058,6 +6064,10 @@ export const LineItemToQuoteMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Lin
 
 export const LineItemToQuoteMinOrderByAggregateInputSchema: z.ZodType<Prisma.LineItemToQuoteMinOrderByAggregateInput> = z.object({
   A: z.lazy(() => SortOrderSchema).optional(),
+  B: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const LineItemToQuoteSumOrderByAggregateInputSchema: z.ZodType<Prisma.LineItemToQuoteSumOrderByAggregateInput> = z.object({
   B: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -7440,11 +7450,11 @@ export const UserCreateWithoutAccountInputSchema: z.ZodType<Prisma.UserCreateWit
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   quotes: z.lazy(() => QuoteCreateNestedManyWithoutUserInputSchema).optional(),
   conversion: z.lazy(() => ConversionCreateNestedManyWithoutUserInputSchema).optional()
@@ -7462,11 +7472,11 @@ export const UserUncheckedCreateWithoutAccountInputSchema: z.ZodType<Prisma.User
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   quotes: z.lazy(() => QuoteUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -7514,11 +7524,11 @@ export const UserScalarWhereInputSchema: z.ZodType<Prisma.UserScalarWhereInput> 
   is_customer: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   account_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   notes: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  payment_method: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   meta_data: z.lazy(() => JsonNullableFilterSchema).optional(),
   full_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   email_verified: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   image: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  payment_method: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const UserCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateWithoutSessionsInput> = z.object({
@@ -7533,11 +7543,11 @@ export const UserCreateWithoutSessionsInputSchema: z.ZodType<Prisma.UserCreateWi
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   quotes: z.lazy(() => QuoteCreateNestedManyWithoutUserInputSchema).optional(),
   account: z.lazy(() => AccountCreateNestedOneWithoutUsersInputSchema).optional(),
   conversion: z.lazy(() => ConversionCreateNestedManyWithoutUserInputSchema).optional()
@@ -7556,11 +7566,11 @@ export const UserUncheckedCreateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   is_customer: z.boolean().optional(),
   account_id: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   quotes: z.lazy(() => QuoteUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
@@ -7587,11 +7597,11 @@ export const UserUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.UserUpdateWi
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quotes: z.lazy(() => QuoteUpdateManyWithoutUserNestedInputSchema).optional(),
   account: z.lazy(() => AccountUpdateOneWithoutUsersNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUpdateManyWithoutUserNestedInputSchema).optional()
@@ -7610,11 +7620,11 @@ export const UserUncheckedUpdateWithoutSessionsInputSchema: z.ZodType<Prisma.Use
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   account_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   quotes: z.lazy(() => QuoteUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
@@ -7900,11 +7910,11 @@ export const UserCreateWithoutConversionInputSchema: z.ZodType<Prisma.UserCreate
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   quotes: z.lazy(() => QuoteCreateNestedManyWithoutUserInputSchema).optional(),
   account: z.lazy(() => AccountCreateNestedOneWithoutUsersInputSchema).optional()
@@ -7923,11 +7933,11 @@ export const UserUncheckedCreateWithoutConversionInputSchema: z.ZodType<Prisma.U
   is_customer: z.boolean().optional(),
   account_id: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   quotes: z.lazy(() => QuoteUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
@@ -7954,11 +7964,11 @@ export const UserUpdateWithoutConversionInputSchema: z.ZodType<Prisma.UserUpdate
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   quotes: z.lazy(() => QuoteUpdateManyWithoutUserNestedInputSchema).optional(),
   account: z.lazy(() => AccountUpdateOneWithoutUsersNestedInputSchema).optional()
@@ -7977,11 +7987,11 @@ export const UserUncheckedUpdateWithoutConversionInputSchema: z.ZodType<Prisma.U
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   account_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   quotes: z.lazy(() => QuoteUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
@@ -8098,11 +8108,11 @@ export const UserCreateWithoutQuotesInputSchema: z.ZodType<Prisma.UserCreateWith
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionCreateNestedManyWithoutUserInputSchema).optional(),
   account: z.lazy(() => AccountCreateNestedOneWithoutUsersInputSchema).optional(),
   conversion: z.lazy(() => ConversionCreateNestedManyWithoutUserInputSchema).optional()
@@ -8121,11 +8131,11 @@ export const UserUncheckedCreateWithoutQuotesInputSchema: z.ZodType<Prisma.UserU
   is_customer: z.boolean().optional(),
   account_id: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
   image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
@@ -8411,11 +8421,11 @@ export const UserUpdateWithoutQuotesInputSchema: z.ZodType<Prisma.UserUpdateWith
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   account: z.lazy(() => AccountUpdateOneWithoutUsersNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUpdateManyWithoutUserNestedInputSchema).optional()
@@ -8434,11 +8444,11 @@ export const UserUncheckedUpdateWithoutQuotesInputSchema: z.ZodType<Prisma.UserU
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   account_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
@@ -10214,11 +10224,11 @@ export const UserCreateManyAccountInputSchema: z.ZodType<Prisma.UserCreateManyAc
   stripe_customer_id: z.string().optional().nullable(),
   is_customer: z.boolean().optional(),
   notes: z.string().optional().nullable(),
+  payment_method: z.string().optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.string().optional().nullable(),
   email_verified: z.coerce.date().optional().nullable(),
-  image: z.string().optional().nullable(),
-  payment_method: z.string().optional().nullable()
+  image: z.string().optional().nullable()
 }).strict();
 
 export const UserUpdateWithoutAccountInputSchema: z.ZodType<Prisma.UserUpdateWithoutAccountInput> = z.object({
@@ -10233,11 +10243,11 @@ export const UserUpdateWithoutAccountInputSchema: z.ZodType<Prisma.UserUpdateWit
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUpdateManyWithoutUserNestedInputSchema).optional(),
   quotes: z.lazy(() => QuoteUpdateManyWithoutUserNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUpdateManyWithoutUserNestedInputSchema).optional()
@@ -10255,11 +10265,11 @@ export const UserUncheckedUpdateWithoutAccountInputSchema: z.ZodType<Prisma.User
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   sessions: z.lazy(() => SessionUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   quotes: z.lazy(() => QuoteUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   conversion: z.lazy(() => ConversionUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -10277,11 +10287,11 @@ export const UserUncheckedUpdateManyWithoutUsersInputSchema: z.ZodType<Prisma.Us
   stripe_customer_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_customer: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   notes: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   meta_data: z.union([ z.lazy(() => NullableJsonNullValueInputSchema),InputJsonValue ]).optional(),
   full_name: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email_verified: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   image: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  payment_method: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const SessionCreateManyUserInputSchema: z.ZodType<Prisma.SessionCreateManyUserInput> = z.object({

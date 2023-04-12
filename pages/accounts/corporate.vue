@@ -5,7 +5,8 @@ definePageMeta({
 </script>
 
 <template>
-  <div>Page: Corporate</div>
+  <CorporateAccountsTable/>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
