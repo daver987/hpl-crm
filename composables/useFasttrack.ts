@@ -1,45 +1,22 @@
-import { useRuntimeConfig } from '#imports'
+async function useFasttrakApi(endpoint: string, token: string): Promise<any> {
+  const apiUrl = `https://api.ifasttrak.com/partner/api/${endpoint}`
 
-export interface Credentials {
-  email: string
-  password: string
-}
-
-export interface AuthenticationResponse {
-  access_token: string
-  refresh_token: string
-  expires_in: number
-  token_type: string
-}
-
-const BASE_URL = 'https://api.ifasttrak.com/partner/api'
-const PARTNER_ACCESS_KEY = useRuntimeConfig().FASTTRACK_PARTNER_ACCESS_KEY
-const PARTNER_API_VERSION = 'v2.1'
-const SYSTEM_ID = useRuntimeConfig().FASTTRACK_SYSTEM_ID
-const EMAIL = useRuntimeConfig().FASTTRACK_USER_EMAIL
-const PASSWORD = useRuntimeConfig().FASTTRACK_USER_PASSWORD
-
-async function authenticate(
-  credentials: Credentials
-): Promise<AuthenticationResponse> {
-  const response = await fetch(`${BASE_URL}/authentication/web-service-user`, {
-    method: 'POST',
-    body: JSON.stringify(credentials),
-    headers: {
-      'Content-Type': 'application/json',
-      'Partner-Access-Key': PARTNER_ACCESS_KEY,
-      'Partner-Api-Version': PARTNER_API_VERSION,
-      'System-Id': SYSTEM_ID,
-    },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Authentication failed: ${response.statusText}`)
+  const headers = {
+    'Partner-Access-Key': '8fce58eb8cb843bf9d8c0ad2377d2f1e',
+    'Partner-Api-Version': 'v2.1',
+    'System-Id': '28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1',
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
   }
 
-  return response.data
-}
-
-export const fastTrackApi = {
-  authenticate,
+  try {
+    const data = await $fetch(apiUrl, {
+      method: 'GET',
+      headers,
+    })
+    return data
+  } catch (error) {
+    console.error(`Error fetching data from Fasttrak API (${endpoint}):`, error)
+    throw error
+  }
 }

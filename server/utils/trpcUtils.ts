@@ -87,8 +87,6 @@ export const createQuoteFromForm = (quotes: {
         {
           pickup_date: quotes.pickup_date,
           pickup_time: quotes.pickup_time,
-          formatted_pickup_date: quotes.formatted_pickup_date,
-          formatted_pickup_time: quotes.formatted_pickup_time,
           distance_text: quotes.distance_text,
           duration_text: quotes.duration_text,
           duration_value: quotes.duration_value,

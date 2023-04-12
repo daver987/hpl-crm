@@ -5,17 +5,16 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const columns = [
-  {
-    name: 'quote',
-    label: 'Quote #',
-    field: 'quote',
-  },
-]
+
+
+
+
+const customers = await useTrpc().fasttrak.get.query()
+console.log("Fasttrack Customers", customers)
 </script>
 
 <template>
   <n-layout-content>
-    <QuoteForm />
+    <pre>{{ customers }}</pre>
   </n-layout-content>
 </template>
