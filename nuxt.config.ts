@@ -13,16 +13,20 @@ export default defineNuxtConfig({
       },
     ],
   ],
+
   build: {
     transpile: ['libphonenumber-js', 'trpc-nuxt'],
   },
+
   typescript: {
     strict: true,
     shim: false,
   },
+
   nitro: {
     preset: 'netlify',
   },
+
   naiveUI: {
     themeOverrides: {
       common: {
@@ -34,6 +38,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   runtimeConfig: {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
@@ -48,9 +53,12 @@ export default defineNuxtConfig({
       WEBSITE_URL: process.env.WEBSITE_URL,
     },
   },
+
   vite: {
     resolve: {
       alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
     },
   },
+
+  devtools: true
 })
