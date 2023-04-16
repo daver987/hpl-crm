@@ -156,4 +156,5 @@ export const fasttrakRouter = router({
       body
     )
     return fasttrakData
+  }),
 })

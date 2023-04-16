@@ -9,8 +9,6 @@ definePageMeta({
 
 const getCount = async () => useTrpc().quote.getCount.query()
 const getBooked = async () => useTrpc().quote.getBooked.query()
-// const { data } = await useFetch('/api/customers')
-// console.log('Customer Data:', data.value)
 const {
   data: countData,
   suspense,
@@ -23,9 +21,6 @@ const {
 onServerPrefetch(async () => {
   await suspense()
 })
-// const rideQuery = 'Toronto'
-// const getRide = async () => await useTrpc().ride.getRide.query({ rideQuery })
-
 const {
   data: bookedData,
   suspense: bookedSuspense,
@@ -37,18 +32,6 @@ const {
 onServerPrefetch(async () => {
   await bookedSuspense()
 })
-// const {
-//   data: rideData,
-//   suspense: rideSuspense,
-//   refetch: updateRide,
-// } = useQuery({
-//   queryKey: ['rides'],
-//   queryFn: getRide,
-// })
-// onServerPrefetch(async () => {
-//   await rideSuspense()
-// })
-// console.log('RideData:', rideData.value)
 </script>
 
 <template>

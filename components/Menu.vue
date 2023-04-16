@@ -83,7 +83,7 @@ function renderNav(
   key: string | number,
   children?: any
 ) {
-  const navItem: any = {
+  const navItem = {
     label: () =>
       h(
         NuxtLink,

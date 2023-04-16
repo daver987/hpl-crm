@@ -25,8 +25,6 @@ onServerPrefetch(async () => {
   await quoteSuspense()
 })
 
-console.log('Fasttrack Customers', customers)
-
 const refTable = ref(null)
 const message = useMessage()
 const dialog = useDialog()
