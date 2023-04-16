@@ -60,11 +60,11 @@ const menuOptions = computed(() => [
   renderNav('/reservations', 'Reservations', ReservationsIcon, 4, [
     {
       type: 'group',
-      label: 'Reservation Types',
+      label: 'Active Reservations',
       key: '4.1',
       children: [
-        renderNav('/reservations/active', 'Active', null, '4.1.1'),
-        renderNav('/reservations/finalized', 'Finalized', null, '4.1.2'),
+        renderNav('/reservations/evertransit', 'Evertransit', null, '4.1.1'),
+        renderNav('/reservations/fasttrak', 'Fasttrak', null, '4.1.2'),
       ],
     },
   ]),

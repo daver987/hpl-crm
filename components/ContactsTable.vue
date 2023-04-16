@@ -1,24 +1,15 @@
 <script lang="ts" setup>
 import { ref } from '#imports'
 import { NButton, useMessage } from 'naive-ui'
-import type { Ref, UnwrapRef } from 'vue'
 import type { DataTableColumns } from 'naive-ui'
 
 const refTable = ref(null)
 const message = useMessage()
 
-const getTrpcQueryType = () => useTrpc().user.getAll.query()
-type GetUserResult = ReturnType<typeof getTrpcQueryType>
-
-type ResolvedGetUserResult = GetUserResult extends Promise<infer T> ? T : never
-
-type UserDataRef = Ref<UnwrapRef<ResolvedGetUserResult>>
-
-type RowData = UserDataRef extends Ref<Array<infer T>> ? T : never
-
-async function getUserResult(): GetUserResult {
+async function getUser() {
   return await useTrpc().user.getAll.query()
 }
+
 const {
   data: contactData,
   suspense,
@@ -26,11 +17,17 @@ const {
   refetch: updateContacts,
 } = useQuery({
   queryKey: ['contacts'],
-  queryFn: getUserResult,
+  queryFn: getUser,
 })
+
 onServerPrefetch(async () => {
   await suspense()
 })
+
+type ArrayElementType<T extends ReadonlyArray<any> | undefined> =
+  T extends ReadonlyArray<infer ElementType> ? ElementType : never
+
+type RowData = ArrayElementType<typeof contactData.value>
 
 const rowKey = (row: RowData) => row.id
 
@@ -123,7 +120,7 @@ const columns = createColumns()
 
 <template>
   <n-data-table
-    :max-height="625"
+    :max-height="675"
     ref="refTable"
     remote
     :data="contactData"

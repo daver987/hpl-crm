@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { navigation } from '~/data/navigation'
-
 // const menuOptions = navigation()
 const route = useRoute()
 </script>
@@ -23,11 +21,5 @@ const route = useRoute()
         <slot />
       </n-layout>
     </n-layout>
-    <n-layout-footer
-      position="absolute"
-      style="height: 4px; padding: 0"
-      bordered
-    >
-    </n-layout-footer>
   </n-layout>
 </template>

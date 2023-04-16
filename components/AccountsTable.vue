@@ -17,17 +17,25 @@ const loading = ref(false)
 const message = useMessage()
 const dialog = useDialog()
 
+const {
+  data: customerData,
+  suspense: customerSuspense,
+  isLoading,
+  refetch: updateCustomers,
+} = useQuery({
+  queryKey: ['stripeCustomers'],
+  queryFn: () => useTrpc().customer.getAll.query(),
+})
 
-async function getCustomers() {
-  loading.value = true
-  const customers = await useTrpc().customer.getAll.query()
-  setTimeout(() => {
-    loading.value = false
-  }, 50)
-  return customers
+onServerPrefetch(async () => {
+  await customerSuspense()
+})
+
+if (!customerData) {
+  await updateCustomers()
 }
 
-const customers = await getCustomers()
+const customers = customerData.value?.data
 
 const deleteCustomer = (stripeCustomerId: string) => {
   const d = dialog.success({
@@ -41,8 +49,8 @@ const deleteCustomer = (stripeCustomerId: string) => {
       })
       if (deleted.deleted) {
         message.info(`The Customer was successfully Deleted`)
+        await updateCustomers()
         d.loading = false
-        reloadNuxtApp()
       } else {
         message.error(
           `Oops, something went wrong reload the page and try again`
@@ -175,10 +183,10 @@ const columns = createColumns()
       :max-height="625"
       ref="refTable"
       remote
-      :loading="loading"
+      :loading="isLoading"
       :columns="columns"
       virtual-scroll
-      :data="customers.data"
+      :data="customers"
       :row-key="rowKey"
     />
   </client-only>

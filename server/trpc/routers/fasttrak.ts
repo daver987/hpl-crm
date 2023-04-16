@@ -1,8 +1,9 @@
 import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 import type { CustomerArray } from '~/composables/fasttrak-api'
+import type { ReservationResponse } from '~/schema/reservationSchema'
 
-async function fetchFasttrakData(
+async function getFasttrakData(
   endpoint: string,
   token: string,
   queryParams: any
@@ -23,7 +24,36 @@ async function fetchFasttrakData(
       headers,
       query: queryParams,
     })
-    console.log('Original customers', data)
+    console.log('Query data', data)
+    return data
+  } catch (error) {
+    console.error(`Error fetching data from Fasttrak API (${endpoint}):`, error)
+    throw error
+  }
+}
+
+async function postFasttrakData(
+  endpoint: string,
+  token: string,
+  body: any
+): Promise<any> {
+  const apiUrl = `https://api.ifasttrak.com/partner/api/${endpoint}`
+
+  const headers = {
+    'Partner-Access-Key': '8fce58eb8cb843bf9d8c0ad2377d2f1e',
+    'Partner-Api-Version': 'v2.1',
+    'System-Id': '28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1',
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  }
+
+  try {
+    const data = await $fetch<CustomerArray>(apiUrl, {
+      method: 'POST',
+      headers,
+      body: body,
+    })
+    console.log('Body data', data)
     return data
   } catch (error) {
     console.error(`Error fetching data from Fasttrak API (${endpoint}):`, error)
@@ -104,7 +134,7 @@ export const fasttrakRouter = router({
       includeInactive: false,
       maxResults: 100,
     }
-    const customers = await fetchFasttrakData(
+    const customers = await getFasttrakData(
       endpoint,
       authResponse.item.token.accessToken,
       queryParams
@@ -112,4 +142,18 @@ export const fasttrakRouter = router({
     console.log('Customers', customers)
     return customers
   }),
+  getReservations: publicProcedure.mutation(async () => {
+    const authResponse = await authenticateFasttrak()
+    const endpoint = 'reservations/search-advanced'
+    const body = {
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    }
+
+    const fasttrakData: ReservationResponse = await postFasttrakData(
+      endpoint,
+      authResponse.item.token.accessToken,
+      body
+    )
+    return fasttrakData
 })

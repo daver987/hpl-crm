@@ -1,17 +1,15 @@
 <script lang="ts" setup>
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
-import { NTag, NButton, useMessage, useDialog } from 'naive-ui'
+import { NButton, useMessage, useDialog } from 'naive-ui'
 import type { Customer } from '~/composables/fasttrak-api'
-
-import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
+import type { DataTableColumns } from 'naive-ui'
 
 type CustomerData = {
   name?: string
   email?: string
   phone?: string
 }
-
 
 const {
   data: customers,
@@ -22,16 +20,16 @@ const {
   queryKey: ['customers'],
   queryFn: () => useTrpc().fasttrak.get.query(),
 })
+
 onServerPrefetch(async () => {
   await quoteSuspense()
 })
 
-console.log("Fasttrack Customers", customers)
+console.log('Fasttrack Customers', customers)
 
 const refTable = ref(null)
 const message = useMessage()
 const dialog = useDialog()
-
 
 const deleteCustomer = (stripeCustomerId: string) => {
   const d = dialog.success({
