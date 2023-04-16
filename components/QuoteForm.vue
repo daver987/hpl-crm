@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const username = useRuntimeConfig().FASTTRACK_USER_EMAIL
-const password = useRuntimeConfig().FASTTRACK_USER_PASSWORD
+// const username = useRuntimeConfig().FASTTRACK_USER_EMAIL
+// const password = useRuntimeConfig().FASTTRACK_USER_PASSWORD
 
 // async function fetchData() {
 //   try {

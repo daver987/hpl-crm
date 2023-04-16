@@ -20,12 +20,17 @@ export default defineNuxtConfig({
 
   typescript: {
     strict: true,
-    shim: false,
+    shim: true,
   },
 
   nitro: {
     preset: 'netlify',
   },
+
+  css: [
+    'ag-grid-enterprise/styles/ag-grid.css',
+    'ag-grid-community/styles/ag-theme-alpine.css',
+  ],
 
   naiveUI: {
     themeOverrides: {
@@ -59,6 +64,4 @@ export default defineNuxtConfig({
       alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
     },
   },
-
-  devtools: true
 })

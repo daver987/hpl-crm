@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useQuery, useMutation } from '@tanstack/vue-query'
+import { useQuery } from '@tanstack/vue-query'
 import { ref } from '#imports'
 import type { Ref, UnwrapRef } from 'vue'
 import { format } from 'date-fns'
@@ -38,6 +38,10 @@ const {
 onServerPrefetch(async () => {
   await quoteSuspense()
 })
+
+if (!quoteData) {
+  await updateQuote()
+}
 
 const rowKey = (row: RowData) => row.quote_number
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
@@ -90,7 +94,7 @@ const createColumns = (): DataTableColumns<RowData> => [
     render(row) {
       return `${row.trips[0].pickup_date}, ${row.trips[0].pickup_time}`
     },
-    width: 225,
+    width: 250,
   },
 
   {
@@ -260,6 +264,7 @@ const filteredData = computed(() => {
     )
   })
 })
+
 const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
@@ -277,7 +282,7 @@ async function deleteQuote(quoteNumber: number) {
   if (deletedQuote) {
     message.success('Quote deleted successfully')
     isDeleting.value = false
-    await await updateQuote()
+    await updateQuote()
   } else {
     message.error(
       'Oops Something Went Wrong, Please Reload the page and try again'
@@ -327,7 +332,7 @@ function handleConfirm(event: DeleteEvent) {
       :row-key="rowKey"
       striped
       @update:checked-row-keys="handleCheck"
-      :max-height="625"
+      :max-height="700"
       ref="refTable"
       remote
       :loading="isLoading"
