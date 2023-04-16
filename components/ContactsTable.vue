@@ -6,10 +6,6 @@ import type { DataTableColumns } from 'naive-ui'
 const refTable = ref(null)
 const message = useMessage()
 
-async function getUser() {
-  return await useTrpc().user.getAll.query()
-}
-
 const {
   data: contactData,
   suspense,
@@ -17,12 +13,16 @@ const {
   refetch: updateContacts,
 } = useQuery({
   queryKey: ['contacts'],
-  queryFn: getUser,
+  queryFn: () => useTrpc().user.getAll.query(),
 })
 
 onServerPrefetch(async () => {
   await suspense()
 })
+
+if (!contactData) {
+  await updateContacts()
+}
 
 type ArrayElementType<T extends ReadonlyArray<any> | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
