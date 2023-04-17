@@ -155,5 +155,6 @@ const columns = createColumns()
     virtual-scroll
     :data="fasttrakCustomers"
     :row-key="rowKey"
+    size="small"
   />
 </template>

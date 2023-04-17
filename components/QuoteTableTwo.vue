@@ -325,5 +325,6 @@ function handleConfirm(event: DeleteEvent) {
     :data="filteredData"
     virtual-scroll
     :scroll-x="1800"
+    size="small"
   />
 </template>

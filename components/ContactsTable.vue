@@ -123,5 +123,6 @@ const columns = createColumns()
     :loading="isLoading"
     :columns="columns"
     :row-key="rowKey"
+    size="small"
   />
 </template>
