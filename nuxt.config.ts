@@ -15,7 +15,11 @@ export default defineNuxtConfig({
   ],
 
   build: {
-    transpile: ['libphonenumber-js', 'trpc-nuxt'],
+    transpile: ['libphonenumber-js', '@googlemaps/js-api-loader', 'trpc-nuxt'],
+  },
+
+  routeRules: {
+    '**': { prerender: true },
   },
 
   typescript: {
@@ -26,11 +30,6 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'netlify',
   },
-
-  css: [
-    'ag-grid-enterprise/styles/ag-grid.css',
-    'ag-grid-community/styles/ag-theme-alpine.css',
-  ],
 
   naiveUI: {
     themeOverrides: {

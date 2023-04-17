@@ -36,6 +36,7 @@ const stripeCustomers = computed(() => stripeCustomerData.value?.data)
 const rowKey = (row: RowData) => row.id
 
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
+
 function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys
   console.log('Selected Row', checkedRowKeysRef)

@@ -52,7 +52,7 @@ const login = async () => {
     setTimeout(async () => {
       await navigateTo('/')
       loading.value = false
-    }, 2000)
+    }, 1000)
   } catch (error) {
     console.error(error)
     alert('Oops Something went wrong, please enter in your credentials again')

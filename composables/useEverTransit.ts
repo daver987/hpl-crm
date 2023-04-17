@@ -49,8 +49,7 @@ class Rides {
         query: 'Toronto',
         limit: 10,
         page: 1,
-        apikey:
-          'c121ba20f7d72b9c9fda17ecee7bea160654b7daf9eac4a546b32fae4942e62776',
+        apikey: useRuntimeConfig().EVER_TRANSIT_API_KEY,
       },
     }
     try {

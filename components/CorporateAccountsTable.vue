@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
-import { NButton, useMessage, useDialog } from 'naive-ui'
+import { NButton, useMessage } from 'naive-ui'
 
 import type { Customer } from '~/composables/fasttrak-api'
-import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
+import type { DataTableColumns } from 'naive-ui'
 
 const {
   data: fasttrakCustomersData,
@@ -23,7 +23,6 @@ const fasttrakCustomers = computed(() => fasttrakCustomersData.value?.items)
 
 const refTable = ref(null)
 const message = useMessage()
-const dialog = useDialog()
 
 const rowKey = (row: Customer) => row?.customerId
 
