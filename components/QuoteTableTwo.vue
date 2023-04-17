@@ -1,49 +1,35 @@
 <script lang="ts" setup>
 import { useQuery } from '@tanstack/vue-query'
 import { ref } from '#imports'
-import type { Ref, UnwrapRef } from 'vue'
 import { format } from 'date-fns'
 import { NTag, NP, NButton, useDialog } from 'naive-ui'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 
 const refTable = ref(null)
 
-const getTrpcQueryType = () => useTrpc().quote.getAll.query()
-type GetQuoteResult = ReturnType<typeof getTrpcQueryType>
-
-type ResolvedGetQuoteResult = GetQuoteResult extends Promise<infer T>
-  ? T
-  : never
-type QuoteDataRef = Ref<UnwrapRef<ResolvedGetQuoteResult>>
-
-type RowData = QuoteDataRef extends Ref<Array<infer T>> ? T : never
-
-async function handleBook(quoteNumber: number) {
-  await useTrpc().ride.book.mutate({ quote_number: quoteNumber })
-}
-
-async function getQuoteResult() {
-  return await useTrpc().quote.getAll.query()
-}
-
 const {
   data: quoteData,
   suspense: quoteSuspense,
   isLoading,
-  refetch: updateQuote,
+  refetch: updateQuotes,
 } = useQuery({
-  queryKey: ['quote'],
-  queryFn: getQuoteResult,
+  queryKey: ['quotes'],
+  queryFn: () => useTrpc().quote.getAll.query(),
 })
+
 onServerPrefetch(async () => {
   await quoteSuspense()
 })
 
-if (!quoteData) {
-  await updateQuote()
-}
+type ArrayElementType<T extends ReadonlyArray<any> | undefined> =
+  T extends ReadonlyArray<infer ElementType> ? ElementType : never
+
+type RowData = ArrayElementType<typeof quoteData.value>
 
 const rowKey = (row: RowData) => row.quote_number
+
+const quotes = computed(() => quoteData.value)
+
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys
@@ -248,9 +234,9 @@ const searchInput = ref('')
 
 const filteredData = computed(() => {
   if (searchInput.value.trim() === '') {
-    return quoteData.value
+    return quotes.value
   }
-  return quoteData.value!.filter((row) => {
+  return quotes.value!.filter((row) => {
     return (
       row.user.first_name
         .toLowerCase()
@@ -282,7 +268,7 @@ async function deleteQuote(quoteNumber: number) {
   if (deletedQuote) {
     message.success('Quote deleted successfully')
     isDeleting.value = false
-    await updateQuote()
+    await updateQuotes()
   } else {
     message.error(
       'Oops Something Went Wrong, Please Reload the page and try again'
@@ -327,19 +313,17 @@ function handleConfirm(event: DeleteEvent) {
     </n-grid-item>
   </n-grid>
 
-  <client-only>
-    <n-data-table
-      :row-key="rowKey"
-      striped
-      @update:checked-row-keys="handleCheck"
-      :max-height="700"
-      ref="refTable"
-      remote
-      :loading="isLoading"
-      :columns="columns"
-      :data="filteredData"
-      virtual-scroll
-      :scroll-x="1800"
-    />
-  </client-only>
+  <n-data-table
+    :row-key="rowKey"
+    striped
+    @update:checked-row-keys="handleCheck"
+    :max-height="700"
+    ref="refTable"
+    remote
+    :loading="isLoading"
+    :columns="columns"
+    :data="filteredData"
+    virtual-scroll
+    :scroll-x="1800"
+  />
 </template>

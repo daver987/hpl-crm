@@ -2,8 +2,7 @@ import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 
 const baseURL = 'https://endpoints.evertransit.com/v2beta/'
-const apiKey =
-  'c121ba20f7d72b9c9fda17ecee7bea160654b7daf9eac4a546b32fae4942e62776'
+const apiKey = useRuntimeConfig().EVER_TRANSIT_API_KEY
 
 export const rideRouter = router({
   getRide: publicProcedure

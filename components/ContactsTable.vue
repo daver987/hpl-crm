@@ -20,10 +20,6 @@ onServerPrefetch(async () => {
   await suspense()
 })
 
-if (!contactData) {
-  await updateContacts()
-}
-
 type ArrayElementType<T extends ReadonlyArray<any> | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
 

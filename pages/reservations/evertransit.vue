@@ -6,25 +6,29 @@ definePageMeta({
 })
 
 const rideQuery = 'Scheduled'
-const getRide = async () => await useTrpc().ride.getRide.query({ rideQuery })
+async function getRides() {
+  return await useTrpc().ride.getRide.query({ rideQuery })
+}
 
 const {
   data: rideData,
+  isLoading,
   suspense: rideSuspense,
-  refetch: updateRide,
 } = useQuery({
-  queryKey: ['rides'],
-  queryFn: getRide,
+  queryKey: ['rides', rideQuery],
+  queryFn: getRides,
 })
 onServerPrefetch(async () => {
   await rideSuspense()
 })
-console.log('RideData:', rideData.value)
 </script>
 
 <template>
   <n-layout-content style="padding: 24px">
-    <n-row>
+    <n-row v-if="isLoading">
+      <n-h2>Loading.....</n-h2>
+    </n-row>
+    <n-row v-else>
       <n-col v-for="ride in rideData.hits" :key="ride.id" :span="12">
         <n-card :title="`${ride.rider.firstName} ${ride.rider.lastName}`">
           <n-p

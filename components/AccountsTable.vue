@@ -5,6 +5,7 @@ import { NTag, NButton, useMessage, useDialog } from 'naive-ui'
 
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Stripe } from 'stripe'
+
 type RowData = Stripe.Customer
 type CustomerData = {
   name?: string
@@ -13,29 +14,32 @@ type CustomerData = {
 }
 
 const refTable = ref(null)
-const loading = ref(false)
-const message = useMessage()
 const dialog = useDialog()
+const message = useMessage()
 
 const {
-  data: customerData,
-  suspense: customerSuspense,
-  isLoading,
-  refetch: updateCustomers,
+  data: stripeCustomerData,
+  suspense: stripeCustomerDataSuspense,
+  isLoading: loading,
+  refetch: refetchStripeCustomers,
 } = useQuery({
   queryKey: ['stripeCustomers'],
   queryFn: () => useTrpc().customer.getAll.query(),
 })
 
 onServerPrefetch(async () => {
-  await customerSuspense()
+  await stripeCustomerDataSuspense()
 })
 
-if (!customerData) {
-  await updateCustomers()
-}
+const stripeCustomers = computed(() => stripeCustomerData.value?.data)
 
-const customers = customerData.value?.data
+const rowKey = (row: RowData) => row.id
+
+const checkedRowKeysRef = ref<DataTableRowKey[]>([])
+function handleCheck(rowKeys: DataTableRowKey[]) {
+  checkedRowKeysRef.value = rowKeys
+  console.log('Selected Row', checkedRowKeysRef)
+}
 
 const deleteCustomer = (stripeCustomerId: string) => {
   const d = dialog.success({
@@ -49,7 +53,7 @@ const deleteCustomer = (stripeCustomerId: string) => {
       })
       if (deleted.deleted) {
         message.info(`The Customer was successfully Deleted`)
-        await updateCustomers()
+        await refetchStripeCustomers()
         d.loading = false
       } else {
         message.error(
@@ -67,8 +71,6 @@ const updateCustomer = async (id: string, options: CustomerData) => {
   })
   console.log('Customer Updated', updatedCustomer)
 }
-
-const rowKey = (row: RowData) => row.id
 
 const createColumns = (): DataTableColumns<RowData> => [
   {
@@ -178,16 +180,14 @@ const columns = createColumns()
 </script>
 
 <template>
-  <client-only>
-    <n-data-table
-      :max-height="625"
-      ref="refTable"
-      remote
-      :loading="isLoading"
-      :columns="columns"
-      virtual-scroll
-      :data="customers"
-      :row-key="rowKey"
-    />
-  </client-only>
+  <n-data-table
+    size="small"
+    :max-height="685"
+    ref="refTable"
+    remote
+    :loading="loading"
+    :columns="columns"
+    :data="stripeCustomers"
+    :row-key="rowKey"
+  />
 </template>

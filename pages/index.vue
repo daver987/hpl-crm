@@ -21,11 +21,7 @@ const {
 onServerPrefetch(async () => {
   await suspense()
 })
-const {
-  data: bookedData,
-  suspense: bookedSuspense,
-  refetch: updateBooked,
-} = useQuery({
+const { data: bookedData, suspense: bookedSuspense } = useQuery({
   queryKey: ['booked'],
   queryFn: getBooked,
 })
