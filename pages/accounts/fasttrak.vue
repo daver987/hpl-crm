@@ -5,7 +5,9 @@ definePageMeta({
 </script>
 
 <template>
-  <CorporateAccountsTable />
+  <n-layout-content>
+    <n-h2>Fasttrak Content</n-h2>
+  </n-layout-content>
 </template>
 
 <style scoped></style>

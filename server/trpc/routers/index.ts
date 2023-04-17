@@ -8,7 +8,7 @@ import { quoteRouter } from '~/server/trpc/routers/quote'
 import { userRouter } from '~/server/trpc/routers/users'
 import { customerRouter } from '~/server/trpc/routers/customers'
 import { rideRouter } from '~/server/trpc/routers/rides'
-import { fasttrakRouter } from '~/server/trpc/routers/fasttrak'
+// import { fasttrakRouter } from '~/server/trpc/routers/fasttrak'
 
 export const appRouter = router({
   lineItem: lineItemsRouter,
@@ -20,7 +20,7 @@ export const appRouter = router({
   user: userRouter,
   customer: customerRouter,
   ride: rideRouter,
-  fasttrak: fasttrakRouter,
+  // fasttrak: fasttrakRouter,
 })
 
 // export type definition of API
