@@ -1,7 +1,7 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import type { H3Event } from 'h3'
 import { stripe } from '~/server/services/stripeInit'
-import { fasttrakAuth } from '~/server/services/fasttrakInit'
+
 /**
  * Creates context for an incoming request
  * @link https://trpc.io/docs/context
@@ -13,11 +13,11 @@ export async function createContext(_event: H3Event) {
    * return { prisma: _event.context.prisma }
    * ```
    */
-  const auth = await fasttrakAuth()
+
   return {
     prisma: _event.context.prisma,
     stripe: stripe,
-    accessToken: auth.item.token.accessToken,
+    accessToken: _event.context.accessToken,
   }
 }
 

@@ -7,6 +7,12 @@ import { fasttrakRequest } from '~/server/services/fasttrakRequest'
 export const fasttrakRouter = router({
   get: publicProcedure.query(async ({ ctx }) => {
     const accessToken = ctx.accessToken
+    console.log(
+      'Access token',
+      accessToken,
+      'Calling authenticateFasttrak from [get]',
+      new Date().toISOString()
+    )
     const endpoint = 'customers'
     const queryParams = {
       includeInactive: false,
@@ -21,12 +27,17 @@ export const fasttrakRouter = router({
     }
 
     const customers: CustomerArray = await fasttrakRequest(requestOptions)
-    console.log('Customers', customers)
     return customers
   }),
 
   getReservations: publicProcedure.mutation(async ({ ctx }) => {
     const accessToken = ctx.accessToken
+    console.log(
+      'Access token',
+      accessToken,
+      'Calling authenticateFasttrak from [get]',
+      new Date().toISOString()
+    )
     const endpoint = 'reservations/search-advanced'
     const body = {
       startDate: new Date(),
