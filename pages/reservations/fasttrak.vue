@@ -188,5 +188,6 @@ const columns = createColumns()
     :row-key="rowKey"
     virtual-scroll
     :scroll-x="1800"
+    size="small"
   />
 </template>

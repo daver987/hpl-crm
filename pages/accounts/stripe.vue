@@ -9,5 +9,3 @@ definePageMeta({
     <AccountsTable />
   </n-layout-content>
 </template>
-
-<style scoped></style>
