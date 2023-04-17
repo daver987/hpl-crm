@@ -11,5 +11,3 @@ definePageMeta({
     <QuoteTableTwo />
   </n-layout-content>
 </template>
-
-<style scoped></style>

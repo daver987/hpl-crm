@@ -9,5 +9,3 @@ definePageMeta({
     <n-calendar></n-calendar>
   </n-layout-content>
 </template>
-
-<style scoped></style>
