@@ -50,8 +50,8 @@ const menuOptions = computed(() => [
       label: 'Account Types',
       key: '1.1',
       children: [
-        renderNav('/accounts/corporate', 'Corporate', null, '1.1.1'),
-        renderNav('/accounts/individual', 'Individual', null, '1.1.2'),
+        renderNav('/accounts/fasttrak', 'Fasttrak', null, '1.1.1'),
+        renderNav('/accounts/stripe', 'Stripe', null, '1.1.2'),
       ],
     },
   ]),

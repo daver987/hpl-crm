@@ -2,63 +2,28 @@
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
 import { NButton, useMessage, useDialog } from 'naive-ui'
-import type { Customer } from '~/composables/fasttrak-api'
-import type { DataTableColumns } from 'naive-ui'
 
-type CustomerData = {
-  name?: string
-  email?: string
-  phone?: string
-}
+import type { Customer } from '~/composables/fasttrak-api'
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 
 const {
-  data: customers,
-  suspense: quoteSuspense,
-  isLoading,
-  refetch: updateCustomers,
+  data: fasttrakCustomersData,
+  suspense: fasttrakCustomersSuspense,
+  isLoading: loadingFasttrakCustomers,
 } = useQuery({
-  queryKey: ['customers'],
+  queryKey: ['fasttrakCustomers'],
   queryFn: () => useTrpc().fasttrak.get.query(),
 })
 
 onServerPrefetch(async () => {
-  await quoteSuspense()
+  await fasttrakCustomersSuspense()
 })
+
+const fasttrakCustomers = computed(() => fasttrakCustomersData.value?.items)
 
 const refTable = ref(null)
 const message = useMessage()
 const dialog = useDialog()
-
-const deleteCustomer = (stripeCustomerId: string) => {
-  const d = dialog.success({
-    title: 'Delete Customer',
-    content: 'Are you sure you want to delete the customer?',
-    positiveText: 'Confirm',
-    onPositiveClick: async () => {
-      d.loading = true
-      const deleted = await useTrpc().customer.delete.mutate({
-        stripe_customer_id: stripeCustomerId,
-      })
-      if (deleted.deleted) {
-        message.info(`The Customer was successfully Deleted`)
-        d.loading = false
-        reloadNuxtApp()
-      } else {
-        message.error(
-          `Oops, something went wrong reload the page and try again`
-        )
-      }
-    },
-  })
-}
-
-const updateCustomer = async (id: string, options: CustomerData) => {
-  const updatedCustomer = await useTrpc().customer.update.mutate({
-    id,
-    options,
-  })
-  console.log('Customer Updated', updatedCustomer)
-}
 
 const rowKey = (row: Customer) => row?.customerId
 
@@ -182,16 +147,14 @@ const columns = createColumns()
 </script>
 
 <template>
-  <client-only>
-    <n-data-table
-      :max-height="625"
-      ref="refTable"
-      remote
-      :loading="isLoading"
-      :columns="columns"
-      virtual-scroll
-      :data="customers!.items"
-      :row-key="rowKey"
-    />
-  </client-only>
+  <n-data-table
+    :max-height="625"
+    ref="refTable"
+    remote
+    :loading="loadingFasttrakCustomers"
+    :columns="columns"
+    virtual-scroll
+    :data="fasttrakCustomers"
+    :row-key="rowKey"
+  />
 </template>

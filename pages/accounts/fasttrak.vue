@@ -1,0 +1,11 @@
+<script lang="ts" setup>
+definePageMeta({
+  path: '/accounts/fasttrak',
+})
+</script>
+
+<template>
+  <CorporateAccountsTable />
+</template>
+
+<style scoped></style>
