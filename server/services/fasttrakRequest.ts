@@ -41,7 +41,12 @@ export async function fasttrakRequest(
       body: options.body,
       query: options.queryParams,
     })
-    console.log(`${options.method} data`, data)
+    console.log(
+      `[${options.method}] Request to ${
+        options.endpoint
+      } at ${new Date().toISOString()}`
+    )
+    // console.log(`${options.method} data`, data)
     return data
   } catch (error) {
     console.error(

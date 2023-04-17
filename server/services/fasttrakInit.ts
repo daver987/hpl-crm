@@ -18,7 +18,7 @@ const AuthResponseSchema = z.object({
 	includesOperationalMessage: z.boolean(),
 })
 
-type AuthResponse = z.infer<typeof AuthResponseSchema>
+export type AuthResponse = z.infer<typeof AuthResponseSchema>
 
 export const fasttrakAuth = async (): Promise<AuthResponse> => {
 	const runtimeConfig = useRuntimeConfig()
@@ -30,6 +30,7 @@ export const fasttrakAuth = async (): Promise<AuthResponse> => {
 			'Content-Type': 'application/json',
 		},
 	})
+	let requestCount = 0
 
 	async function authenticateFasttrak(
 		systemId: string,
@@ -45,6 +46,9 @@ export const fasttrakAuth = async (): Promise<AuthResponse> => {
 		}
 
 		try {
+			requestCount += 1
+			console.log(`Request #${requestCount} at ${new Date().toISOString()}`)
+
 			//@ts-ignore
 			const data = (await $fetch(
 				'https://api.ifasttrak.com/partner/api/authentication/web-service-user',
