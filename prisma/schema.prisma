@@ -15,26 +15,34 @@ datasource db {
 }
 
 model Account {
-  id                     String   @id @unique @default(uuid())
-  number                 Int      @unique @default(autoincrement())
-  created_at             DateTime @default(now())
-  updated_at             DateTime @updatedAt
-  company_name           String
-  company_address        String
-  company_phone          String?
-  company_email          String
-  company_account_number Int
-  users                  User[]
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  password          String
+  number            Int     @unique @default(autoincrement())
+  refresh_token     String? // @db.Text
+  access_token      String? // @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? // @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  session_token String   @unique
-  user_id       String
-  expires       DateTime
-  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([user_id])
+  @@index([userId])
 }
 
 model User {
@@ -55,12 +63,18 @@ model User {
   full_name            String?
   email_verified       DateTime?
   image                String?
-  sessions             Session[]
   quotes               Quote[]
-  account              Account?     @relation(fields: [account_id], references: [id])
+  accounts             Account[]
+  sessions             Session[]
   conversion           Conversion[]
+}
 
-  @@index([account_id])
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Affiliate {
@@ -85,15 +99,6 @@ model Driver {
   phone_number    String
   drivers_licence String?
   notes           String?
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  id         String   @id @default(cuid())
-
-  @@unique([identifier, token])
 }
 
 model Conversion {

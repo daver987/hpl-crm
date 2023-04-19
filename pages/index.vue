@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query'
-
 definePageMeta({
   name: 'My Office',
   layout: 'default',
-  middleware: 'auth',
 })
 
 const getCount = async () => useTrpc().quote.getCount.query()
@@ -21,6 +18,7 @@ const {
 onServerPrefetch(async () => {
   await suspense()
 })
+
 const { data: bookedData, suspense: bookedSuspense } = useQuery({
   queryKey: ['booked'],
   queryFn: getBooked,

@@ -2,7 +2,6 @@
 definePageMeta({
   name: 'Contacts',
   layout: 'default',
-  middleware: 'auth',
 })
 </script>
 

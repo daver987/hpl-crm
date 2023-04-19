@@ -1,5 +1,3 @@
-import { useTrpc } from '~/composables/useTrpc'
-import { useQuery } from '@tanstack/vue-query'
 import { QuoteFormReturn } from '~/schema/QuoteFormSchema'
 import { z } from 'zod'
 export async function getSalesTax() {
@@ -59,7 +57,7 @@ export async function getQuote(quoteNumber: string) {
 }
 
 export async function getUsers() {
-  const getUsers = () => useTrpc().user.getAll.query()
+  const getUsers = () => useTrpc().user.getAll.useQuery()
 
   const { data, suspense, isLoading } = useQuery({
     queryKey: ['users'],

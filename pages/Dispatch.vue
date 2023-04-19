@@ -2,15 +2,10 @@
 definePageMeta({
   name: 'Dispatch',
   layout: 'default',
-  middleware: 'auth',
 })
 
-
-
-
-
-const customers = await useTrpc().fasttrak.get.query()
-console.log("Fasttrack Customers", customers)
+// const customers = await useTrpc().fasttrak.get.query()
+// console.log('Fasttrack Customers', customers)
 </script>
 
 <template>

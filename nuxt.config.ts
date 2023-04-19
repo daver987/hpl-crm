@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   modules: [
+    '@sidebase/nuxt-auth',
     '@nuxtjs/supabase',
     '@vueuse/nuxt',
     'nuxt-vitest',
@@ -18,17 +19,13 @@ export default defineNuxtConfig({
     transpile: ['libphonenumber-js', '@googlemaps/js-api-loader', 'trpc-nuxt'],
   },
 
-  routeRules: {
-    '**': { prerender: true },
-  },
-
   typescript: {
     strict: true,
     shim: false,
   },
 
   nitro: {
-    preset: 'vercel',
+    preset: 'node-server',
   },
 
   naiveUI: {
@@ -52,6 +49,7 @@ export default defineNuxtConfig({
     FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
     NUXT_SECRET: process.env.NUXT_SECRET,
     EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
+    NUXT_AUTH_SECRET: process.env.NUXT_AUTH_SECRET,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,
@@ -63,4 +61,10 @@ export default defineNuxtConfig({
       alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
     },
   },
+
+  auth: {
+    globalAppMiddleware: true,
+  },
+
+  devtools: true,
 })

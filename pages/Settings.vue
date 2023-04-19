@@ -2,7 +2,6 @@
 definePageMeta({
   name: 'Settings',
   layout: 'default',
-  middleware: 'auth',
 })
 </script>
 

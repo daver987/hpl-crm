@@ -2,7 +2,6 @@ import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 
 const baseURL = 'https://endpoints.evertransit.com/v2beta/'
-const apiKey = useRuntimeConfig().EVER_TRANSIT_API_KEY
 
 export const rideRouter = router({
   getRide: publicProcedure
@@ -12,6 +11,7 @@ export const rideRouter = router({
       })
     )
     .query(async ({ input }) => {
+      const apiKey = useRuntimeConfig().EVER_TRANSIT_API_KEY
       const requestOptions = {
         method: 'GET',
       }
@@ -38,6 +38,7 @@ export const rideRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const apiKey = useRuntimeConfig().EVER_TRANSIT_API_KEY
       const bookedOrder = await ctx.prisma.quote.findUnique({
         where: {
           quote_number: input.quote_number,

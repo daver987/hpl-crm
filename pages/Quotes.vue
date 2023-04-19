@@ -2,7 +2,6 @@
 definePageMeta({
   name: 'Quotes',
   layout: 'default',
-  middleware: 'auth',
 })
 </script>
 

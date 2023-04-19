@@ -1,23 +1,14 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import type { H3Event } from 'h3'
 import { stripe } from '~/server/services/stripeInit'
+import { getServerSession } from '#auth'
+import { prismaDb } from '../prismadb'
 
-/**
- * Creates context for an incoming request
- * @link https://trpc.io/docs/context
- */
-export async function createContext(_event: H3Event) {
-  /**
-   * Add any trpc-request context here. E.g., you could add `prisma` like this (if you've added it via sidebase):
-   * ```ts
-   * return { prisma: _event.context.prisma }
-   * ```
-   */
-
+export const createContext = async (event: H3Event) => {
   return {
-    prisma: _event.context.prisma,
     stripe: stripe,
+    session: await getServerSession(event),
+    prisma: prismaDb,
   }
 }
-
 export type Context = inferAsyncReturnType<typeof createContext>

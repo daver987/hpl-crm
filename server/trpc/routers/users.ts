@@ -1,5 +1,6 @@
 import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
+
 export const userRouter = router({
   getOne: publicProcedure
     .input(
@@ -18,4 +19,18 @@ export const userRouter = router({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findMany()
   }),
+  getCreds: publicProcedure
+    .input(
+      z.object({
+        email_address: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findUnique({
+        where: { email_address: input.email_address },
+        select: {
+          password: true,
+        },
+      })
+    }),
 })

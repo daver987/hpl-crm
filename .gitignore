@@ -12,3 +12,11 @@ node_modules
 .netlify
 prisma/generated
 .cache
+dist
+coverage
+.VSCodeCounter
+.vercel
+*.tsbuildinfo
+prisma/db.sqlite
+prisma/db.sqlite.journal
+prisma/data/

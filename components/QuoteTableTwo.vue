@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useQuery } from '@tanstack/vue-query'
 import { ref } from '#imports'
 import { format } from 'date-fns'
 import { NTag, NP, NButton, useDialog } from 'naive-ui'

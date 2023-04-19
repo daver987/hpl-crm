@@ -28,10 +28,8 @@ export const createQuoteFromForm = (quotes: {
   quote_subtotal: number
   quote_tax_total: number
   combined_line_items: any
-  pickup_date: number
-  pickup_time: number
-  formatted_pickup_date: string
-  formatted_pickup_time: string
+  pickup_date: string
+  pickup_time: string
   distance_text: string
   duration_text: string
   duration_value: number
