@@ -24,10 +24,6 @@ export default defineNuxtConfig({
     shim: false,
   },
 
-  nitro: {
-    preset: 'netlify',
-  },
-
   naiveUI: {
     themeOverrides: {
       common: {
