@@ -1,33 +1,31 @@
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query'
-
 definePageMeta({
   name: 'My Office',
   layout: 'default',
   middleware: 'auth',
 })
 
-const getCount = async () => useTrpc().quote.getCount.query()
-const getBooked = async () => useTrpc().quote.getBooked.query()
-const {
-  data: countData,
-  suspense,
-  isLoading,
-  refetch: updateCount,
-} = useQuery({
-  queryKey: ['quoteCount'],
-  queryFn: getCount,
-})
-onServerPrefetch(async () => {
-  await suspense()
-})
-const { data: bookedData, suspense: bookedSuspense } = useQuery({
-  queryKey: ['booked'],
-  queryFn: getBooked,
-})
-onServerPrefetch(async () => {
-  await bookedSuspense()
-})
+const { data: countData } = await useTrpc().quote.getCount.useQuery()
+const { data: bookedData } = await useTrpc().quote.getBooked.useQuery()
+// const {
+//   data: countData,
+//   suspense,
+//   isLoading,
+//   refetch: updateCount,
+// } = useQuery({
+//   queryKey: ['quoteCount'],
+//   queryFn: getCount,
+// })
+// onServerPrefetch(async () => {
+//   await suspense()
+// })
+// const { data: bookedData, suspense: bookedSuspense } = useQuery({
+//   queryKey: ['booked'],
+//   queryFn: getBooked,
+// })
+// onServerPrefetch(async () => {
+//   await bookedSuspense()
+// })
 </script>
 
 <template>
@@ -37,10 +35,10 @@ onServerPrefetch(async () => {
         <n-statistic label="Today's Quotes" :value="99" />
       </n-col>
       <n-col :span="4">
-        <n-statistic label="Orders Booked" :value="bookedData" />
+        <n-statistic label="Orders Booked" :value="bookedData as number" />
       </n-col>
       <n-col :span="4">
-        <n-statistic label="Active Quotes" :value="countData" />
+        <n-statistic label="Active Quotes" :value="countData as number" />
       </n-col>
     </n-row>
     <!--    <n-row>-->

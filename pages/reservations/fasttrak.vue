@@ -5,6 +5,7 @@ import { ref } from '#imports'
 import { NButton, useMessage, NTag } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
+
 definePageMeta({
   name: 'Fasttrak',
   layout: 'default',
@@ -13,18 +14,18 @@ definePageMeta({
 const tableRef = ref(null)
 const message = useMessage()
 
-const {
-  data: reservationsData,
-  suspense: reservationsSuspense,
-  isLoading,
-} = useQuery({
-  queryKey: ['fasttrakReservations'],
-  queryFn: () => useTrpc().fasttrak.getReservations.mutate(),
-})
-
-onServerPrefetch(async () => {
-  await reservationsSuspense()
-})
+// const {
+//   data: reservationsData,
+//   suspense: reservationsSuspense,
+//   isLoading,
+// } = useQuery({
+//   queryKey: ['fasttrakReservations'],
+//   queryFn: () => useTrpc().fasttrak.getReservations.mutate(),
+// })
+const { data: reservationsData, pending: isLoading } = await useTrpc().fasttrak.getReservations.useQuery()
+// onServerPrefetch(async () => {
+//   await reservationsSuspense()
+// })
 
 const reservations = computed(() => reservationsData.value?.items)
 
@@ -52,9 +53,8 @@ const createColumns = (): DataTableColumns<Reservation> => [
     key: 'date',
     title: 'Date & Time',
     render(row) {
-      return `${format(new Date(row.scheduledPickupTime), 'PP, p')} ${
-        row.estimatedHours
-      }`
+      return `${format(new Date(row.scheduledPickupTime), 'PP, p')} ${row.estimatedHours
+        }`
     },
     ellipsis: {
       tooltip: true,

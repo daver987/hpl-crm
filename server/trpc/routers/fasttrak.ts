@@ -1,8 +1,9 @@
 import { router, publicProcedure } from '../trpc'
 import type { CustomerArray } from '~/composables/fasttrak-api'
 import type { ReservationResponse } from '~/schema/reservationSchema'
-import type { FasttrakRequestOptions } from '~/server/services/fasttrakRequest'
-import { fasttrakRequest } from '~/server/services/fasttrakRequest'
+import type { FasttrakRequestOptions } from '~/server/fasttrakRequest'
+import { fasttrakRequest } from '~/server/fasttrakRequest'
+import { getCookie } from 'h3'
 
 export const fasttrakRouter = router({
   get: publicProcedure.query(async ({ ctx }) => {
@@ -30,7 +31,7 @@ export const fasttrakRouter = router({
     return customers
   }),
 
-  getReservations: publicProcedure.mutation(async ({ ctx }) => {
+  getReservations: publicProcedure.query(async ({ ctx }) => {
     const accessToken = ctx.accessToken
     console.log(
       'Access token',

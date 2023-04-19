@@ -8,7 +8,6 @@ export const customerRouter = router({
       limit: 100,
       expand: ['data.sources', 'data.invoice_settings'],
     })
-    console.log(customers)
     return customers
   }),
 
@@ -23,7 +22,6 @@ export const customerRouter = router({
       const deletedCustomer = await stripe.customers.del(
         input.stripe_customer_id
       )
-      console.log(deletedCustomer)
       return deletedCustomer
     }),
 
@@ -44,7 +42,6 @@ export const customerRouter = router({
         input.id,
         input.options
       )
-      console.log(updatedCustomer)
       return updatedCustomer
     }),
 })

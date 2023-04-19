@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useQuery } from '@tanstack/vue-query'
 import { ref } from '#imports'
 import { format } from 'date-fns'
 import { NTag, NP, NButton, useDialog } from 'naive-ui'
@@ -7,21 +6,10 @@ import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 
 const refTable = ref(null)
 
-const {
-  data: quoteData,
-  suspense: quoteSuspense,
-  isLoading,
-  refetch: updateQuotes,
-} = useQuery({
-  queryKey: ['quotes'],
-  queryFn: () => useTrpc().quote.getAll.query(),
-})
+const { data: quoteData, pending: isLoading, refresh: updateQuotes } = await useTrpc().quote.getAll.useQuery()
+// console.log('loading:', isLoading.value)
 
-onServerPrefetch(async () => {
-  await quoteSuspense()
-})
-
-type ArrayElementType<T extends ReadonlyArray<any> | undefined> =
+type ArrayElementType<T extends ReadonlyArray<any> | null> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
 type RowData = ArrayElementType<typeof quoteData.value>
@@ -199,7 +187,7 @@ const createColumns = (): DataTableColumns<RowData> => [
           size: 'small',
           color: 'blue',
           textColor: '#fff',
-          onClick: () => handleBook(row.quote_number),
+          // onClick: () => handleBook(row.quote_number),
         },
         { default: () => 'Book' }
       )
@@ -251,7 +239,7 @@ const filteredData = computed(() => {
   })
 })
 
-const filterSearch = () => {}
+const filterSearch = () => { }
 const dialog = useDialog()
 const message = useMessage()
 

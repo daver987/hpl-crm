@@ -17,19 +17,8 @@ const refTable = ref(null)
 const dialog = useDialog()
 const message = useMessage()
 
-const {
-  data: stripeCustomerData,
-  suspense: stripeCustomerDataSuspense,
-  isLoading: loading,
-  refetch: refetchStripeCustomers,
-} = useQuery({
-  queryKey: ['stripeCustomers'],
-  queryFn: () => useTrpc().customer.getAll.query(),
-})
 
-onServerPrefetch(async () => {
-  await stripeCustomerDataSuspense()
-})
+const { data: stripeCustomerData, pending: loading, refresh: refetchStripeCustomers } = await useTrpc().customer.getAll.useQuery()
 
 const stripeCustomers = computed(() => stripeCustomerData.value?.data)
 
