@@ -18,9 +18,9 @@ export default defineNuxtConfig({
     transpile: ['libphonenumber-js', '@googlemaps/js-api-loader', 'trpc-nuxt'],
   },
 
-  routeRules: {
-    '**': { prerender: true },
-  },
+  // routeRules: {
+  //   '**': { prerender: true },
+  // },
 
   typescript: {
     strict: true,
@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'vercel',
+    preset: 'netlify',
   },
 
   naiveUI: {
