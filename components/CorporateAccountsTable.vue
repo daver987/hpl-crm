@@ -6,18 +6,7 @@ import { NButton, useMessage } from 'naive-ui'
 import type { Customer } from '~/composables/fasttrak-api'
 import type { DataTableColumns } from 'naive-ui'
 
-const {
-  data: fasttrakCustomersData,
-  suspense: fasttrakCustomersSuspense,
-  isLoading: loadingFasttrakCustomers,
-} = useQuery({
-  queryKey: ['fasttrakCustomers'],
-  queryFn: () => useTrpc().fasttrak.get.query(),
-})
-
-onServerPrefetch(async () => {
-  await fasttrakCustomersSuspense()
-})
+const { data: fasttrakCustomersData, pending: loadingFasttrakCustomers } = await useTrpc().fasttrak.get.useQuery()
 
 const fasttrakCustomers = computed(() => fasttrakCustomersData.value?.items)
 

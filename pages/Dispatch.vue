@@ -9,7 +9,7 @@ definePageMeta({
 
 
 
-const customers = await useTrpc().fasttrak.get.query()
+const { data: customers } = await useTrpc().fasttrak.get.useQuery()
 console.log("Fasttrack Customers", customers)
 </script>
 
