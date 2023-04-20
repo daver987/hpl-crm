@@ -20,7 +20,7 @@ const AuthResponseSchema = z.object({
 
 export type AuthResponse = z.infer<typeof AuthResponseSchema>
 
-export const fasttrakAuth = async (): Promise<AuthResponse> => {
+export const fasttrakAuth = async (): Promise<string> => {
   const runtimeConfig = useRuntimeConfig()
   const config = (partnerAccessKey: string, systemId: string) => ({
     headers: {
@@ -72,10 +72,12 @@ export const fasttrakAuth = async (): Promise<AuthResponse> => {
       throw error
     }
   }
-  return authenticateFasttrak(
+  const authResponse = await authenticateFasttrak(
     runtimeConfig.FASTTRACK_SYSTEM_ID,
     runtimeConfig.FASTTRACK_USER_EMAIL,
     runtimeConfig.FASTTRACK_USER_PASSWORD,
     ''
   )
+  const authToken = authResponse.item.token.accessToken
+  return authToken
 }

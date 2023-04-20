@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { formatAddress } from '~/utils/formatAddress'
 import { usePricingEngine } from '~/composables/usePricingEngine'
 import { useFormatDateTime } from '~/composables/useFormatDateTime'
-import { createQuoteFromForm } from '~/server/utils/trpcUtils'
+import { createQuoteFromForm } from '~/server/trpcUtils'
 import { useLinkShortener } from '~/composables/useLinkShortener'
 import {
   quoteFormReturnSchema,

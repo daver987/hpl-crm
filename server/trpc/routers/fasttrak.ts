@@ -1,8 +1,8 @@
 import { router, publicProcedure } from '../trpc'
 import type { CustomerArray } from '~/composables/fasttrak-api'
 import type { ReservationResponse } from '~/schema/reservationSchema'
-import type { FasttrakRequestOptions } from '~/server/fasttrakRequest'
-import { fasttrakRequest } from '~/server/fasttrakRequest'
+import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
+import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { getCookie } from 'h3'
 
 export const fasttrakRouter = router({
