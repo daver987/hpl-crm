@@ -361,6 +361,7 @@ export const quoteRouter = router({
       }
       const { shortLink, createShortLink } = useLinkShortener(domain)
       const data = await prisma.quote.create({
+        //@ts-expect-error
         data: createQuoteFromForm(quotes),
         include: {
           user: {

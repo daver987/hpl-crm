@@ -6,21 +6,8 @@ definePageMeta({
 })
 
 const rideQuery = 'Scheduled'
-// async function getRides() {
-//   return await useTrpc().ride.getRide.query({ rideQuery })
-// }
-const { data: rideData, pending: isLoading } = await useTrpc().ride.getRide.useQuery({ rideQuery })
-// const {
-//   data: rideData,
-//   isLoading,
-//   suspense: rideSuspense,
-// } = useQuery({
-//   queryKey: ['rides', rideQuery],
-//   queryFn: getRides,
-// })
-// onServerPrefetch(async () => {
-//   await rideSuspense()
-// })
+const { data: rideData, pending: isLoading } =
+  await useTrpc().ride.getRide.useQuery({ rideQuery })
 </script>
 
 <template>

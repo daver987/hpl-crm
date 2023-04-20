@@ -6,18 +6,19 @@ import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 
 const refTable = ref(null)
 
-const { data: quoteData, pending: isLoading, refresh: updateQuotes } = await useTrpc().quote.getAll.useQuery()
-// console.log('loading:', isLoading.value)
+const {
+  data: quoteData,
+  pending: isLoading,
+  refresh: updateQuotes,
+} = await useTrpc().quote.getAll.useQuery()
 
 type ArrayElementType<T extends ReadonlyArray<any> | null> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
 type RowData = ArrayElementType<typeof quoteData.value>
 
-const rowKey = (row: RowData) => row.quote_number
-
 const quotes = computed(() => quoteData.value)
-
+const rowKey = (row: RowData) => row.quote_number
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys
@@ -239,7 +240,7 @@ const filteredData = computed(() => {
   })
 })
 
-const filterSearch = () => { }
+const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
 
@@ -300,20 +301,20 @@ function handleConfirm(event: DeleteEvent) {
       </n-space>
     </n-grid-item>
   </n-grid>
-<ClientOnly>
-  <n-data-table
-    :row-key="rowKey"
-    striped
-    @update:checked-row-keys="handleCheck"
-    :max-height="700"
-    ref="refTable"
-    remote
-    :loading="isLoading"
-    :columns="columns"
-    :data="filteredData"
-    virtual-scroll
-    :scroll-x="1800"
-    size="small"
-  />
-</ClientOnly>
+  <ClientOnly>
+    <n-data-table
+      :row-key="rowKey"
+      striped
+      @update:checked-row-keys="handleCheck"
+      :max-height="700"
+      ref="refTable"
+      remote
+      :loading="isLoading"
+      :columns="columns"
+      :data="filteredData"
+      virtual-scroll
+      :scroll-x="1800"
+      size="small"
+    />
+  </ClientOnly>
 </template>

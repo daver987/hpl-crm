@@ -17,13 +17,14 @@ const refTable = ref(null)
 const dialog = useDialog()
 const message = useMessage()
 
-
-const { data: stripeCustomerData, pending: loading, refresh: refetchStripeCustomers } = await useTrpc().customer.getAll.useQuery()
-
+const {
+  data: stripeCustomerData,
+  pending: loading,
+  refresh: refetchStripeCustomers,
+} = await useTrpc().customer.getAll.useQuery()
 const stripeCustomers = computed(() => stripeCustomerData.value?.data)
 
 const rowKey = (row: RowData) => row.id
-
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 
 function handleCheck(rowKeys: DataTableRowKey[]) {
@@ -170,16 +171,16 @@ const columns = createColumns()
 </script>
 
 <template>
-  <client-only>
-  <n-data-table
-    size="small"
-    :max-height="685"
-    ref="refTable"
-    remote
-    :loading="loading"
-    :columns="columns"
-    :data="stripeCustomers"
-    :row-key="rowKey"
-  />
-</client-only>
+  <ClientOnly>
+    <n-data-table
+      size="small"
+      :max-height="685"
+      ref="refTable"
+      remote
+      :loading="loading"
+      :columns="columns"
+      :data="stripeCustomers"
+      :row-key="rowKey"
+    />
+  </ClientOnly>
 </template>

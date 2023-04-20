@@ -8,12 +8,6 @@ import { getCookie } from 'h3'
 export const fasttrakRouter = router({
   get: publicProcedure.query(async ({ ctx }) => {
     const accessToken = ctx.accessToken
-    console.log(
-      'Access token',
-      accessToken,
-      'Calling authenticateFasttrak from [get]',
-      new Date().toISOString()
-    )
     const endpoint = 'customers'
     const queryParams = {
       includeInactive: false,

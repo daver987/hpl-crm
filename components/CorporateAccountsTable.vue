@@ -2,16 +2,15 @@
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
 import { NButton, useMessage } from 'naive-ui'
-
 import type { Customer } from '~/composables/fasttrak-api'
 import type { DataTableColumns } from 'naive-ui'
 
-const { data: fasttrakCustomersData, pending: loadingFasttrakCustomers } = await useTrpc().fasttrak.get.useQuery()
-
-const fasttrakCustomers = computed(() => fasttrakCustomersData.value?.items)
-
 const refTable = ref(null)
 const message = useMessage()
+
+const { data: fasttrakCustomersData, pending: loadingFasttrakCustomers } =
+  await useTrpc().fasttrak.get.useQuery()
+const fasttrakCustomers = computed(() => fasttrakCustomersData.value?.items)
 
 const rowKey = (row: Customer) => row?.customerId
 
@@ -72,30 +71,6 @@ const createColumns = (): DataTableColumns<Customer> => [
       tooltip: true,
     },
   },
-  // {
-  //   key: 'is_booked',
-  //   title: 'Card On File',
-  //   render(row) {
-  //     return h(
-  //       NTag,
-  //       {
-  //         style: {
-  //           marginRight: '6px',
-  //         },
-  //         type:
-  //           row.invoice_settings.default_payment_method || row.default_source
-  //             ? 'success'
-  //             : 'error',
-  //       },
-  //       {
-  //         default: () =>
-  //           row.invoice_settings.default_payment_method || row.default_source
-  //             ? 'Card On File'
-  //             : 'No Card On File',
-  //       }
-  //     )
-  //   },
-  // },
   {
     title: 'Update',
     key: 'delete',
@@ -136,16 +111,16 @@ const columns = createColumns()
 
 <template>
   <ClientOnly>
-  <n-data-table
-    :max-height="625"
-    ref="refTable"
-    remote
-    :loading="loadingFasttrakCustomers"
-    :columns="columns"
-    virtual-scroll
-    :data="fasttrakCustomers"
-    :row-key="rowKey"
-    size="small"
-  />
-</ClientOnly>
+    <n-data-table
+      :max-height="625"
+      ref="refTable"
+      remote
+      :loading="loadingFasttrakCustomers"
+      :columns="columns"
+      virtual-scroll
+      :data="fasttrakCustomers"
+      :row-key="rowKey"
+      size="small"
+    />
+  </ClientOnly>
 </template>
