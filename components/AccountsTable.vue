@@ -170,6 +170,7 @@ const columns = createColumns()
 </script>
 
 <template>
+  <client-only>
   <n-data-table
     size="small"
     :max-height="685"
@@ -180,4 +181,5 @@ const columns = createColumns()
     :data="stripeCustomers"
     :row-key="rowKey"
   />
+</client-only>
 </template>

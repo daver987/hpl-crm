@@ -178,6 +178,7 @@ const columns = createColumns()
 </script>
 
 <template>
+  <ClientOnly>
   <n-data-table
     :max-height="685"
     ref="tableRef"
@@ -190,4 +191,5 @@ const columns = createColumns()
     :scroll-x="1800"
     size="small"
   />
+</ClientOnly>
 </template>
