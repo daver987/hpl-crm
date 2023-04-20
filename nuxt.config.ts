@@ -1,6 +1,5 @@
 export default defineNuxtConfig({
   modules: [
-    '@nuxtjs/supabase',
     '@vueuse/nuxt',
     'nuxt-vitest',
     '@unocss/nuxt',
