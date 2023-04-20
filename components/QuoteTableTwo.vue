@@ -6,19 +6,13 @@ import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 
 const refTable = ref(null)
 
-// const {
-//   data: quoteData,
-//   pending: isLoading,
-//   refresh: updateQuotes,
-// } = await useTrpc().quote.getAll.query()
-
 const {
   data: quoteData,
   isLoading: isLoading,
   refetch: updateQuotes,
 } = useQuery({
   queryKey: ['quotes'],
-  queryFn: () => useTrpc().quote.getAll.query(),
+  queryFn: async () => await useTrpc().quote.getAll.query(),
 })
 
 type ArrayElementType<T extends ReadonlyArray<any> | null> =
