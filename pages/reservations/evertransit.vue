@@ -6,8 +6,11 @@ definePageMeta({
 })
 
 const rideQuery = 'Scheduled'
-const { data: rideData, pending: isLoading } =
-  await useTrpc().ride.getRide.useQuery({ rideQuery })
+
+const { data: rideData, isLoading: isLoading } = useQuery({
+  queryKey: ['everytransitRides'],
+  queryFn: () => useTrpc().ride.getRide.query({ rideQuery }),
+})
 </script>
 
 <template>

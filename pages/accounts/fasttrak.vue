@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 
 <template>
-  <ClientOnly>
+  <n-layout-content>
     <CorporateAccountsTable />
-  </ClientOnly>
+  </n-layout-content>
 </template>

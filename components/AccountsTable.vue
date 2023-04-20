@@ -19,9 +19,12 @@ const message = useMessage()
 
 const {
   data: stripeCustomerData,
-  pending: loading,
-  refresh: refetchStripeCustomers,
-} = await useTrpc().customer.getAll.useQuery()
+  isLoading: loading,
+  refetch: refetchStripeCustomers,
+} = useQuery({
+  queryKey: ['stripeCustomers'],
+  queryFn: () => useTrpc().customer.getAll.query(),
+})
 const stripeCustomers = computed(() => stripeCustomerData.value?.data)
 
 const rowKey = (row: RowData) => row.id

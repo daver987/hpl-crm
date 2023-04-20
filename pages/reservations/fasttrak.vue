@@ -13,8 +13,10 @@ definePageMeta({
 const tableRef = ref(null)
 const message = useMessage()
 
-const { data: reservationsData, pending: isLoading } =
-  await useTrpc().fasttrak.getReservations.useQuery()
+const { data: reservationsData, isLoading: isLoading } = useQuery({
+  queryKey: ['reservationsFasttrak'],
+  queryFn: () => useTrpc().fasttrak.getReservations.query(),
+})
 
 const reservations = computed(() => reservationsData.value?.items)
 
@@ -168,7 +170,7 @@ const columns = createColumns()
 </script>
 
 <template>
-  <ClientOnly>
+  <n-layout-content>
     <n-data-table
       :max-height="685"
       ref="tableRef"
@@ -181,5 +183,5 @@ const columns = createColumns()
       :scroll-x="1800"
       size="small"
     />
-  </ClientOnly>
+  </n-layout-content>
 </template>
