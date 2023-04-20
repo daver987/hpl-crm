@@ -17,7 +17,6 @@ export async function createContext(_event: H3Event) {
   return {
     prisma: prismaDb,
     stripe: stripe,
-    accessToken: _event.context.authToken,
   }
 }
 

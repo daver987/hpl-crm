@@ -15,7 +15,7 @@ const message = useMessage()
 
 const { data: reservationsData, isLoading: isLoading } = useQuery({
   queryKey: ['reservationsFasttrak'],
-  queryFn: () => useTrpc().fasttrak.getReservations.query(),
+  queryFn: async () => await useTrpc().fasttrak.getReservations.query(),
 })
 
 const reservations = computed(() => reservationsData.value?.items)
