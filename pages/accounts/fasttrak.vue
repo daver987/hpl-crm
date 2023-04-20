@@ -7,5 +7,3 @@ definePageMeta({
 <template>
   <CorporateAccountsTable />
 </template>
-
-<style scoped></style>

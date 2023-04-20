@@ -7,5 +7,3 @@
     <n-card title="Overview"> Accounts overview </n-card>
   </div>
 </template>
-
-<style scoped></style>

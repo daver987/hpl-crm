@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// const menuOptions = navigation()
 const route = useRoute()
 </script>
 <template>

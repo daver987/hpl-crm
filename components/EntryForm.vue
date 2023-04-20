@@ -42,6 +42,3 @@
     </q-page-container>
   </q-layout> -->
 </template>
-
-<style scoped>
-</style>
