@@ -1,7 +1,7 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import type { H3Event } from 'h3'
 import { prismaDb } from '~/server/prismadb'
-import { fasttrakAuth } from '~/server/fasttrakInit'
+import { fasttrakAuth } from '~/server/middleware/fasttrakInit'
 import { stripe } from '~/server/services/stripeInit'
 
 /**
