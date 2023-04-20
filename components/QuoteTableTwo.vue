@@ -102,7 +102,7 @@ const createColumns = (): DataTableColumns<RowData> => [
         row.user.phone_number
       )
     },
-    width: 150,
+    width: 175,
   },
 
   {
@@ -300,7 +300,7 @@ function handleConfirm(event: DeleteEvent) {
       </n-space>
     </n-grid-item>
   </n-grid>
-
+<ClientOnly>
   <n-data-table
     :row-key="rowKey"
     striped
@@ -315,4 +315,5 @@ function handleConfirm(event: DeleteEvent) {
     :scroll-x="1800"
     size="small"
   />
+</ClientOnly>
 </template>

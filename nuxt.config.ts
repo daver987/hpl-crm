@@ -50,7 +50,6 @@ export default defineNuxtConfig({
     FASTTRACK_SYSTEM_ID: process.env.FASTTRACK_SYSTEM_ID,
     FASTTRACK_USER_PASSWORD: process.env.FASTTRACK_USER_PASSWORD,
     FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
-    NUXT_SECRET: process.env.NUXT_SECRET,
     EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,

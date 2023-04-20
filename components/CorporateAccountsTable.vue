@@ -135,6 +135,7 @@ const columns = createColumns()
 </script>
 
 <template>
+  <ClientOnly>
   <n-data-table
     :max-height="625"
     ref="refTable"
@@ -146,4 +147,5 @@ const columns = createColumns()
     :row-key="rowKey"
     size="small"
   />
+</ClientOnly>
 </template>
