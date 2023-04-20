@@ -3,11 +3,11 @@ import type { CustomerArray } from '~/composables/fasttrak-api'
 import type { ReservationResponse } from '~/schema/reservationSchema'
 import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
-import { getCookie } from 'h3'
+import { fasttrakAuth } from '~/services/fasttrakInit'
 
 export const fasttrakRouter = router({
   get: publicProcedure.query(async ({ ctx }) => {
-    const accessToken = ctx.accessToken
+    const accessToken = await fasttrakAuth()
     const endpoint = 'customers'
     const queryParams = {
       includeInactive: false,
@@ -26,7 +26,7 @@ export const fasttrakRouter = router({
   }),
 
   getReservations: publicProcedure.query(async ({ ctx }) => {
-    const accessToken = ctx.accessToken
+    const accessToken = await fasttrakAuth()
     console.log(
       'Access token',
       accessToken,

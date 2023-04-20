@@ -6,6 +6,7 @@ definePageMeta({
 
 const { data: countData } = await useTrpc().quote.getCount.useQuery()
 const { data: bookedData } = await useTrpc().quote.getBooked.useQuery()
+
 // const {
 //   data: countData,
 //   suspense,
