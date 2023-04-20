@@ -3,9 +3,9 @@
 </script>
 
 <template>
-	<div>
+	<n-layout-content>
 		<n-card title="Overview"> Reservations overview </n-card>
-	</div>
+	</n-layout-content>
 </template>
 
 <style scoped></style>

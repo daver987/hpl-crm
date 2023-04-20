@@ -7,8 +7,6 @@ definePageMeta({
 
 <template>
   <n-layout-content>
-    <ClientOnly>
-      <QuoteTableTwo />
-    </ClientOnly>
+    <QuoteTableTwo />
   </n-layout-content>
 </template>

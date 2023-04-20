@@ -8,8 +8,12 @@ import type { DataTableColumns } from 'naive-ui'
 const refTable = ref(null)
 const message = useMessage()
 
-const { data: fasttrakCustomersData, pending: loadingFasttrakCustomers } =
-  await useTrpc().fasttrak.get.useQuery()
+const { data: fasttrakCustomersData, isLoading: loadingFasttrakCustomers } =
+  useQuery({
+    queryFn: () => useTrpc().fasttrak.get.query(),
+    queryKey: ['fasttrakCustomers'],
+  })
+
 const fasttrakCustomers = computed(() => fasttrakCustomersData.value?.items)
 
 const rowKey = (row: Customer) => row?.customerId

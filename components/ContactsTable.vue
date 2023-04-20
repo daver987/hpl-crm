@@ -6,8 +6,10 @@ import type { DataTableColumns } from 'naive-ui'
 const refTable = ref(null)
 const message = useMessage()
 
-const { data: contactData, pending: isLoading } =
-  await useTrpc().user.getAll.useQuery()
+const { data: contactData, isLoading: isLoading } = useQuery({
+  queryFn: () => useTrpc().user.getAll.query(),
+  queryKey: ['contacts'],
+})
 
 type ArrayElementType<T extends ReadonlyArray<any> | null> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
