@@ -22,8 +22,6 @@ export default defineNuxtConfig({
     shim: false,
   },
 
-  ssr: false,
-
   nitro: {
     preset: 'netlify',
   },
@@ -59,5 +57,5 @@ export default defineNuxtConfig({
       alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
     },
   },
-  devtools: ['true'],
+  devtools: 'true',
 })

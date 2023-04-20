@@ -3,18 +3,14 @@ import { ref } from '#imports'
 import { NButton, useMessage } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
-
 const refTable = ref(null)
 const message = useMessage()
 
-
-const { data: contactData, pending: isLoading } = await useTrpc().user.getAll.useQuery()
-
-
+const { data: contactData, pending: isLoading } =
+  await useTrpc().user.getAll.useQuery()
 
 type ArrayElementType<T extends ReadonlyArray<any> | null> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
-
 
 type RowData = ArrayElementType<typeof contactData.value>
 
@@ -108,7 +104,6 @@ const columns = createColumns()
 </script>
 
 <template>
-  <client-only>
   <n-data-table
     :max-height="675"
     ref="refTable"
@@ -119,5 +114,4 @@ const columns = createColumns()
     :row-key="rowKey"
     size="small"
   />
-  </client-only>
 </template>

@@ -110,17 +110,15 @@ const columns = createColumns()
 </script>
 
 <template>
-  <ClientOnly>
-    <n-data-table
-      :max-height="625"
-      ref="refTable"
-      remote
-      :loading="loadingFasttrakCustomers"
-      :columns="columns"
-      virtual-scroll
-      :data="fasttrakCustomers"
-      :row-key="rowKey"
-      size="small"
-    />
-  </ClientOnly>
+  <n-data-table
+    :max-height="625"
+    ref="refTable"
+    remote
+    :loading="loadingFasttrakCustomers"
+    :columns="columns"
+    virtual-scroll
+    :data="fasttrakCustomers"
+    :row-key="rowKey"
+    size="small"
+  />
 </template>

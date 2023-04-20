@@ -171,16 +171,14 @@ const columns = createColumns()
 </script>
 
 <template>
-  <ClientOnly>
-    <n-data-table
-      size="small"
-      :max-height="685"
-      ref="refTable"
-      remote
-      :loading="loading"
-      :columns="columns"
-      :data="stripeCustomers"
-      :row-key="rowKey"
-    />
-  </ClientOnly>
+  <n-data-table
+    size="small"
+    :max-height="685"
+    ref="refTable"
+    remote
+    :loading="loading"
+    :columns="columns"
+    :data="stripeCustomers"
+    :row-key="rowKey"
+  />
 </template>

@@ -301,20 +301,18 @@ function handleConfirm(event: DeleteEvent) {
       </n-space>
     </n-grid-item>
   </n-grid>
-  <ClientOnly>
-    <n-data-table
-      :row-key="rowKey"
-      striped
-      @update:checked-row-keys="handleCheck"
-      :max-height="700"
-      ref="refTable"
-      remote
-      :loading="isLoading"
-      :columns="columns"
-      :data="filteredData"
-      virtual-scroll
-      :scroll-x="1800"
-      size="small"
-    />
-  </ClientOnly>
+  <n-data-table
+    :row-key="rowKey"
+    striped
+    @update:checked-row-keys="handleCheck"
+    :max-height="700"
+    ref="refTable"
+    remote
+    :loading="isLoading"
+    :columns="columns"
+    :data="filteredData"
+    virtual-scroll
+    :scroll-x="1800"
+    size="small"
+  />
 </template>
