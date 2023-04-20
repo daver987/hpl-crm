@@ -2,7 +2,6 @@
 definePageMeta({
   name: 'Dispatch',
   layout: 'default',
-  middleware: 'auth',
 })
 </script>
 

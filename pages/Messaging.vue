@@ -2,7 +2,6 @@
 definePageMeta({
   name: 'Messaging',
   layout: 'default',
-  middleware: 'auth',
 })
 
 const options = [

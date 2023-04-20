@@ -2,7 +2,6 @@
 definePageMeta({
   name: 'My Office',
   layout: 'default',
-  middleware: 'auth',
 })
 
 const { data: countData } = await useTrpc().quote.getCount.useQuery()

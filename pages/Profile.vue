@@ -6,7 +6,6 @@
 definePageMeta({
   name: 'Profile',
   layout: 'default',
-  middleware: 'auth',
 })
 
 // const quotesToSnakeCase = toSnakeCase(quotes)
@@ -72,11 +71,8 @@ definePageMeta({
 
 <template>
   <n-layout-content style="padding: 24px">
-    <n-card title="Profile Page">
-      
-    </n-card>
+    <n-card title="Profile Page"> </n-card>
   </n-layout-content>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
