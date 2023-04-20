@@ -73,9 +73,9 @@ export const fasttrakAuth = async (): Promise<string> => {
     }
   }
   const authResponse = await authenticateFasttrak(
-    runtimeConfig.FASTTRACK_SYSTEM_ID,
-    runtimeConfig.FASTTRACK_USER_EMAIL,
-    runtimeConfig.FASTTRACK_USER_PASSWORD,
+    '28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1',
+    'info@drobertson.pro',
+    'i3taxfrcioIn!',
     ''
   )
   const authToken = authResponse.item.token.accessToken
