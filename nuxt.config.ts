@@ -2,9 +2,9 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     'nuxt-vitest',
-    '@unocss/nuxt',
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/color-mode',
+    'nuxt-icon',
     [
       '@pinia/nuxt',
       {
@@ -19,7 +19,6 @@ export default defineNuxtConfig({
         ? [
             'naive-ui',
             'vueuc',
-            '@css-render/vue3-ssr',
             '@juggle/resize-observer',
             'libphonenumber-js',
             '@googlemaps/js-api-loader',
@@ -36,10 +35,6 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
     shim: false,
-  },
-
-  nitro: {
-    preset: 'netlify',
   },
 
   naiveUI: {
