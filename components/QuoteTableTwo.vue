@@ -15,7 +15,7 @@ const {
   queryFn: async () => await useTrpc().quote.getAll.query(),
 })
 
-type ArrayElementType<T extends ReadonlyArray<any> | null> =
+type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
 type RowData = ArrayElementType<typeof quoteData.value>
@@ -138,7 +138,7 @@ const createColumns = (): DataTableColumns<RowData> => [
     render(row) {
       return row.service.label
     },
-    width: 125,
+    width: 150,
   },
   {
     key: 'vehicle_label',
@@ -170,6 +170,9 @@ const createColumns = (): DataTableColumns<RowData> => [
       return h(
         NP,
         {
+          style: {
+            color: '#986F0C',
+          },
           strong: true,
         },
         { default: () => `$${row.quote_total}` }
