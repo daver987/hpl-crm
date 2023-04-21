@@ -1,20 +1,20 @@
 <script lang="ts" setup>
-import { PersonOutline as PersonIcon } from '@vicons/ionicons5'
-import {
-  RequestPageOutlined as QuoteIcon,
-  GroupOutlined as ContactsIcon,
-  InboxOutlined as HomeIcon,
-  AccountCircleOutlined as AccountsIcon,
-  CalendarMonthOutlined as ReservationsIcon,
-  MessageOutlined as MessageIcon,
-  DirectionsCarOutlined as DispatchIcon,
-  ReceiptOutlined as InvoiceIcon,
-  SettingsOutlined as SettingsIcon,
-  ScheduleOutlined as ScheduleIcon,
-} from '@vicons/material'
 import { Component } from 'vue'
 import { NIcon } from 'naive-ui'
 import { NuxtLink } from '#components'
+import { Icon } from '#components'
+
+const SettingsIcon = h(Icon, { name: 'ic:outline-settings' })
+const ScheduleIcon = h(Icon, { name: 'ic:outline-schedule' })
+const InvoiceIcon = h(Icon, { name: 'ic:outline-receipt' })
+const DispatchIcon = h(Icon, { name: 'ic:outline-directions-car' })
+const MessageIcon = h(Icon, { name: 'ic:outline-message' })
+const ReservationsIcon = h(Icon, { name: 'ic:outline-calendar-month' })
+const AccountsIcon = h(Icon, { name: 'ic:outline-account-circle' })
+const HomeIcon = h(Icon, { name: 'ic:outline-inbox' })
+const ContactsIcon = h(Icon, { name: 'ic:outline-group' })
+const QuoteIcon = h(Icon, { name: 'ic:outline-request-page' })
+const PersonIcon = h(Icon, { name: 'basil:user-outline' })
 
 interface RenderNavOptions {
   navigateTo: string
