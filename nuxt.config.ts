@@ -14,7 +14,23 @@ export default defineNuxtConfig({
   ],
 
   build: {
-    transpile: ['libphonenumber-js', '@googlemaps/js-api-loader', 'trpc-nuxt'],
+    transpile:
+      process.env.NODE_ENV === 'production'
+        ? [
+            'naive-ui',
+            'vueuc',
+            '@css-render/vue3-ssr',
+            '@juggle/resize-observer',
+            'libphonenumber-js',
+            '@googlemaps/js-api-loader',
+            'trpc-nuxt',
+          ]
+        : [
+            '@juggle/resize-observer',
+            'libphonenumber-js',
+            '@googlemaps/js-api-loader',
+            'trpc-nuxt',
+          ],
   },
 
   typescript: {
@@ -56,6 +72,12 @@ export default defineNuxtConfig({
     resolve: {
       alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
     },
+    optimizeDeps: {
+      include:
+        process.env.NODE_ENV === 'development'
+          ? ['naive-ui', 'vueuc', 'date-fns-tz/esm/formatInTimeZone']
+          : [],
+    },
   },
-  devtools: 'true',
+  devtools: true,
 })
