@@ -83,10 +83,10 @@ export function usePricingEngine(
 
   function updateBaseRate() {
     const selectedVehicleType = vehicles.find(
-      (v) => v.value === vehicleTypeId.value
+      (v) => v.vehicle_number === vehicleTypeId.value
     )
     const selectedServiceType = services.find(
-      (s) => s.value === serviceTypeId.value
+      (s) => s.service_number === serviceTypeId.value
     )
     selectedVehicle.value = selectedVehicleType
     selectedService.value = selectedServiceType

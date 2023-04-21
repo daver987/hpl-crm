@@ -137,6 +137,11 @@ export const quoteRouter = router({
             trip_order: 'asc',
           },
           include: {
+            price: {
+              select: {
+                line_items_list: true,
+              },
+            },
             locations: {
               orderBy: {
                 route_order: 'asc',

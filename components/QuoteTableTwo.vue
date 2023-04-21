@@ -149,6 +149,21 @@ const createColumns = (): DataTableColumns<RowData> => [
     width: 135,
   },
   {
+    key: 'base_rate',
+    title: 'Base Rate',
+    render(row) {
+      return h(
+        NP,
+        {
+          strong: true,
+        },
+        { default: () => `$${row.trips[0].price?.line_items_list[0].total}` }
+      )
+    },
+
+    width: 100,
+  },
+  {
     key: 'quote_total',
     title: 'Price',
     render(row) {
