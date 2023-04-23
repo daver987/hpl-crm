@@ -13,3 +13,28 @@ export async function checkForCustomer(email: string) {
     return customerId.value
   }
 }
+
+export function getTravelType(tripType: string) {
+  switch (tripType) {
+    case 'To Airport':
+      return 'Departure'
+    case 'From Airport':
+      return 'Arrival'
+    case 'Hourly As Directed':
+    case 'Point to Point':
+      return 'Ground'
+    default:
+      return 'None'
+  }
+}
+
+export function getTripCategory(tripType: string) {
+  switch (tripType) {
+    case 'To Airport':
+      return 'Departure'
+    case 'From Airport':
+      return 'Arrivals'
+    default:
+      return 'Transfer'
+  }
+}

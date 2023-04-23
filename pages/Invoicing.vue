@@ -1,130 +1,239 @@
-<script setup lang="ts">
-// import { AgGridVue } from 'ag-grid-vue3'
-// import type { GridOptions, ColDef } from 'ag-grid-community'
-// import { reactive, ref } from '#imports'
-// import { format } from 'date-fns'
-// import { Ref } from 'vue'
-// import 'ag-grid-enterprise'
+<script lang="ts">
+import { defineComponent, ref } from '#imports'
 
-// const gridApi = ref(null) // Optional - for accessing Grid's API
+export default defineComponent({
+  name: 'Invoice',
+  setup() {
+    const invoiceNumber = ref('0001')
+    const invoiceDate = ref('2023-04-23')
+    const lineItems = ref([
+      { description: 'Base Fare', amount: ' $100.00' },
+      { description: 'Fuel Surcharge', amount: ' $10.00' },
+      { description: 'Gratuity', amount: ' $15.00' },
+      // Add more line items if needed
+    ])
+    const totals = ref([
+      { label: 'Subtotal', amount: ' $125.00' },
+      { label: 'HST', amount: ' $16.25' },
+      { label: 'Total', amount: ' $141.25' },
+    ])
+    const pickupAddress = ref('123 Main St')
+    const pickupTime = ref('08:00 AM')
+    const pickupDay = ref('2023-04-24')
+    const dropOffAddress = ref('789 Second St')
 
-// async function getQuote() {
-//   return await useTrpc().quote.getAll.query()
-// }
-// const {
-//   data: quoteData,
-//   suspense,
-//   isLoading,
-//   refetch: updateQuotes,
-// } = useQuery({
-//   queryKey: ['contacts'],
-//   queryFn: getQuote,
-// })
-// onServerPrefetch(async () => {
-//   await suspense()
-// })
+    const billToName = ref('John Doe')
+    const billToAddress = ref('123 Anywhere St, Toronto, ON')
+    const passengerName = ref('Jane Smith')
+    const pickupDateTime = ref('2023-04-24, 08:00 AM')
+    const pickupLocation = ref('123 Main St')
+    const dropOffLocation = ref('789 Second St')
+    const memo = ref('Please confirm pickup time.')
 
-// type ArrayElementType<T extends ReadonlyArray<any> | undefined> =
-//   T extends ReadonlyArray<infer ElementType> ? ElementType : never
-
-// type RowData = ArrayElementType<typeof quoteData.value>
-
-// // Obtain API from grid's onGridReady event
-// const onGridReady = (params) => {
-//   gridApi.value = params.api
-// }
-
-// const gridOptions = {}
-
-// const rowData: Ref<RowData> | Ref<null> | undefined = ref(null) // Set rowData to Array of Objects, one Object per Row
-// rowData.value = quoteData?.value!
-
-// // Each Column Definition results in one Column.
-// const columnDefs = reactive({
-//   value: [
-//     {
-//       headerName: 'Quote',
-//       field: 'quote_number',
-//       filter: 'agNumberColumnFilter',
-//       sort: 'desc',
-//       maxWidth: 120,
-//       resizeable: false,
-//       valueFormatter: (params: Ref<RowData>): string =>
-//         'HPL-' + `${params.value.quote_number}`,
-//       cellStyle: { color: 'red', 'font-weight': 'bold' },
-//     },
-//     {
-//       field: 'created_at',
-//       headerName: 'Quote Number',
-//     },
-//     {
-//       field: 'user.first_name',
-//       headerName: 'Full Name',
-//       valueFormatter: (params: Ref<RowData>): string => {
-//         return `${params.value.user.first_name} ${params.value.user.last_name}`
-//       },
-//     },
-//     {
-//       field: 'user.last_name',
-//       headerName: 'Last Name',
-//     },
-//     {
-//       field: 'trips.[0].locations.[0]?.full_name',
-//       valueFormatter: (params: Ref<RowData>): string | null => {
-//         return params.value.trips[0].locations[0].full_name
-//       },
-//       headerName: 'Pickup Location',
-//     },
-//   ],
-// })
-
-// // DefaultColDef sets props common to all Columns
-// const defaultColDef = {
-//   sortable: true,
-//   filter: true,
-//   flex: 1,
-// }
-// const gridContainer = ref(null)
-
-// // function setGridHeight() {
-// //   const headerHeight = document.querySelector('.n-layout-header').offsetHeight
-// //   const windowHeight = window.innerHeight
-// //   const gridHeight = windowHeight - headerHeight
-// //
-// //   gridContainer.value.AgGridVue.style.height = `${gridHeight}px`
-// // }
-
-// // Example load data from server
-// // onMounted(() => {
-// //   fetch('https://www.ag-grid.com/example-assets/row-data.json')
-// //     .then((result) => result.json())
-// //     .then((remoteRowData) => (rowData.value = remoteRowData))
-// // })
-
-// // const cellWasClicked = (event) => {
-// //   // Example of consuming Grid Event
-// //   console.log('cell was clicked', event)
-// // }
-// // const deselectRows = () => {
-// //   gridApi.value?.deselectAll()
-// // }
+    return {
+      invoiceNumber,
+      invoiceDate,
+      lineItems,
+      totals,
+      pickupAddress,
+      pickupTime,
+      pickupDay,
+      dropOffAddress,
+      billToName,
+      billToAddress,
+      passengerName,
+      pickupDateTime,
+      pickupLocation,
+      dropOffLocation,
+      memo,
+    }
+  },
+})
 </script>
 
 <template>
-  <!-- <ClientOnly> -->
-  <n-layout-content>
-    <n-p>Invoicing</n-p>
+  <n-layout-content style="padding: 24px">
+    <n-card
+      style="
+        max-width: 1000px;
+        margin: auto;
+        aspect-ratio: 17/22;
+        padding-left: 12px;
+        padding-right: 12px;
+      "
+    >
+      <div class="header">
+        <img
+          class="logo"
+          src="/images/hpl-logo-3.png"
+          alt="High Park Livery Logo"
+        />
+        <div class="contact">
+          <p>Email: info@highparklivery.com</p>
+          <p>Phone: 647.360.9631</p>
+        </div>
+      </div>
+
+      <div class="invoice-info">
+        <div>
+          <span class="label">Invoice #</span>
+          <span>{{ invoiceNumber }}</span>
+        </div>
+        <div>
+          <span class="label">Date</span>
+          <span>{{ invoiceDate }}</span>
+        </div>
+      </div>
+
+      <div class="bill-to">
+        <h3>Bill To</h3>
+        <p>{{ billToName }}</p>
+        <p>{{ billToAddress }}</p>
+      </div>
+
+      <div class="order-info">
+        <h3>Order Information</h3>
+        <div>Passenger Name: {{ passengerName }}</div>
+        <div>Pickup Date & Time: {{ pickupDateTime }}</div>
+        <div>Pickup Location: {{ pickupLocation }}</div>
+        <div>Drop Off Location: {{ dropOffLocation }}</div>
+      </div>
+
+      <table class="line-items">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in lineItems" :key="index">
+            <td>{{ item.description }}</td>
+            <td>{{ item.amount }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div v-for="(total, index) in totals" :key="index">
+          <span class="label">{{ total.label }} </span>
+          <span> {{ total.amount }}</span>
+        </div>
+      </div>
+
+      <div class="memo">
+        <h3>Memo</h3>
+        <p>{{ memo }}</p>
+      </div>
+
+      <div class="message">
+        <p>
+          Thank you for choosing High Park Livery. We appreciate your business!
+        </p>
+      </div>
+    </n-card>
   </n-layout-content>
-  <!-- <ag-grid-vue
-      ref="gridContainer"
-      class="ag-theme-alpine-dark"
-      :columnDefs="columnDefs.value"
-      :rowData="rowData"
-      :defaultColDef="defaultColDef"
-      style="height: 700px"
-      animateRows="true"
-      @grid-ready="onGridReady"
-      pagination
-    /> -->
-  <!-- </ClientOnly> -->
 </template>
+
+<style scoped>
+body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 2px solid #a57c52ff;
+}
+
+.logo {
+  max-width: 150px;
+  max-height: 75px;
+}
+
+.contact {
+  text-align: right;
+}
+
+.invoice-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.invoice-info div {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.line-items {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.line-items th,
+.line-items td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.line-items th {
+  background-color: #a57c52ff;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.totals {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.totals div {
+  margin-left: 20px;
+}
+
+.routing {
+  margin-bottom: 20px;
+}
+.routing h3 {
+  margin-bottom: 10px;
+  color: #a57c52ff;
+}
+
+.routing div {
+  margin-bottom: 5px;
+}
+
+.bill-to,
+.order-info,
+.memo {
+  margin-bottom: 20px;
+}
+
+.bill-to h3,
+.order-info h3,
+.memo h3 {
+  color: #a57c52ff;
+  margin-bottom: 10px;
+}
+
+.message {
+  font-style: italic;
+  text-align: center;
+  margin-top: 20px;
+}
+</style>
