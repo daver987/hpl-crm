@@ -19,6 +19,7 @@ const { data: reservationsData, isLoading: isLoading } = useQuery({
 })
 
 const reservations = computed(() => reservationsData.value?.items)
+console.log('Reservations:', reservations.value)
 
 const rowKey = (row: Reservation) => row.reservationId
 

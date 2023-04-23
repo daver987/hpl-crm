@@ -1,0 +1,102 @@
+{
+  "items": [
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/1?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 1,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "Platinum Sedan",
+      "isExcludedFromInternetReservations": false,
+      "passengerCapacity": 3,
+      "bagCapacity": 3,
+      "colorRed": 192,
+      "colorGreen": 192,
+      "colorBlue": 192,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 36
+    },
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/2?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 2,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "SUV",
+      "isExcludedFromInternetReservations": false,
+      "passengerCapacity": 7,
+      "bagCapacity": 7,
+      "colorRed": 128,
+      "colorGreen": 255,
+      "colorBlue": 128,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 23
+    },
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/8?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 8,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "Sedan",
+      "isExcludedFromInternetReservations": false,
+      "passengerCapacity": 3,
+      "bagCapacity": 3,
+      "colorRed": 212,
+      "colorGreen": 212,
+      "colorBlue": 212,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 48
+    },
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/9?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 9,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "Platinum SUV",
+      "isExcludedFromInternetReservations": false,
+      "passengerCapacity": 7,
+      "bagCapacity": 7,
+      "colorRed": 64,
+      "colorGreen": 128,
+      "colorBlue": 128,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 43
+    },
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/15?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 15,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "Black Car",
+      "isExcludedFromInternetReservations": false,
+      "passengerCapacity": 3,
+      "bagCapacity": 2,
+      "colorRed": 128,
+      "colorGreen": 128,
+      "colorBlue": 128,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 48
+    },
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/16?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 16,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "Black SUV",
+      "isExcludedFromInternetReservations": false,
+      "passengerCapacity": 7,
+      "bagCapacity": 7,
+      "colorRed": 64,
+      "colorGreen": 128,
+      "colorBlue": 128,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 53
+    },
+    {
+      "vehicleTypeImageUrl": "https://partnercontent.ifasttrak.com/content/vehicle-type/17?systemId=28AE0C07-CD77-4D72-A0F5-DE99D44DB3C1",
+      "vehicleTypeId": 17,
+      "externalVehicleTypeId": 0,
+      "vehicleTypeName": "Sprinter Van",
+      "isExcludedFromInternetReservations": true,
+      "passengerCapacity": 9,
+      "bagCapacity": 9,
+      "colorRed": 0,
+      "colorGreen": 0,
+      "colorBlue": 0,
+      "vehicleTypeImageId": 0,
+      "externalVehicleTypeImageId": 19
+    }
+  ]
+}

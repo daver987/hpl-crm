@@ -1,1 +1,5 @@
 export * from './customer'
+export * from './ReservationAddWithNewCustomerRequest'
+export * from './customerSearchSchema'
+export * from './vehicleTypeSchema'
+export * from './authResponseSchema'

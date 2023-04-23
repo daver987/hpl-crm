@@ -1,5 +1,6 @@
 import { AuthResponse } from './types'
 export * from './schemas'
+export * from './utils'
 
 export class FasttrakApi {
   private accessToken: string | null
