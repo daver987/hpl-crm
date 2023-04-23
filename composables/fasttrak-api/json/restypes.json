@@ -1,0 +1,323 @@
+{
+  "resTypes": [
+    {
+      "resStatusTypes": {
+        "enum": [
+          "None",
+          "Quotation",
+          "Trip_Confirmed",
+          "Driver_Confirmed",
+          "En_route",
+          "On_Location",
+          "Dropped",
+          "No_Show",
+          "Cancelled",
+          "On_Board",
+          "Booked",
+          "Driver_Scheduled"
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "resTravelTypes": {
+        "enum": [
+          "None",
+          "Ground",
+          "Arrival",
+          "Departure",
+          "Transfer"
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "resOrigins": {
+        "enum": [
+          "None",
+          "FASTTRAK",
+          "Internet",
+          "Web_Service",
+          "Express"
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "resPricingInfo": {
+        "type": "object",
+        "properties": {
+          "pricingId": {
+            "type": "integer",
+            "description": "Selected pricing for reservation",
+            "format": "int32"
+          },
+          "vehicleTypeId": {
+            "type": "integer",
+            "description": "Selected Vehicle Type for reservation pricing",
+            "format": "int32"
+          },
+          "pricingVehicleTypeZoneId": {
+            "type": "integer",
+            "description": "If selected pricing is zone-based and is a point-to-point price, this will include the selected point-to-point zone.",
+            "format": "int32"
+          },
+          "isFlatRate": {
+            "type": "boolean",
+            "description": "If is GEO pricing or Zone-based, the flat-rate will be enabled."
+          },
+          "baseRate": {
+            "$ref": "#/components/schemas/BasePricingItem"
+          },
+          "additionalCharge1": {
+            "$ref": "#/components/schemas/BasePricingItem"
+          },
+          "additionalCharge2": {
+            "$ref": "#/components/schemas/BasePricingItem"
+          },
+          "additionalPricingItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdditionalPricingItem"
+            },
+            "description": "List of additional pricing items associated with reservation",
+            "nullable": true
+          },
+          "taxRateList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxRate"
+            },
+            "description": "Variable rates are pricing specific and can be applied to any number of pricing items.",
+            "nullable": true
+          },
+          "incrementalCharge": {
+            "type": "number",
+            "description": "Read-only,  If pricing plan is GEO, will include incremental rate calulation.",
+            "format": "double"
+          },
+          "minimumCharge": {
+            "type": "number",
+            "description": "Read-only, If pricing plan is GEO, will include minimum rate calulation.",
+            "format": "double"
+          },
+          "minimumRateIncludedAsBase": {
+            "type": "boolean",
+            "description": "If true, the base charge includes the minimum rate"
+          },
+          "totalCharge": {
+            "type": "number",
+            "description": "Read-only, total of all charges",
+            "format": "double",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Describes the pricing characteristics of a reservation."
+      }
+    },
+    {
+      "basePricingItem": {
+        "type": "object",
+        "properties": {
+          "minimum": {
+            "type": "number",
+            "format": "double"
+          },
+          "estimated": {
+            "type": "number",
+            "format": "double"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantity of pricing item (default 1)",
+            "format": "int32"
+          },
+          "rate": {
+            "type": "number",
+            "description": "Single quantity rate of item",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total rate calculation of item (qty * rate)",
+            "format": "double"
+          },
+          "name": {
+            "type": "string",
+            "description": "Descriptinve name of pricing item",
+            "nullable": true
+          },
+          "pricingItemType": {
+            "$ref": "#/components/schemas/ReservationPricingType"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "pricingItemType": {
+        "enum": [
+          "None",
+          "Vehicle_Type",
+          "Flat_Rate_Vehicle_Type",
+          "Fixed_Charge_Item",
+          "Variable_Fee_Item",
+          "Tax_Item",
+          "Base_Charges",
+          "Base_Additional_Charges_1",
+          "Base_Additional_Charges_2",
+          "Discount"
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "additionalPricingItem": {
+        "type": "object",
+        "properties": {
+          "pricingItemId": {
+            "type": "integer",
+            "description": "Unique ID for this instance of the pricing item (non-definition)",
+            "format": "int32"
+          },
+          "zoneAdditionalChargeItemId": {
+            "type": "string",
+            "description": "If zone pricing is in use, Additional Charges may be added directly. In this case, this is the reference ID",
+            "nullable": true
+          },
+          "isQuantifiable": {
+            "type": "boolean",
+            "description": "If true, the pricing item quantity can be modified, default of 1 otherwise."
+          },
+          "isFixedPrice": {
+            "type": "boolean",
+            "description": "If true, the rate cannot be modified by the user and is fixed in price"
+          },
+          "applyToBaseCharge": {
+            "type": "boolean",
+            "description": "Item takes into account base charge when calculating line item total"
+          },
+          "applyToAdditional1Charge": {
+            "type": "boolean",
+            "description": "Item takes into account Additional 1 charge when calculating line item total"
+          },
+          "applyToAdditional2Charge": {
+            "type": "boolean",
+            "description": "Item takes into account Additional 2 charge when calculating line item total"
+          },
+          "appliesToFixedItemList": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "appliesToVariableItemList": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "appliesToAdditionalItemList": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "appliesToZoneAdditionalChargeItemList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "selectedTaxRateId": {
+            "type": "integer",
+            "description": "If true, the item is taxable and will show",
+            "format": "int32"
+          },
+          "doPayToDriver": {
+            "type": "boolean",
+            "description": "Specifies the item is to be paid to driver"
+          },
+          "doPayToDriverOnlyContractor": {
+            "type": "boolean",
+            "description": "Specifies the item is to be paid to contractor drivers only"
+          },
+          "driverPayPercentage": {
+            "type": "number",
+            "description": "If only a percentage of the rate is paid to driver, it is specified here.",
+            "format": "double"
+          },
+          "isCustomerOverride": {
+            "type": "boolean",
+            "description": "Signifies that the item was overridden at the customer level"
+          },
+          "isCorporateOverride": {
+            "type": "boolean",
+            "description": "Signifies that the item was overridden at the corporate level"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantity of pricing item (default 1)",
+            "format": "int32"
+          },
+          "rate": {
+            "type": "number",
+            "description": "Single quantity rate of item",
+            "format": "double"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total rate calculation of item (qty * rate)",
+            "format": "double"
+          },
+          "name": {
+            "type": "string",
+            "description": "Descriptinve name of pricing item",
+            "nullable": true
+          },
+          "pricingItemType": {
+            "$ref": "#/components/schemas/ReservationPricingType"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "taxRate": {
+        "type": "object",
+        "properties": {
+          "taxRateId": {
+            "type": "integer",
+            "description": "Internal identifier of tax rate",
+            "format": "int32"
+          },
+          "applicableToPricingItemId": {
+            "type": "integer",
+            "description": "Defines which tax item ID the tax is applicable to.\r\n\r\nAll rates are not applicable to all tax items ..only those items with corresponding pricingItemId",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "description": "Description of rate",
+            "nullable": true
+          },
+          "rate": {
+            "type": "number",
+            "description": "Rate percentage",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Defines core details of a tax rate"
+      }
+    }
+  ]
+}

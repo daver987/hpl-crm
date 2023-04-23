@@ -2,6 +2,8 @@ import { router, publicProcedure } from '../trpc'
 import type { CustomerArray } from '~/composables/fasttrak-api'
 import type { ReservationResponse } from '~/schema/reservationSchema'
 import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
+import type { VehicleType } from '~/composables/fasttrak-api/schemas'
+
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
 
@@ -49,6 +51,26 @@ export const fasttrakRouter = router({
     const fasttrakData: ReservationResponse = await fasttrakRequest(
       requestOptions
     )
+    return fasttrakData
+  }),
+  getVehicleTypes: publicProcedure.query(async ({ ctx }) => {
+    const accessToken = await fasttrakAuth()
+    console.log(
+      'Access token',
+      accessToken,
+      'Calling authenticateFasttrak from [get]',
+      new Date().toISOString()
+    )
+    const endpoint = 'pricing-plans'
+
+    const requestOptions: FasttrakRequestOptions = {
+      method: 'GET',
+      endpoint: endpoint,
+      token: accessToken,
+      queryParams: { pricingId: 208 },
+    }
+
+    const fasttrakData: VehicleType = await fasttrakRequest(requestOptions)
     return fasttrakData
   }),
 })

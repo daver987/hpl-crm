@@ -7,6 +7,17 @@ definePageMeta({
 const { data: countData } = await useTrpc().quote.getCount.useQuery()
 const { data: bookedData } = await useTrpc().quote.getBooked.useQuery()
 
+// const parsedAddress1 = parseAddress(
+//   '4881 Fountain St N #1, Breslau, ON N0B 1M0, Canada'
+// )
+// console.log('parsedAddress1', parsedAddress1)
+
+// const parsedAddress2 = parseAddress('Toronto, ON, Canada')
+// console.log('parsedAddress2', parsedAddress2)
+
+// const parsedAddress3 = parseAddress('Mississauga, ON L5S 1Y4, Canada')
+// console.log('parsedAddress3', parsedAddress3)
+
 // const {
 //   data: countData,
 //   suspense,
@@ -33,12 +44,15 @@ const { data: bookedData } = await useTrpc().quote.getBooked.useQuery()
     <n-row>
       <n-col :span="4">
         <n-statistic label="Today's Quotes" :value="99" />
+        <!--        <p>{{ parsedAddress1 }}</p>-->
       </n-col>
       <n-col :span="4">
         <n-statistic label="Orders Booked" :value="bookedData as number" />
+        <!--        <p>{{ parsedAddress2 }}</p>-->
       </n-col>
       <n-col :span="4">
         <n-statistic label="Active Quotes" :value="countData as number" />
+        <!--        <p>{{ parsedAddress3 }}</p>-->
       </n-col>
     </n-row>
     <!--    <n-row>-->

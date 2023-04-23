@@ -23,7 +23,7 @@ const {
   refetch: refetchStripeCustomers,
 } = useQuery({
   queryKey: ['stripeCustomers'],
-  queryFn: () => useTrpc().customer.getAll.query(),
+  queryFn: () => useTrpc().stripeCustomers.getAll.query(),
 })
 const stripeCustomers = computed(() => stripeCustomerData.value?.data)
 
@@ -42,7 +42,7 @@ const deleteCustomer = (stripeCustomerId: string) => {
     positiveText: 'Confirm',
     onPositiveClick: async () => {
       d.loading = true
-      const deleted = await useTrpc().customer.delete.mutate({
+      const deleted = await useTrpc().stripeCustomers.delete.mutate({
         stripe_customer_id: stripeCustomerId,
       })
       if (deleted.deleted) {
@@ -59,7 +59,7 @@ const deleteCustomer = (stripeCustomerId: string) => {
 }
 
 const updateCustomer = async (id: string, options: CustomerData) => {
-  const updatedCustomer = await useTrpc().customer.update.mutate({
+  const updatedCustomer = await useTrpc().stripeCustomers.update.mutate({
     id,
     options,
   })

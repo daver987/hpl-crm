@@ -6,9 +6,11 @@ import { vehicleRouter } from '~/server/trpc/routers/vehicle'
 import { stripeRouter } from '~/server/trpc/routers/stripe'
 import { quoteRouter } from '~/server/trpc/routers/quote'
 import { userRouter } from '~/server/trpc/routers/users'
-import { customerRouter } from '~/server/trpc/routers/customers'
+import { stripeCustomersRouter } from '~/server/trpc/routers/stripeCustomers'
 import { rideRouter } from '~/server/trpc/routers/rides'
 import { fasttrakRouter } from '~/server/trpc/routers/fasttrak'
+import { reservationsRouter } from '~/server/trpc/routers/reservations'
+import { fasttrakCustomersRouter } from '~/server/trpc/routers/fasttrakCustomers'
 
 export const appRouter = router({
   lineItem: lineItemsRouter,
@@ -18,9 +20,11 @@ export const appRouter = router({
   stripe: stripeRouter,
   quote: quoteRouter,
   user: userRouter,
-  customer: customerRouter,
+  stripeCustomers: stripeCustomersRouter,
+  fasttrakCustomers: fasttrakCustomersRouter,
   ride: rideRouter,
   fasttrak: fasttrakRouter,
+  reservations: reservationsRouter,
 })
 
 // export type definition of API

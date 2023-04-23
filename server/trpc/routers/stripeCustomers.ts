@@ -1,7 +1,7 @@
 import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 
-export const customerRouter = router({
+export const stripeCustomersRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const stripe = ctx.stripe
     const customers = await stripe.customers.list({

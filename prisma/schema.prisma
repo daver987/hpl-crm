@@ -313,6 +313,7 @@ model Vehicle {
   is_active        Boolean  @default(true)
   label            String
   limo_anywhere_id Int?
+  fasttrak_id      Int?
   vehicle_image    String?
   quotes           Quote[]
 }
