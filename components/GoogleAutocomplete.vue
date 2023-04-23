@@ -1,8 +1,8 @@
 <script setup lang="ts">
-// import { useMap } from '../stores/useMap'
+// import { useMap } from '../store/useMap'
 // import { storeToRefs } from 'pinia'
-// import { useCounterStore } from '../stores/counter'
-// import { usePriceCalculator } from '../stores/usePriceCalculator'
+// import { useCounterStore } from '../store/counter'
+// import { usePriceCalculator } from '../store/usePriceCalculator'
 // import { data } from '../data/useData'
 // import { ref, reactive } from 'vue'
 // import Alert from './MyAlert.vue'

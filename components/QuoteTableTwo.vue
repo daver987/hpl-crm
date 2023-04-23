@@ -345,44 +345,30 @@ function handleConfirmBook(event: RowData) {
   })
 }
 
-// function combineDateAndTime(dateString: string, timeString: string): string {
-//   // Remove ordinal suffix from the date string using a regex
-//   const formattedDateString = dateString.replace(/(st|nd|rd|th)/g, '')
-//
-//   // Combine the date and time strings
-//   const combinedDateTime = `${formattedDateString} ${timeString}`
-//
-//   // Create a Date object
-//   const dateTimeObject = new Date(combinedDateTime)
-//
-//   // Convert the Date object to an ISO 8601 date-time string
-//   return dateTimeObject.toISOString()
+// function getTravelType(tripType: string) {
+//   switch (tripType) {
+//     case 'To Airport':
+//       return 'Departure'
+//     case 'From Airport':
+//       return 'Arrival'
+//     case 'Hourly As Directed':
+//     case 'Point to Point':
+//       return 'Ground'
+//     default:
+//       return 'None'
+//   }
 // }
-
-function getTravelType(tripType: string) {
-  switch (tripType) {
-    case 'To Airport':
-      return 'Departure'
-    case 'From Airport':
-      return 'Arrival'
-    case 'Hourly As Directed':
-    case 'Point to Point':
-      return 'Ground'
-    default:
-      return 'None'
-  }
-}
-
-function getTripCategory(tripType: string) {
-  switch (tripType) {
-    case 'To Airport':
-      return 'Departure'
-    case 'From Airport':
-      return 'Arrivals'
-    default:
-      return 'Transfer'
-  }
-}
+//
+// function getTripCategory(tripType: string) {
+//   switch (tripType) {
+//     case 'To Airport':
+//       return 'Departure'
+//     case 'From Airport':
+//       return 'Arrivals'
+//     default:
+//       return 'Transfer'
+//   }
+// }
 
 type LineItemsList = {
   total: number
