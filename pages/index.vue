@@ -27,6 +27,8 @@ const { data: countLastSeven } =
         <!--        <p>{{ parsedAddress3 }}</p>-->
       </n-col>
     </n-row>
-    <AdminPanel />
+    <n-row>
+      <AdminPanel />
+    </n-row>
   </n-layout-content>
 </template>
