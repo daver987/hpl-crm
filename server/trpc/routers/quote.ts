@@ -76,10 +76,42 @@ export const quoteRouter = router({
       return quoteReturn
     }),
 
-  getCount: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.quote.count()
+  countToday: publicProcedure.query(async ({ ctx }) => {
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+
+    const todayEnd = new Date()
+    todayEnd.setHours(23, 59, 59, 999)
+
+    return await ctx.prisma.quote.count({
+      where: {
+        created_at: {
+          gte: todayStart,
+          lte: todayEnd,
+        },
+      },
+    })
   }),
-  getBooked: publicProcedure.query(async ({ ctx }) => {
+  countLastSevenDays: publicProcedure.query(async ({ ctx }) => {
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
+    sevenDaysAgo.setHours(0, 0, 0, 0)
+
+    const todayEnd = new Date()
+    todayEnd.setHours(23, 59, 59, 999)
+
+    return await ctx.prisma.quote.count({
+      where: {
+        created_at: {
+          gte: sevenDaysAgo,
+          lte: todayEnd,
+        },
+        is_booked: false,
+      },
+    })
+  }),
+
+  countBooked: publicProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.quote.count({
       where: {
         is_booked: {
@@ -88,7 +120,7 @@ export const quoteRouter = router({
       },
     })
   }),
-  bookQuote: publicProcedure.query(async ({ ctx }) => {
+  countAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.quote.count()
   }),
 
