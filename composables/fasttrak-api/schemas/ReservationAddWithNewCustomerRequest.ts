@@ -55,7 +55,7 @@ export const ReservationDetailSchema = z.object({
     .transform((val) => (val === 'Hourly As Directed' ? 'Livery' : val)),
   orderedBy: z.string(),
   orderedByPhone: z.string().optional(),
-  scheduledPickupTime: z.string(),
+  scheduledPickupTime: z.string().optional(),
   estimatedEndTime: z.string().optional(),
   tripNotes: z.string().nullable().optional(),
   fromLocation: z.object({
