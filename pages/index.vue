@@ -16,19 +16,16 @@ const { data: countLastSeven } =
     <n-row>
       <n-col :span="4">
         <n-statistic label="Today's Quotes" :value="countToday" />
-        <!--        <p>{{ parsedAddress1 }}</p>-->
       </n-col>
       <n-col :span="4">
         <n-statistic label="Orders Booked" :value="countBooked" />
-        <!--        <p>{{ parsedAddress2 }}</p>-->
       </n-col>
       <n-col :span="4">
-        <n-statistic label="Active Quotes" :value="countAll" />
-        <!--        <p>{{ parsedAddress3 }}</p>-->
+        <n-statistic label="Last 7 Days" :value="countLastSeven" />
       </n-col>
-    </n-row>
-    <n-row>
-      <AdminPanel />
+      <n-col :span="4">
+        <n-statistic label="All Quotes" :value="countAll" />
+      </n-col>
     </n-row>
   </n-layout-content>
 </template>
