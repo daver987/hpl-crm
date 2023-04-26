@@ -8,6 +8,7 @@ export function combineDateAndTime(
   const combinedDateTime = `${formattedDateString} ${timeString}`
   // Create a Date object
   const dateTimeObject = new Date(combinedDateTime)
+  console.log('[COMBINED_DATE_TIME:', dateTimeObject)
   // Convert the Date object to an ISO 8601 date-time string
   return dateTimeObject.toISOString()
 }

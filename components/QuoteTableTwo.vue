@@ -1,11 +1,6 @@
 <script lang="ts" setup>
-import {
-  checkForCustomer,
-  h,
-  parseAddress,
-  ref,
-  combineDateAndTime,
-} from '#imports'
+import { checkForCustomer, h, parseAddress, ref } from '#imports'
+import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime.ts'
 import { format } from 'date-fns'
 import type { DataTableRowKey } from 'naive-ui'
 import { NButton, NP, NTag, useDialog } from 'naive-ui'
@@ -20,11 +15,6 @@ const {
   queryKey: ['quotes'],
   queryFn: async () => await useTrpc().quote.getMany.query(),
 })
-
-// const { data: vehicleTypes } =
-//   await useTrpc().fasttrak.getVehicleTypes.useQuery()
-//
-// console.log('vehicle Types:', vehicleTypes.value)
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
