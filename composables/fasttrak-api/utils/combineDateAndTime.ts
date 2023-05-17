@@ -1,3 +1,4 @@
+//scripts
 export function combineDateAndTime(
   dateString: string,
   timeString: string

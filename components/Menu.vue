@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { Component } from 'vue'
 import { NIcon } from 'naive-ui'
-import { NuxtLink } from '#components'
-import { Icon } from '#components'
+import { NuxtLink, Icon } from '#components'
 
 const SettingsIcon = h(Icon, { name: 'ic:outline-settings' })
 const ScheduleIcon = h(Icon, { name: 'ic:outline-schedule' })
@@ -71,6 +70,15 @@ const menuOptions = computed(() => [
   renderNav('/dispatch', 'Dispatch', DispatchIcon, 5),
   renderNav('/messaging', 'Messaging', MessageIcon, 6),
   renderNav('/schedule', 'Schedule', ScheduleIcon, 7),
+  renderNav('/affiliates', 'Affiliates', ScheduleIcon, 11, [
+    {
+      type: 'group',
+      label: 'Affiliates Overview',
+      key: '11.1',
+      children: [renderNav('/affiliates/fasttrak', 'Fasttrak', null, '11.1.1')],
+    },
+  ]),
+  renderNav('/drivers', 'Drivers', ScheduleIcon, 7),
   renderNav('/invoicing', 'Invoicing', InvoiceIcon, 8),
   renderNav('/profile', 'My Profile', PersonIcon, 9),
   renderNav('/settings', 'Settings', SettingsIcon, 10),
@@ -83,7 +91,7 @@ function renderNav(
   key: string | number,
   children?: any
 ) {
-  const navItem = {
+  const navItem: any = {
     label: () =>
       h(
         NuxtLink,

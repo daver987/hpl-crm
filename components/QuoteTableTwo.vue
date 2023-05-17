@@ -1,11 +1,38 @@
 <script lang="ts" setup>
-import { checkForCustomer, h, parseAddress, ref } from '#imports'
-import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime.ts'
+import { checkForCustomer, h, parseAddress, ref, computed } from '#imports'
+import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
 import { format } from 'date-fns'
-import type { DataTableRowKey } from 'naive-ui'
+import { z } from 'zod'
 import { NButton, NP, NTag, useDialog } from 'naive-ui'
+import type { DataTableRowKey, DataTableColumns } from 'naive-ui'
+import type {
+  ReservationResponse,
+  ReservationDetail,
+} from '~/composables/fasttrak-api/schemas'
+import type { Ref } from 'vue'
+
+type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
+  T extends ReadonlyArray<infer ElementType> ? ElementType : never
+
+type RowData = ArrayElementType<typeof quoteData.value>
+
+type DeleteEvent = {
+  quote_number: number
+}
+
+type LineItemsList = {
+  total: number
+  label: string
+  tax: number
+}
 
 const refTable = ref(null)
+const searchInput = ref('')
+const checkedRowKeysRef = ref<DataTableRowKey[]>([])
+const isDeleting = ref(true)
+const filterSearch = () => {}
+const dialog = useDialog()
+const message = useMessage()
 
 const {
   data: quoteData,
@@ -16,25 +43,19 @@ const {
   queryFn: async () => await useTrpc().quote.getMany.query(),
 })
 
-type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
-  T extends ReadonlyArray<infer ElementType> ? ElementType : never
-
-type RowData = ArrayElementType<typeof quoteData.value>
-
 const quotes = computed(() => quoteData.value)
 const rowKey = (row: RowData) => row.quote_number
-const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 
 function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys
   console.log('Selected Row', checkedRowKeysRef)
 }
 
-const createColumns = (): RowData[] => [
+const createColumns = (): DataTableColumns<RowData> => [
   {
     key: 'created_at',
     title: 'Submitted',
-    render(row: RowData) {
+    render(row) {
       return format(new Date(row.created_at), 'PP, p')
     },
     width: 200,
@@ -46,7 +67,7 @@ const createColumns = (): RowData[] => [
     fixed: 'left',
     sortOrder: false,
     sorter: 'default',
-    render(row: RowData) {
+    render(row) {
       return h(
         'span',
         {
@@ -59,7 +80,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'full_name',
     title: 'Name',
-    render(row: RowData) {
+    render(row) {
       return `${row.user.first_name} ${row.user.last_name}`
     },
     width: 150,
@@ -71,7 +92,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'formatted_pickup_date',
     title: 'Pickup Date & Time',
-    render(row: RowData) {
+    render(row) {
       return `${row.trips[0].pickup_date}, ${row.trips[0].pickup_time}`
     },
     width: 250,
@@ -80,7 +101,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'email_address',
     title: 'Email',
-    render(row: RowData) {
+    render(row) {
       return h(
         'a',
         {
@@ -98,7 +119,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'phone_number',
     title: 'Phone',
-    render(row: RowData) {
+    render(row) {
       return h(
         'a',
         {
@@ -114,7 +135,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'origin',
     title: 'Pickup',
-    render(row: RowData) {
+    render(row) {
       return row.trips?.[0]?.locations?.[0]?.full_name ?? 'N/A'
     },
     width: 200,
@@ -125,7 +146,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'destination',
     title: 'Drop Off',
-    render(row: RowData) {
+    render(row) {
       return row.trips?.[0]?.locations?.[1]?.full_name ?? 'N/A'
     },
     width: 200,
@@ -137,7 +158,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'service_label',
     title: 'Service Type',
-    render(row: RowData) {
+    render(row) {
       return row.service.label
     },
     width: 150,
@@ -145,7 +166,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'vehicle_label',
     title: 'Vehicle Type',
-    render(row: RowData) {
+    render(row) {
       return row.vehicle.label
     },
     width: 135,
@@ -153,13 +174,14 @@ const createColumns = (): RowData[] => [
   {
     key: 'base_rate',
     title: 'Base Rate',
-    render(row: RowData) {
+    render(row) {
       return h(
         NP,
         {
           strong: true,
         },
-        { default: () => `$${row.trips[0].price?.line_items_list[0].total}` }
+        //@ts-ignore
+        { default: () => `$${row.trips[0].price.line_items_list[0].total}` }
       )
     },
 
@@ -168,7 +190,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'quote_total',
     title: 'Price',
-    render(row: RowData) {
+    render(row) {
       return h(
         NP,
         {
@@ -186,7 +208,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'is_booked',
     title: 'Status',
-    render(row: RowData) {
+    render(row) {
       return h(
         NTag,
         {
@@ -205,7 +227,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'book',
     title: 'Book',
-    render(row: RowData) {
+    render(row) {
       return h(
         NButton,
         {
@@ -223,7 +245,7 @@ const createColumns = (): RowData[] => [
   {
     key: 'delete',
     title: 'Remove',
-    render(row: RowData) {
+    render(row) {
       return h(
         NButton,
         {
@@ -239,11 +261,7 @@ const createColumns = (): RowData[] => [
     width: 100,
   },
 ]
-
 const columns = createColumns()
-const columnsRef = ref(columns)
-
-const searchInput = ref('')
 
 const filteredData = computed(() => {
   if (searchInput.value.trim() === '') {
@@ -263,16 +281,6 @@ const filteredData = computed(() => {
     )
   })
 })
-
-const filterSearch = () => {}
-const dialog = useDialog()
-const message = useMessage()
-
-interface DeleteEvent {
-  quote_number: number
-}
-
-const isDeleting = ref(true)
 
 async function deleteQuote(quoteNumber: number) {
   isDeleting.value = true
@@ -335,38 +343,9 @@ function handleConfirmBook(event: RowData) {
   })
 }
 
-// function getTravelType(tripType: string) {
-//   switch (tripType) {
-//     case 'To Airport':
-//       return 'Departure'
-//     case 'From Airport':
-//       return 'Arrival'
-//     case 'Hourly As Directed':
-//     case 'Point to Point':
-//       return 'Ground'
-//     default:
-//       return 'None'
-//   }
-// }
-//
-// function getTripCategory(tripType: string) {
-//   switch (tripType) {
-//     case 'To Airport':
-//       return 'Departure'
-//     case 'From Airport':
-//       return 'Arrivals'
-//     default:
-//       return 'Transfer'
-//   }
-// }
-
-type LineItemsList = {
-  total: number
-  label: string
-  tax: number
-}
 async function handleBook(event: RowData) {
   const customerSummary = ref({})
+  const vehicleId: Ref<number> = ref(1)
   const user = event.user
   const vehicle = event.vehicle
   const service = event.service
@@ -379,8 +358,28 @@ async function handleBook(event: RowData) {
   const travelCategory = getTripCategory(service.label)
   const toAddressParsed = parseAddress(toLocation.formatted_address)
   const fromAddressParsed = parseAddress(fromLocation.formatted_address)
-
   const customerId = await checkForCustomer(event.user.email_address)
+
+  if (
+    vehicle.fasttrak_id !== null &&
+    [1, 2, 8, 9].includes(vehicle.fasttrak_id)
+  ) {
+    vehicleId.value = vehicle.fasttrak_id
+  } else {
+    vehicleId.value = 1
+  }
+
+  const TripTypeSchema = z
+    .enum([
+      'Point to Point',
+      'To Airport',
+      'From Airport',
+      'Livery',
+      'Hourly As Directed',
+    ])
+    .default('Point to Point')
+    .transform((val) => (val === 'Hourly As Directed' ? 'Livery' : val))
+
   if (customerId === null) {
     customerSummary.value = {
       firstName: event.user.first_name,
@@ -394,16 +393,138 @@ async function handleBook(event: RowData) {
     }
   }
 
-  const reservationDetails = {
+  const gtaaFee = {
+    pricingItemId: 259,
+    isQuantifiable: false,
+    isFixedPrice: true,
+    applyToBaseCharge: false,
+    applyToAdditional1Charge: false,
+    applyToAdditional2Charge: false,
+    selectedTaxRateId: 0,
+    doPayToDriver: true,
+    doPayToDriverOnlyContractor: false,
+    driverPayPercentage: 100,
+    isCustomerOverride: false,
+    isCorporateOverride: false,
+    quantity: 1,
+    rate: 13.27,
+    total: 13.27,
+    name: 'GTAA Fee',
+    pricingItemType: 'Fixed_Charge_Item',
+  }
+
+  let pricingInformation = {
+    pricingId: 209,
+    vehicleTypeId: vehicleId.value,
+    pricingVehicleTypeZoneId: 0,
+    isFlatRate: true,
+    baseRate: {
+      minimum: 1,
+      estimated: 0,
+      quantity: 1,
+      rate: lineItemsList[0].total,
+      name: 'Base/Hourly Charge',
+      pricingItemType: 'Base_Charges',
+    },
+    additionalPricingItems: [
+      {
+        pricingItemId: 357,
+        isQuantifiable: false,
+        isFixedPrice: false,
+        applyToBaseCharge: true,
+        applyToAdditional1Charge: true,
+        applyToAdditional2Charge: true,
+        appliesToFixedItemList: [],
+        appliesToAdditionalItemList: [],
+        selectedTaxRateId: 0,
+        doPayToDriver: true,
+        doPayToDriverOnlyContractor: false,
+        driverPayPercentage: 100,
+        isCustomerOverride: false,
+        isCorporateOverride: false,
+        quantity: 1,
+        rate: 8,
+        name: 'Fuel Surcharge',
+        pricingItemType: 'Variable_Fee_Item',
+      },
+      {
+        pricingItemId: 366,
+        isQuantifiable: false,
+        isFixedPrice: false,
+        applyToBaseCharge: true,
+        applyToAdditional1Charge: true,
+        applyToAdditional2Charge: true,
+        appliesToFixedItemList: [],
+        appliesToAdditionalItemList: [],
+        selectedTaxRateId: 0,
+        doPayToDriver: true,
+        doPayToDriverOnlyContractor: false,
+        driverPayPercentage: 100,
+        isCustomerOverride: false,
+        isCorporateOverride: false,
+        quantity: 1,
+        rate: 20,
+        name: 'Gratuity',
+        pricingItemType: 'Variable_Fee_Item',
+      },
+      {
+        pricingItemId: 293,
+        isQuantifiable: false,
+        isFixedPrice: false,
+        applyToBaseCharge: true,
+        applyToAdditional1Charge: true,
+        applyToAdditional2Charge: true,
+        appliesToFixedItemList: [259],
+        appliesToVariableItemList: [357],
+        appliesToAdditionalItemList: [],
+        appliesToZoneAdditionalChargeItemList: [],
+        selectedTaxRateId: 295,
+        doPayToDriver: true,
+        doPayToDriverOnlyContractor: false,
+        driverPayPercentage: 0,
+        isCustomerOverride: false,
+        isCorporateOverride: false,
+        quantity: 1,
+        rate: 13,
+        name: 'HST',
+        pricingItemType: 'Tax_Item',
+      },
+    ],
+    taxRateList: [
+      {
+        taxRateId: 295,
+        applicableToPricingItemId: 293,
+        name: 'ON - HST-ON',
+        rate: 13,
+      },
+    ],
+    incrementalCharge: 0,
+    minimumCharge: 1,
+    minimumRateIncludedAsBase: false,
+  }
+
+  const buildPricing = computed(() => {
+    if (lineItemsList.some((item) => item.label === 'Pearson Airport Toll')) {
+      return {
+        ...pricingInformation,
+        additionalPricingItems: [
+          ...pricingInformation.additionalPricingItems,
+          gtaaFee,
+        ],
+      }
+    } else {
+      return pricingInformation
+    }
+  })
+
+  const reservationDetails: ReservationDetail = reactive({
     vehicleId: 0,
     employeeId: 0,
     greeterId: 0,
     customerId: customerId,
-    vehicleTypeId: vehicle.fasttrak_id?.toString(),
-    reservationGroupId: 0,
+    vehicleTypeId: vehicleId.value,
     companyId: 1,
-    corporateProfileId: 0,
-    pricingId: 1,
+    pricingId: 209,
     reservationStatus: 'Booked',
     travelType: travelType,
     reservationPhoneNumber: user.phone_number,
@@ -411,29 +532,11 @@ async function handleBook(event: RowData) {
     bookingSource: 'Google Ads',
     bookingCategory: 'Personal',
     tripCategory: travelCategory,
-    tripType: service.label,
-    orderedBy: user.full_name,
+    tripType: TripTypeSchema.parse(service.label),
+    orderedBy: user.full_name as string,
     orderedByPhone: user.phone_number,
-    driverInTime: null,
-    driverSpotTime: null,
-    enRouteTime: null,
-    onLocationTime: null,
-    actualPickupTime: null,
-    dropoffTime: null,
-    noShowTime: null,
-    cancelTime: null,
-    returnTime: null,
-    billingStartTime: null,
-    billingEndTime: null,
-    actualHours: 0,
+    confirmedBy: user.full_name,
     estimatedHours: 1,
-    beginMileage: 0,
-    endMileage: 0,
-    driverNotes: '',
-    driverDispatchStatus: '',
-    dispatchNotes: '',
-    affiliateNotes: '',
-    tripPreferences: '',
     scheduledPickupTime: combineDateAndTime(
       trip.pickup_date!,
       trip.pickup_time!
@@ -450,14 +553,11 @@ async function handleBook(event: RowData) {
         region: toAddressParsed.region,
         postalCode: toAddressParsed.postalCode,
         country: toAddressParsed.country,
-        displayAddress: toAddressParsed.displayAddress,
+        displayAddress: fromLocation.full_name,
         geoLookupAddress: '',
         cityRegionPostalCode: '',
       },
-      additionalInformation: '',
-      summaryAddress: '',
-      geoLookupAddress: '',
-      displayAddress: toAddressParsed.displayAddress,
+      displayAddress: fromLocation.full_name,
     },
     toLocation: {
       latitude: toLocation.lat,
@@ -469,19 +569,15 @@ async function handleBook(event: RowData) {
         region: fromAddressParsed.region,
         postalCode: fromAddressParsed.postalCode,
         country: fromAddressParsed.country,
-        displayAddress: fromAddressParsed.displayAddress,
+        displayAddress: toLocation.full_name as string,
         geoLookupAddress: '',
         cityRegionPostalCode: '',
       },
-      displayAddress: fromAddressParsed.displayAddress,
-      additionalInformation: '',
-      summaryAddress: fromAddressParsed.displayAddress,
-      geoLookupAddress: '',
+      displayAddress: toLocation.full_name as string,
     },
     passengerCount: event.selected_passengers,
-    luggageCount: trips[0].large_luggage,
+    luggageCount: trips[0].large_luggage!,
     reservationOrigin: 'FASTTRAK',
-    totalCharges: event.quote_total,
     primaryPassenger: {
       name: user.full_name,
       phoneNumber: user.phone_number,
@@ -490,7 +586,6 @@ async function handleBook(event: RowData) {
       doEnablePassengerSMS: true,
     },
     numAdditionalStops: 0,
-    numSupportDocuments: 0,
     affiliatePay: 0,
     isInBilling: false,
     isExcludedFromBilling: false,
@@ -508,18 +603,10 @@ async function handleBook(event: RowData) {
     isSpecialHandling: false,
     isFarmIn: false,
     isFarmOut: false,
-    charterReservationId: 0,
-    charterMoveId: 0,
-    charterMoveName: '',
-    charterLegType: '',
     collectionMethod: 'Billing_Account',
     collectionType: 'Billing',
-    creditCardId: 0,
     segmentId: '',
-    alternateContractId: 0,
     doInvoiceCustomerDirectly: false,
-    totalDeposits: 0,
-    creditCardAuthorizationAmount: 0,
     companySummary: {
       companyId: 1,
       companyName: 'High Park Livery',
@@ -528,55 +615,14 @@ async function handleBook(event: RowData) {
       corporateProfileId: 0,
       companyName: '',
     },
-    customerContactId: 0,
-    corporateProfileContactId: 0,
-    cancelledBy: '',
-    pricingInformation: {
-      pricingId: 0,
-      vehicleTypeId: vehicle.fasttrak_id,
-      isFlatRate: true,
-      baseRate: {
-        minimum: 0,
-        estimated: lineItemsList[1].total,
-        quantity: 1,
-        rate: lineItemsList[0].total,
-        total: lineItemsList[0].total,
-        name: lineItemsList[0].label,
-        pricingItemType: 'Base_Charges',
-      },
-      additionalCharge1: {
-        minimum: 0,
-        estimated: lineItemsList[1].total,
-        quantity: 1,
-        rate: lineItemsList[1].total,
-        total: lineItemsList[1].total,
-        name: lineItemsList[1].label,
-        pricingItemType: 'Base_Additional_Charges_1',
-      },
-      additionalCharge2: {
-        minimum: 0,
-        estimated: lineItemsList[2].total,
-        quantity: 1,
-        rate: lineItemsList[2].total,
-        total: lineItemsList[2].total,
-        name: lineItemsList[2].label,
-        pricingItemType: 'Base_Additional_Charges_2',
-      },
-    },
-    // taxRateList: [
-    //   {
-    //     taxRateId: 1,
-    //   },
-    // ],
-    totalCharge: event.quote_total,
-    confirmedBy: user.full_name,
-  }
-  console.log('Reservation Details:', reservationDetails)
-
-  const bookingResult = await useTrpc().reservations.add.mutate({
-    reservationDetail: reservationDetails,
-    customerSummary: customerSummary.value,
+    pricingInformation: buildPricing.value,
   })
+
+  const bookingResult: ReservationResponse =
+    await useTrpc().reservations.add.mutate({
+      reservationDetail: reservationDetails,
+      customerSummary: customerSummary.value,
+    })
   console.log('Booked Result', bookingResult)
   if (bookingResult.status === 'SUCCESS') {
     message.success('Quote booked successfully')

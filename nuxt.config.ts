@@ -2,6 +2,7 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     'nuxt-vitest',
+    '@nuxt/devtools',
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/color-mode',
     'nuxt-icon',
@@ -36,6 +37,7 @@ export default defineNuxtConfig({
     strict: true,
     shim: false,
   },
+  css: ['vue-tel-input/vue-tel-input.css'],
 
   naiveUI: {
     themeOverrides: {
@@ -57,9 +59,11 @@ export default defineNuxtConfig({
     FASTTRACK_USER_PASSWORD: process.env.FASTTRACK_USER_PASSWORD,
     FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
     EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,
+      CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
     },
   },
 
@@ -74,5 +78,6 @@ export default defineNuxtConfig({
           : [],
     },
   },
+  //@ts-ignore
   devtools: true,
 })
