@@ -11,8 +11,10 @@ import { rideRouter } from '~/server/trpc/routers/rides'
 import { fasttrakRouter } from '~/server/trpc/routers/fasttrak'
 import { reservationsRouter } from '~/server/trpc/routers/reservations'
 import { fasttrakCustomersRouter } from '~/server/trpc/routers/fasttrakCustomers'
+import { driverRouter } from './drivers'
 
 export const appRouter = router({
+  drivers: driverRouter,
   lineItem: lineItemsRouter,
   service: serviceRouter,
   salesTax: salesTaxRouter,

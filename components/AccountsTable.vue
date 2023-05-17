@@ -2,7 +2,6 @@
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
 import { NTag, NButton, useMessage, useDialog } from 'naive-ui'
-
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Stripe } from 'stripe'
 

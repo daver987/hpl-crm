@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Contacts',
+  name: 'Drivers',
   layout: 'default',
 })
 </script>
 
 <template>
   <n-layout-content>
-    <QuoteTableTwo />
+    <DriverTable/>
   </n-layout-content>
 </template>

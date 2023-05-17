@@ -2,39 +2,37 @@
 import { ref } from '#imports'
 import { NButton, useMessage } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
+import type { Driver } from '~/composables'
 
 const refTable = ref(null)
 const message = useMessage()
 
-const { data: contactData, isLoading: isLoading } = useQuery({
-  queryFn: () => useTrpc().user.getAll.query(),
-  queryKey: ['contacts'],
+const { data: driverData, isLoading: isLoading } = useQuery({
+  queryKey: ['drivers'],
+  queryFn: async () => await useTrpc().drivers.get.query(),
 })
 
-type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
-  T extends ReadonlyArray<infer ElementType> ? ElementType : never
+const drivers = computed(() => driverData.value?.items)
+console.log('Drivers:', drivers.value)
 
-type RowData = ArrayElementType<typeof contactData.value>
-
-const rowKey = (row: RowData) => row.id
+const rowKey = (row: Driver) => row.userId
 
 const pagination = {
   rowsPerPage: 12,
   sortBy: 'quote_number',
 }
 
-const createColumns = (): DataTableColumns<RowData> => [
+const createColumns = (): DataTableColumns<Driver> => [
   {
     key: 'full_name',
     title: 'Name',
     render(row) {
-      return `${row.first_name} ${row.last_name}`
+      return `${row.firstName} ${row.lastName}`
     },
     ellipsis: {
       tooltip: true,
     },
   },
-
   {
     key: 'email',
     title: 'Email',
@@ -42,10 +40,10 @@ const createColumns = (): DataTableColumns<RowData> => [
       return h(
         'a',
         {
-          href: `mailto:${row.email_address}`,
+          href: `mailto:${row.emailAddress}`,
           style: { color: '#93c5fd' },
         },
-        row.email_address
+        row.emailAddress
       )
     },
     ellipsis: {
@@ -59,10 +57,24 @@ const createColumns = (): DataTableColumns<RowData> => [
       return h(
         'a',
         {
-          href: `tel:${row.phone_number}`,
+          href: `tel:${row.phoneCell}`,
           style: { color: '#93c5fd' },
         },
-        { default: () => row.phone_number }
+        { default: () => row.phoneCell }
+      )
+    },
+  },
+  {
+    key: 'balance',
+    title: 'Balance',
+    render(row) {
+      return h(
+        'a',
+        {
+          href: `tel:${row.phoneCell}`,
+          style: { color: '#93c5fd' },
+        },
+        { default: () => row.phoneCell }
       )
     },
   },
@@ -84,19 +96,19 @@ const createColumns = (): DataTableColumns<RowData> => [
     },
   },
   {
-    title: 'Delete',
-    key: 'delete',
+    title: 'Details',
+    key: 'details',
     render(row) {
       return h(
         NButton,
         {
-          type: 'error',
+          type: 'success',
           strong: true,
           tertiary: true,
           size: 'small',
           onClick: () => message.info('Feature Under Construction'),
         },
-        { default: () => 'Delete' }
+        { default: () => 'Details' }
       )
     },
   },
@@ -110,7 +122,7 @@ const columns = createColumns()
     :max-height="675"
     ref="refTable"
     remote
-    :data="contactData"
+    :data="drivers"
     :loading="isLoading"
     :columns="columns"
     :row-key="rowKey"

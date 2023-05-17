@@ -1,0 +1,83 @@
+{
+  "items": [
+    {
+      "pricingId": 1,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "Default Pricing",
+      "friendlyName": "Default Pricing",
+      "isGeoPricing": false,
+      "isDefault": true,
+      "isDisabled": false,
+      "modifyDate": "2023-03-11T15:05:20"
+    },
+    {
+      "pricingId": 203,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "Google Ads (Point to Point)",
+      "friendlyName": "Google Ads (Point to Point) [GEO]",
+      "isGeoPricing": true,
+      "isDefault": false,
+      "isDisabled": false,
+      "modifyDate": "2023-04-17T12:59:20"
+    },
+    {
+      "pricingId": 172,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "London",
+      "friendlyName": "London [GEO]",
+      "isGeoPricing": true,
+      "isDefault": false,
+      "isDisabled": false,
+      "modifyDate": "2022-03-05T12:22:20"
+    },
+    {
+      "pricingId": 209,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "LRS Pricing",
+      "friendlyName": "LRS Pricing",
+      "isGeoPricing": false,
+      "isDefault": false,
+      "isDisabled": false,
+      "modifyDate": "2023-04-26T19:58:56"
+    },
+    {
+      "pricingId": 132,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "Point to Point Pricing",
+      "friendlyName": "Point to Point Pricing [GEO]",
+      "isGeoPricing": true,
+      "isDefault": false,
+      "isDisabled": false,
+      "modifyDate": "2023-03-21T08:53:07"
+    },
+    {
+      "pricingId": 208,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "Revised",
+      "friendlyName": "Revised",
+      "isGeoPricing": false,
+      "isDefault": false,
+      "isDisabled": false,
+      "modifyDate": "2023-04-23T00:02:06"
+    },
+    {
+      "pricingId": 106,
+      "customerProfileId": 0,
+      "corporateProfileId": 0,
+      "name": "RideMyWay (BMBC)",
+      "friendlyName": "RideMyWay (BMBC) [GEO]",
+      "isGeoPricing": true,
+      "isDefault": false,
+      "isDisabled": false,
+      "modifyDate": "2023-01-13T09:23:05"
+    }
+  ],
+  "status": "SUCCESS",
+  "includesOperationalMessage": false
+}
