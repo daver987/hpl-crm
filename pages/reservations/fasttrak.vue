@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import type { Reservation } from '~/schema/reservationSchema'
+import type { Reservation } from '~/composables/fasttrak-api/schemas/reservationSchema'
 import { format } from 'date-fns'
 import { ref } from '#imports'
-import { NButton, useMessage, NTag } from 'naive-ui'
+import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
+import { RowData } from 'naive-ui/es/data-table/src/interface'
+import chalk from 'chalk'
 
 definePageMeta({
   name: 'Fasttrak',
@@ -18,8 +20,34 @@ const { data: reservationsData, isLoading: isLoading } = useQuery({
   queryFn: async () => await useTrpc().fasttrak.getReservations.query(),
 })
 
+//@ts-ignore
 const reservations = computed(() => reservationsData.value?.items)
-console.log('Reservations:', reservations.value)
+await console.log('Reservations:', reservations.value)
+
+const pushToZoho = async (evt: RowData) => {
+  const { data } = await useFetch('/api/zoho', {
+    method: 'POST',
+    body: evt,
+  })
+  return data
+}
+
+const dialog = useDialog()
+
+const handlePush = (evt: RowData) => {
+  const d = dialog.success({
+    title: 'Push to Zoho',
+    content: 'Are you sure you want to push to Zoho',
+    positiveText: 'Confirm',
+    onPositiveClick: async () => {
+      // d.loading = true
+      const response = pushToZoho(evt)
+      console.log(chalk.blue('[RETURNED_ZOHO]', response))
+      // message.info(`The Customer was successfully Deleted`)
+      // d.loading = false
+    },
+  })
+}
 
 const rowKey = (row: Reservation) => row.reservationId
 
@@ -132,8 +160,8 @@ const createColumns = (): DataTableColumns<Reservation> => [
     },
   },
   {
-    title: 'Update',
-    key: 'update',
+    title: 'To Zoho',
+    key: 'zoho',
     render(row) {
       return h(
         NButton,
@@ -142,9 +170,9 @@ const createColumns = (): DataTableColumns<Reservation> => [
           strong: true,
           tertiary: true,
           size: 'small',
-          onClick: () => message.info('Feature Under Construction'),
+          onClick: () => handlePush(row),
         },
-        { default: () => 'Update' }
+        { default: () => 'To Zoho' }
       )
     },
   },

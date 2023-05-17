@@ -11,11 +11,16 @@ const options = [
   { label: 'David Robertson', value: '12894009408' },
   { label: 'Nicole Hooper', value: '16474732057' },
 ]
+
+const { data: messages } = await useTrpc().user.getContactMessages.useQuery()
 </script>
 
 <template>
   <n-layout-content>
-    <Messenger />
+    <ContactMessageList
+      style="width: 100%; height: 100%"
+      :messages="messages"
+    />
   </n-layout-content>
 </template>
 

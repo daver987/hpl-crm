@@ -120,8 +120,8 @@ export const quoteRouter = router({
       },
     })
   }),
-  countAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.quote.count()
+  countAll: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.quote.count()
   }),
 
   getMany: publicProcedure.query(async ({ ctx }) => {

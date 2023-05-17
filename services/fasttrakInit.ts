@@ -1,5 +1,6 @@
 import { AuthResponseSchema } from '~/composables/fasttrak-api'
 import type { AuthResponse } from '~/composables/fasttrak-api'
+import chalk from 'chalk'
 
 export const fasttrakAuth = async (): Promise<string> => {
   const runtimeConfig = useRuntimeConfig()
@@ -53,12 +54,22 @@ export const fasttrakAuth = async (): Promise<string> => {
       throw error
     }
   }
-  const authResponse = await authenticateFasttrak(
-    runtimeConfig.FASTTRACK_SYSTEM_ID,
-    runtimeConfig.FASTTRACK_USER_EMAIL,
-    runtimeConfig.FASTTRACK_USER_PASSWORD,
-    ''
-  )
-  const authToken = authResponse.item.token.accessToken
-  return authToken
+  let authResponse
+  let authToken
+  const token = await useStorage().getItem('fasttrak:token')
+  if (!token) {
+    authResponse = await authenticateFasttrak(
+      runtimeConfig.FASTTRACK_SYSTEM_ID,
+      runtimeConfig.FASTTRACK_USER_EMAIL,
+      runtimeConfig.FASTTRACK_USER_PASSWORD,
+      ''
+    )
+    authToken = authResponse.item.token.accessToken
+    console.log(chalk.cyanBright('[SET_NEW_TOKEN]', authToken))
+    await useStorage().setItem('fasttrak:token', authToken)
+  } else {
+    console.log(chalk.green('[OLD_TOKEN]', token))
+    authToken = token
+  }
+  return authToken as string
 }

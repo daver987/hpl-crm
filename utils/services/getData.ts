@@ -45,8 +45,8 @@ export async function getService() {
 export async function getQuote(quoteNumber: string) {
   const quoteNumberSchema = z.coerce.number()
   const routeQuoteNumber = quoteNumberSchema.parse(quoteNumber)
-  const getQuote = () =>
-    useTrpc().quote.get.query({
+  const getQuote = async () =>
+    await useTrpc().quote.getUnique.query({
       quote_number: routeQuoteNumber,
     })
 
