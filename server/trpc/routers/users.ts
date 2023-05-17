@@ -18,4 +18,13 @@ export const userRouter = router({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findMany()
   }),
+  getContactMessages: publicProcedure.query(async ({ ctx }) => {
+    const messages = await ctx.prisma.message.findMany({
+      include: {
+        user: true,
+      },
+    })
+    console.log('[USER]getContactMessages')
+    return messages
+  }),
 })

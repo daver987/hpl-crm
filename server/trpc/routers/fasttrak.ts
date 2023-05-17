@@ -1,11 +1,12 @@
 import { router, publicProcedure } from '../trpc'
 import type { CustomerArray } from '~/composables/fasttrak-api'
-import type { ReservationResponse } from '~/schema/reservationSchema'
+import type { ReservationResponse } from '~/composables/fasttrak-api/schemas/reservationSchema'
 import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
-import type { VehicleType } from '~/composables/fasttrak-api/schemas'
-
+import type { PricingPlan } from '~/composables/fasttrak-api/schemas'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
+import chalk from 'chalk'
+import { z } from 'zod'
 
 export const fasttrakRouter = router({
   get: publicProcedure.query(async ({ ctx }) => {
@@ -28,32 +29,49 @@ export const fasttrakRouter = router({
   }),
 
   getReservations: publicProcedure.query(async ({ ctx }) => {
-    const accessToken = await fasttrakAuth()
-    console.log(
-      'Access token',
-      accessToken,
-      'Calling authenticateFasttrak from [get]',
-      new Date().toISOString()
-    )
-    const endpoint = 'reservations/search-advanced'
-    const body = {
-      startDate: new Date(),
-      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    }
+    const reservations = await useStorage().getItem('fasttrak:reservations')
+    let accessToken
+    if (!reservations) {
+      accessToken = await fasttrakAuth()
+      console.log(
+        'Access token',
+        accessToken,
+        'Calling authenticateFasttrak from [get]',
+        new Date().toISOString()
+      )
+      const endpoint = 'reservations/search-advanced'
+      const today = new Date()
+      const millisecondsPerDay = 24 * 60 * 60 * 1000
 
-    const requestOptions: FasttrakRequestOptions = {
-      method: 'POST',
-      endpoint: endpoint,
-      token: accessToken,
-      body: body,
-    }
+      const startDate = new Date(today.getTime() - 14 * millisecondsPerDay)
+      const endDate = new Date(today.getTime() + 30 * millisecondsPerDay)
 
-    const fasttrakData: ReservationResponse = await fasttrakRequest(
-      requestOptions
-    )
-    return fasttrakData
+      const body = {
+        startDate: startDate,
+        endDate: endDate,
+      }
+
+      const requestOptions: FasttrakRequestOptions = {
+        method: 'POST',
+        endpoint: endpoint,
+        token: accessToken,
+        body: body,
+      }
+
+      const fasttrakData: ReservationResponse = await fasttrakRequest(
+        requestOptions
+      )
+      await useStorage().setItem('fasttrak:reservations', fasttrakData)
+      console.log(chalk.blue('[RESERVATIONS_NEW]'))
+      return fasttrakData
+    } else {
+      console.log(
+        chalk.green('[RESERVATIONS_OLD]', JSON.stringify(reservations))
+      )
+      return reservations
+    }
   }),
-  getVehicleTypes: publicProcedure.query(async ({ ctx }) => {
+  getPricingPlans: publicProcedure.query(async ({ ctx }) => {
     const accessToken = await fasttrakAuth()
     console.log(
       'Access token',
@@ -67,10 +85,31 @@ export const fasttrakRouter = router({
       method: 'GET',
       endpoint: endpoint,
       token: accessToken,
-      queryParams: { pricingId: 208 },
+      queryParams: { includeDisabled: false },
     }
 
-    const fasttrakData: VehicleType = await fasttrakRequest(requestOptions)
+    const fasttrakData: PricingPlan = await fasttrakRequest(requestOptions)
     return fasttrakData
   }),
+  getReservationById: publicProcedure
+    .input(z.object({ reservationId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const accessToken = await fasttrakAuth()
+      console.log(
+        'Access token',
+        accessToken,
+        'Calling authenticateFasttrak from [get]',
+        new Date().toISOString()
+      )
+      const endpoint = `reservations/${input.reservationId}`
+
+      const requestOptions: FasttrakRequestOptions = {
+        method: 'GET',
+        endpoint: endpoint,
+        token: accessToken,
+      }
+
+      const fasttrakData: PricingPlan = await fasttrakRequest(requestOptions)
+      return fasttrakData
+    }),
 })

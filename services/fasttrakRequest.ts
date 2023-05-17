@@ -1,3 +1,6 @@
+import chalk from 'chalk'
+
+interface Body {}
 export interface FasttrakRequestOptions {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
   endpoint: string
@@ -42,9 +45,11 @@ export async function fasttrakRequest(
       query: options.queryParams,
     })
     console.log(
-      `[${options.method}] Request to ${
-        options.endpoint
-      } at ${new Date().toISOString()}`
+      chalk.bgRed(
+        `[${options.method}] Request to ${
+          options.endpoint
+        } at ${new Date().toISOString()}`
+      )
     )
     // console.log(`${options.method} data`, data)
     return data
