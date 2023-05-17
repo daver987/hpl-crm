@@ -8,7 +8,7 @@ import {
   ReservationDetailSchema,
   CustomerSummarySchema,
 } from '~/composables/fasttrak-api/schemas'
-import { ReservationResponse } from '~/schema/reservationSchema'
+import { ReservationResponse } from '~/composables/fasttrak-api/schemas/reservationSchema'
 import { z } from 'zod'
 
 export const reservationsRouter = router({
@@ -40,6 +40,23 @@ export const reservationsRouter = router({
       const fasttrakData: ReservationResponse = await fasttrakRequest(
         requestOptions
       )
+      console.log('[FASTTRAK_DATA]', fasttrakData)
+
+      if (fasttrakData.status === 'SUCCESS') {
+        let quoteNumber: number
+        const quoteNumberAsString = fasttrakData.item.referencePO.match(/\d+/g)
+        if (typeof quoteNumberAsString![0] === 'string') {
+          quoteNumber = parseInt(quoteNumberAsString![0])
+          await ctx.prisma.quote.update({
+            where: {
+              quote_number: quoteNumber,
+            },
+            data: {
+              is_booked: true,
+            },
+          })
+        }
+      }
       return fasttrakData
     }),
 })

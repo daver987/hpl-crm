@@ -3,11 +3,6 @@ generator client {
   previewFeatures = ["fieldReference", "jsonProtocol"]
 }
 
-generator zod {
-  provider           = "zod-prisma-types"
-  createPartialTypes = "true"
-}
-
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
@@ -19,8 +14,8 @@ model Account {
   number                 Int      @unique @default(autoincrement())
   created_at             DateTime @default(now())
   updated_at             DateTime @updatedAt
-  company_name           String
-  company_address        String
+  company_name           String?
+  company_address        String?
   company_phone          String?
   company_email          String
   company_account_number Int
@@ -47,6 +42,7 @@ model User {
   phone_number         String
   phone_number_country String?
   stripe_customer_id   String?
+  clerk_id             String?
   is_customer          Boolean      @default(false)
   account_id           String?
   notes                String?

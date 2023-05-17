@@ -1,14 +1,13 @@
-import { router, publicProcedure } from '../trpc'
+import { publicProcedure, router } from '../trpc'
 import { z } from 'zod'
 
 export const stripeCustomersRouter = router({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const stripe = ctx.stripe
-    const customers = await stripe.customers.list({
+    return await stripe.customers.list({
       limit: 100,
       expand: ['data.sources', 'data.invoice_settings'],
     })
-    return customers
   }),
 
   delete: publicProcedure
@@ -19,10 +18,7 @@ export const stripeCustomersRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const stripe = ctx.stripe
-      const deletedCustomer = await stripe.customers.del(
-        input.stripe_customer_id
-      )
-      return deletedCustomer
+      return await stripe.customers.del(input.stripe_customer_id)
     }),
 
   update: publicProcedure
@@ -38,10 +34,6 @@ export const stripeCustomersRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const stripe = ctx.stripe
-      const updatedCustomer = await stripe.customers.update(
-        input.id,
-        input.options
-      )
-      return updatedCustomer
+      return await stripe.customers.update(input.id, input.options)
     }),
 })
