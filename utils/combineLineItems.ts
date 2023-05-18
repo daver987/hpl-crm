@@ -29,7 +29,6 @@ interface Quote {
 export function combineLineItemsTwo(quote: Quote): LineItem[] {
   const combinedItems: { [label: string]: LineItem } = {}
 
-  // Iterate through the line_items_list of the first trip
   for (const item of quote.trips[0].line_items_list) {
     if (!combinedItems[item.label]) {
       combinedItems[item.label] = { ...item }
@@ -39,7 +38,6 @@ export function combineLineItemsTwo(quote: Quote): LineItem[] {
     }
   }
 
-  // If the second trip exists, iterate through its line_items_list
   if (quote.trips[1]) {
     for (const item of quote.trips[1].line_items_list) {
       if (!combinedItems[item.label]) {
@@ -51,7 +49,6 @@ export function combineLineItemsTwo(quote: Quote): LineItem[] {
     }
   }
 
-  // Calculate the total amount and tax
   let totalAmount = 0
   let totalTax = 0
   for (const item of Object.values(combinedItems)) {
@@ -59,7 +56,6 @@ export function combineLineItemsTwo(quote: Quote): LineItem[] {
     totalTax += item.tax
   }
 
-  // Add the Tax and Total Amount objects to the array
   const result = Object.values(combinedItems)
   result.push({ label: 'HST', total: totalTax, tax: totalTax })
   result.push({ label: 'Total', total: totalAmount + totalTax, tax: 0 })
@@ -106,7 +102,6 @@ export function combineTwoLineItems(
 ): LineItem[] {
   const combinedItems: { [label: string]: LineItem } = {}
 
-  // Iterate through the first line items array
   for (const item of lineItems1) {
     if (!combinedItems[item.label]) {
       combinedItems[item.label] = { ...item }
@@ -116,7 +111,6 @@ export function combineTwoLineItems(
     }
   }
 
-  // Iterate through the second line items array
   for (const item of lineItems2) {
     if (!combinedItems[item.label]) {
       combinedItems[item.label] = { ...item }
@@ -126,7 +120,6 @@ export function combineTwoLineItems(
     }
   }
 
-  // Convert the combinedItems object back to an array
   return Object.values(combinedItems)
 }
 

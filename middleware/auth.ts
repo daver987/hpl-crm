@@ -1,6 +1,3 @@
-import Clerk from '@clerk/clerk-js'
-import chalk from 'chalk'
-
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // console.log(chalk.redBright('[CLERK_MIDDLEWARE]'), user)
   // if (user) {
