@@ -33,9 +33,9 @@ export const driverRouter = router({
       endpoint: endpoint,
       token: accessToken,
     }
-
     return await fasttrakRequest(requestOptions)
   }),
+
   getPay: publicProcedure.query(async ({ ctx }) => {
     const accessToken = await fasttrakAuth()
     const endpoint = 'affiliates'
@@ -48,6 +48,7 @@ export const driverRouter = router({
 
     return await fasttrakRequest(requestOptions)
   }),
+
   getEmployeePay: publicProcedure
     .input(
       z.object({

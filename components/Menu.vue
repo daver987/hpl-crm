@@ -70,18 +70,18 @@ const menuOptions = computed(() => [
   renderNav('/dispatch', 'Dispatch', DispatchIcon, 5),
   renderNav('/messaging', 'Messaging', MessageIcon, 6),
   renderNav('/schedule', 'Schedule', ScheduleIcon, 7),
-  renderNav('/affiliates', 'Affiliates', ScheduleIcon, 11, [
+  renderNav('/affiliates', 'Affiliates', ScheduleIcon, 8, [
     {
       type: 'group',
       label: 'Affiliates Overview',
-      key: '11.1',
-      children: [renderNav('/affiliates/fasttrak', 'Fasttrak', null, '11.1.1')],
+      key: '8.1',
+      children: [renderNav('/affiliates/fasttrak', 'Fasttrak', null, '8.1.1')],
     },
   ]),
-  renderNav('/drivers', 'Drivers', ScheduleIcon, 7),
-  renderNav('/invoicing', 'Invoicing', InvoiceIcon, 8),
-  renderNav('/profile', 'My Profile', PersonIcon, 9),
-  renderNav('/settings', 'Settings', SettingsIcon, 10),
+  renderNav('/drivers', 'Drivers', ScheduleIcon, 9),
+  renderNav('/invoicing', 'Invoicing', InvoiceIcon, 10),
+  renderNav('/profile', 'My Profile', PersonIcon, 11),
+  renderNav('/settings', 'Settings', SettingsIcon, 12),
 ])
 
 function renderNav(
