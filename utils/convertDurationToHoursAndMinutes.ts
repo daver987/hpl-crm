@@ -20,18 +20,3 @@ type DateAndTime = [
   hours: number,
   minutes: number
 ]
-// export function combineDateAndTime(
-//   dateTimestamp: number,
-//   timeTimestamp: number
-// ): DateAndTime {
-//   const date = new Date(dateTimestamp)
-//   const time = new Date(timeTimestamp)
-//
-//   const year = date.getFullYear()
-//   const month = date.getMonth() + 1
-//   const day = date.getDate()
-//   const hours = time.getHours()
-//   const minutes = time.getMinutes()
-//
-//   return [year, month, day, hours, minutes]
-// }
