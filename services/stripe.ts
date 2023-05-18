@@ -137,30 +137,3 @@ export async function getCustomerByEmail({
 
   return null
 }
-// export const handleInvoicePaid = async ({
-//   event,
-//   stripe,
-//   prisma,
-// }: {
-//   event: Stripe.Event
-//   stripe: Stripe
-//   prisma: PrismaClient
-// }) => {
-//   const invoice = event.data.object as Stripe.Invoice
-//   const subscriptionId = invoice.subscription
-//   const subscription = await stripe.subscriptions.retrieve(
-//     subscriptionId as string
-//   )
-//   const userId = subscription.metadata.userId
-//
-//   // update user with subscription data
-//   await prisma.user.update({
-//     where: {
-//       id: userId,
-//     },
-//     data: {
-//       stripeSubscriptionId: subscription.id,
-//       stripeSubscriptionStatus: subscription.status,
-//     },
-//   })
-// }

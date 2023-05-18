@@ -8,8 +8,9 @@ definePageMeta({
 <template>
   <n-layout-content style="padding: 24px">
     <n-row>
-      <n-card title="Quote Settings"></n-card>
-      <QuoteSettings />
+      <n-card title="Quote Form Settings">
+        <SettingsTable/>
+      </n-card>
     </n-row>
   </n-layout-content>
 </template>
