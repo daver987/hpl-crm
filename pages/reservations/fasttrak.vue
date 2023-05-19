@@ -239,30 +239,32 @@ const columns = createColumns()
 
 <template>
   <n-layout-content>
-    <n-grid :cols="1">
-      <n-grid-item style="padding: 16px">
-        <n-space justify-between>
-          <n-date-picker
-            v-model:value="range"
-            type="daterange"
-            clearable
-            :default-value="range"
-            format="PP"
-          />
-        </n-space>
-      </n-grid-item>
-    </n-grid>
-    <n-data-table
-      :max-height="685"
-      ref="tableRef"
-      remote
-      :data="filteredReservations"
-      :loading="pending"
-      :columns="columns"
-      :row-key="rowKey"
-      virtual-scroll
-      :scroll-x="1800"
-      size="small"
-    />
+    <n-spin :show="pending">
+      <n-grid :cols="1">
+        <n-grid-item style="padding: 16px">
+          <n-space justify-between>
+            <n-date-picker
+              v-model:value="range"
+              type="daterange"
+              clearable
+              :default-value="range"
+              format="PP"
+            />
+          </n-space>
+        </n-grid-item>
+      </n-grid>
+      <n-data-table
+        :max-height="685"
+        ref="tableRef"
+        remote
+        :data="filteredReservations"
+        :loading="pending"
+        :columns="columns"
+        :row-key="rowKey"
+        virtual-scroll
+        :scroll-x="1800"
+        size="small"
+      />
+    </n-spin>
   </n-layout-content>
 </template>

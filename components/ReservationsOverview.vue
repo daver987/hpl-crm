@@ -97,20 +97,21 @@ const averageCharge = computed(() => {
 </script>
 
 <template>
-  <n-grid :cols="1">
-    <n-grid-item style="padding: 16px; padding-top: 0">
-      <n-space justify-between>
-        <n-date-picker
-          v-model:value="range"
-          type="daterange"
-          clearable
-          :default-value="range"
-          format="PP"
-        />
-      </n-space>
-    </n-grid-item>
-  </n-grid>
   <n-spin :show="pending">
+    <n-grid :cols="1">
+      <n-grid-item style="padding: 16px; padding-top: 0">
+        <n-space justify-between>
+          <n-date-picker
+            v-model:value="range"
+            type="daterange"
+            clearable
+            :default-value="range"
+            format="PP"
+          />
+        </n-space>
+      </n-grid-item>
+    </n-grid>
+
     <n-grid :cols="4" :x-gap="12">
       <n-gi>
         <n-card>
