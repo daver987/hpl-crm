@@ -11,13 +11,13 @@ import {
   endOfMonth,
   getUnixTime,
 } from 'date-fns'
-import { ReservationDateAndTotalSchema } from '~/composables'
 import { ComputedRef, Ref } from 'vue'
-import { computed } from '#imports'
 
-const { data: reservations, pending } = await useFetch('/api/reservations')
+const { data: response, pending } = await useFetch('/api/reservations')
 const pickedReservations = computed(() => {
-  return ReservationDateAndTotalSchema.array().parse(reservations.value?.items)
+  return ReservationDateAndTotalSchema.array().parse(
+    response.value?.reservations
+  )
 })
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
 const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
@@ -46,7 +46,7 @@ const filteredReservations = computed(() => {
   if (!startDate.value || !endDate.value) {
     return []
   }
-  return pickedReservations.value.filter((reservation) => {
+  return pickedReservations.value?.filter((reservation) => {
     let reservationDate = parseISO(reservation.scheduledPickupTime)
     return (
       (isAfter(reservationDate, startDate.value!) ||
@@ -59,7 +59,7 @@ const filteredReservations = computed(() => {
 
 const totalCharges = computed(() => {
   return (
-    filteredReservations.value.reduce(
+    filteredReservations.value?.reduce(
       (total: number, obj) => total + obj.totalCharges,
       0
     ) || 0

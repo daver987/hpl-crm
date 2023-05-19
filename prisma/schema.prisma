@@ -361,6 +361,13 @@ model Airport {
   flight   Flight[]
 }
 
+model Fasttrak {
+  id           Int      @id @unique @default(autoincrement())
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  reservations Json
+}
+
 model LAOrders {
   created_at                            DateTime @default(now())
   conf_num                              Int      @id @unique @default(autoincrement())

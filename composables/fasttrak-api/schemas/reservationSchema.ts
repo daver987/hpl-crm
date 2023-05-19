@@ -416,7 +416,6 @@ export const ReservationDateAndTotalSchema = ReservationSchema.pick({
   scheduledPickupTime: true,
   isFinalized: true,
   isInvoiced: true,
-  vehicleTypeSummary: true,
   reservationId: true,
 })
 
