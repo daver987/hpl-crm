@@ -2,11 +2,10 @@
 import { useEcharts } from '~/composables/useEcharts'
 import type { ECOption } from '~/composables/useEcharts'
 import { format } from 'date-fns'
-import { computed } from '#imports'
 import { QuoteReturnedPickedSchema } from '~/schema/QuoteFormSchema'
 
 const { data: quotes, pending } = await useFetch('/api/quotes')
-const pickedQuotes = await computed(() => {
+const pickedQuotes = computed(() => {
   return QuoteReturnedPickedSchema.array().parse(quotes.value)
 })
 

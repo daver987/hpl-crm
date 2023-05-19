@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useEcharts } from '~/composables/useEcharts'
 import type { ECOption } from '~/composables/useEcharts'
-import { parseISO, format } from 'date-fns'
-import { computed, ReservationDateAndTotalSchema } from '#imports'
+import { format, parseISO } from 'date-fns'
+import { ReservationDateAndTotalSchema } from '~/composables/fasttrak-api/schemas'
 
-const { data: reservations, pending } = await useFetch('/api/reservations')
+const { data: response, pending } = await useFetch('/api/reservations')
+
 const pickedReservations = computed(() => {
-  return ReservationDateAndTotalSchema.array().parse(reservations.value?.items)
+  return ReservationDateAndTotalSchema.array().parse(
+    response.value?.reservations
+  )
 })
 
 const weeklyData = {
