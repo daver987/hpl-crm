@@ -11,10 +11,19 @@ import {
   endOfMonth,
   getUnixTime,
 } from 'date-fns'
-import type { ReservationResponse } from '~/composables'
+import { z } from 'zod'
 import { ReservationDateAndTotalSchema } from '~/composables'
+import { ComputedRef, Ref } from 'vue'
 
-const reservations: Ref<null | ReservationResponse> = ref(null)
+type ReservationResponse = z.infer<typeof ReservationDateAndTotalSchema>
+
+interface Props {
+  reservations: ReservationResponse[]
+}
+
+const props = defineProps<Props>()
+const pickedReservations = ref(props.reservations)
+
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
 const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
 const range: Ref<[number, number]> = ref([
@@ -38,20 +47,11 @@ const endDate = computed(() => {
   return endTimestamp.value ? new Date(endTimestamp.value) : null
 })
 
-const { data: reservationResponse, pending: loading } =
-  await useTrpc().fasttrak.getReservations.useQuery()
-
-reservations.value = reservationResponse.value as ReservationResponse
-
-const pickedReservations = ReservationDateAndTotalSchema.array().parse(
-  reservations.value?.items
-)
-
 const filteredReservations = computed(() => {
   if (!startDate.value || !endDate.value) {
     return []
   }
-  return pickedReservations.filter((reservation) => {
+  return pickedReservations.value.filter((reservation) => {
     let reservationDate = parseISO(reservation.scheduledPickupTime)
     return (
       (isAfter(reservationDate, startDate.value!) ||

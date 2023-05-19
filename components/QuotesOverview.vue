@@ -10,7 +10,24 @@ import {
   endOfWeek,
   getUnixTime,
 } from 'date-fns'
-import { QuoteReturnedPickedSchema } from '~/schema/QuoteFormSchema'
+import { z } from 'zod'
+import { ComputedRef, Ref } from 'vue'
+import {
+  QuoteReturnedPickedSchema,
+  ReturnedQuoteSchema,
+} from '~/schema/QuoteFormSchema'
+
+type ReturnedQuote = z.infer<typeof ReturnedQuoteSchema>
+type PickedQuotes = z.infer<typeof QuoteReturnedPickedSchema>
+
+interface Props {
+  quotes: PickedQuotes[]
+}
+
+const props = defineProps<Props>()
+
+const pickedQuotes = ref(props.quotes)
+console.log('Props', props.quotes)
 
 const startOfWeekTimestamp = getUnixTime(startOfWeek(new Date()))
 const endOfWeekTimestamp = getUnixTime(endOfWeek(new Date()))
@@ -33,13 +50,6 @@ const startDate = computed(() => {
 
 const endDate = computed(() => {
   return endTimestamp.value ? new Date(endTimestamp.value) : null
-})
-
-const { data: quoteData, pending: isLoading } =
-  await useTrpc().quote.getMany.useQuery()
-
-const pickedQuotes = computed(() => {
-  return QuoteReturnedPickedSchema.array().parse(quoteData.value)
 })
 
 const filteredQuotes = computed(() => {
