@@ -20,16 +20,16 @@ export default defineNuxtConfig({
         ? [
             'naive-ui',
             'vueuc',
-            '@juggle/resize-observer',
             'libphonenumber-js',
             '@googlemaps/js-api-loader',
             'trpc-nuxt',
+            'echarts',
           ]
         : [
-            '@juggle/resize-observer',
             'libphonenumber-js',
             '@googlemaps/js-api-loader',
             'trpc-nuxt',
+            'echarts',
           ],
   },
 
@@ -65,10 +65,6 @@ export default defineNuxtConfig({
       WEBSITE_URL: process.env.WEBSITE_URL,
       CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
     },
-  },
-
-  nitro: {
-    preset: 'vercel',
   },
 
   vite: {
