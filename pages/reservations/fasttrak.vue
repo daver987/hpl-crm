@@ -29,7 +29,9 @@ const tableRef = ref(null)
 const message = useMessage()
 const dialog = useDialog()
 
-const { data: reservationsData, pending } = await useFetch('/api/reservations')
+const { data: reservationsData, pending } = await useFetch(
+  '/api/reservations-all'
+)
 const reservations = computed(() => {
   return reservationsData.value as unknown as ReservationResponse
 })
