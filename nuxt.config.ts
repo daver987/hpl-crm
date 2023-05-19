@@ -67,10 +67,6 @@ export default defineNuxtConfig({
     },
   },
 
-  nitro: {
-    preset: 'vercel',
-  },
-
   vite: {
     resolve: {
       alias: { '.prisma/client/index-browser': `@prisma/client/index-browser` },
