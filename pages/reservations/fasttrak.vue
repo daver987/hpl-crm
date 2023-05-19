@@ -1,11 +1,25 @@
 <script lang="ts" setup>
-import type { Reservation } from '~/composables/fasttrak-api/schemas/reservationSchema'
-import { format } from 'date-fns'
-import { ref } from '#imports'
+import {
+  endOfDay,
+  endOfMonth,
+  format,
+  getUnixTime,
+  isAfter,
+  isBefore,
+  isSameDay,
+  parseISO,
+  startOfDay,
+  startOfMonth,
+} from 'date-fns'
+import { computed, ref } from '#imports'
 import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import { RowData } from 'naive-ui/es/data-table/src/interface'
-import chalk from 'chalk'
+import { ComputedRef, Ref } from 'vue'
+import type {
+  ReservationResponse,
+  Reservation,
+} from '~/composables/fasttrak-api/schemas/reservationSchema'
 
 definePageMeta({
   name: 'Fasttrak',
@@ -14,42 +28,67 @@ definePageMeta({
 
 const tableRef = ref(null)
 const message = useMessage()
-
-const { data: reservationsData, isLoading: isLoading } = useQuery({
-  queryKey: ['reservationsFasttrak'],
-  queryFn: async () => await useTrpc().fasttrak.getReservations.query(),
-})
-
-//@ts-ignore
-const reservations = computed(() => reservationsData.value?.items)
-await console.log('Reservations:', reservations.value)
-
-const pushToZoho = async (evt: RowData) => {
-  const { data } = await useFetch('/api/zoho', {
-    method: 'POST',
-    body: evt,
-  })
-  return data
-}
-
 const dialog = useDialog()
 
-const handlePush = (evt: RowData) => {
-  const d = dialog.success({
-    title: 'Push to Zoho',
-    content: 'Are you sure you want to push to Zoho',
-    positiveText: 'Confirm',
-    onPositiveClick: async () => {
-      // d.loading = true
-      const response = pushToZoho(evt)
-      console.log(chalk.blue('[RETURNED_ZOHO]', response))
-      // message.info(`The Customer was successfully Deleted`)
-      // d.loading = false
-    },
-  })
-}
-
+const { data: reservationsData, pending } = await useFetch('/api/reservations')
+const reservations = computed(() => {
+  return reservationsData.value as unknown as ReservationResponse
+})
 const rowKey = (row: Reservation) => row.reservationId
+
+const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
+const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
+const range: Ref<[number, number]> = ref([
+  startOfMonthTimestamp * 1000,
+  endOfMonthTimestamp * 1000,
+])
+
+const startTimestamp: ComputedRef<Date | null> = computed(() => {
+  return range.value ? startOfDay(new Date(range.value[0])) : null
+})
+
+const endTimestamp: ComputedRef<Date | null> = computed(() => {
+  return range.value ? endOfDay(new Date(range.value[1])) : null
+})
+
+const startDate = computed(() => {
+  return startTimestamp.value ? new Date(startTimestamp.value) : null
+})
+
+const endDate = computed(() => {
+  return endTimestamp.value ? new Date(endTimestamp.value) : null
+})
+
+const filteredReservations = computed(() => {
+  if (!startDate.value || !endDate.value) {
+    return []
+  }
+  return reservations.value.items.filter((reservation) => {
+    let reservationDate = parseISO(reservation.scheduledPickupTime)
+    return (
+      (isAfter(reservationDate, startDate.value!) ||
+        isSameDay(reservationDate, startDate.value!)) &&
+      (isBefore(reservationDate, endDate.value!) ||
+        isSameDay(reservationDate, endDate.value!))
+    )
+  })
+})
+
+const handlePush = (evt: RowData) => {
+  console.log('Push event', evt)
+  // const d = dialog.success({
+  //   title: 'Push to Zoho',
+  //   content: 'Are you sure you want to push to Zoho',
+  //   positiveText: 'Confirm',
+  //   onPositiveClick: async () => {
+  //     // d.loading = true
+  //     const response = pushToZoho(evt)
+  //     console.log(chalk.blue('[RETURNED_ZOHO]', response))
+  //     // message.info(`The Customer was successfully Deleted`)
+  //     // d.loading = false
+  //   },
+  // })
+}
 
 const createColumns = (): DataTableColumns<Reservation> => [
   {
@@ -179,7 +218,7 @@ const createColumns = (): DataTableColumns<Reservation> => [
   {
     title: 'Delete',
     key: 'delete',
-    render(row) {
+    render() {
       return h(
         NButton,
         {
@@ -200,12 +239,25 @@ const columns = createColumns()
 
 <template>
   <n-layout-content>
+    <n-grid :cols="1">
+      <n-grid-item style="padding: 16px">
+        <n-space justify-between>
+          <n-date-picker
+            v-model:value="range"
+            type="daterange"
+            clearable
+            :default-value="range"
+            format="PP"
+          />
+        </n-space>
+      </n-grid-item>
+    </n-grid>
     <n-data-table
       :max-height="685"
       ref="tableRef"
       remote
-      :data="reservations"
-      :loading="isLoading"
+      :data="filteredReservations"
+      :loading="pending"
       :columns="columns"
       :row-key="rowKey"
       virtual-scroll
