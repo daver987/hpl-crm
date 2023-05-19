@@ -11,19 +11,15 @@ import {
   endOfMonth,
   getUnixTime,
 } from 'date-fns'
-import { z } from 'zod'
+// import { z } from 'zod'
 import { ReservationDateAndTotalSchema } from '~/composables'
 import { ComputedRef, Ref } from 'vue'
+import { computed } from '#imports'
 
-type ReservationResponse = z.infer<typeof ReservationDateAndTotalSchema>
-
-interface Props {
-  reservations: ReservationResponse[]
-}
-
-const props = defineProps<Props>()
-const pickedReservations = ref(props.reservations)
-
+const { data: reservations, pending } = await useFetch('/api/reservations')
+const pickedReservations = computed(() => {
+  return ReservationDateAndTotalSchema.array().parse(reservations.value?.items)
+})
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
 const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
 const range: Ref<[number, number]> = ref([
@@ -115,29 +111,37 @@ const averageCharge = computed(() => {
       </n-space>
     </n-grid-item>
   </n-grid>
-  <n-grid :cols="4" :x-gap="12">
-    <n-gi>
-      <n-card>
-        <n-statistic label="Today's Reservations" :value="todayItemCount" />
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card>
-        <n-statistic label="Total Reservations For Range" :value="itemCount" />
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card>
-        <n-statistic
-          label="Total Value For Range"
-          :value="totalChargesFormatted"
-        />
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card>
-        <n-statistic label="Average Amount For Range" :value="averageCharge" />
-      </n-card>
-    </n-gi>
-  </n-grid>
+  <n-spin :show="pending">
+    <n-grid :cols="4" :x-gap="12">
+      <n-gi>
+        <n-card>
+          <n-statistic label="Today's Reservations" :value="todayItemCount" />
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic
+            label="Total Reservations For Range"
+            :value="itemCount"
+          />
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic
+            label="Total Value For Range"
+            :value="totalChargesFormatted"
+          />
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic
+            label="Average Amount For Range"
+            :value="averageCharge"
+          />
+        </n-card>
+      </n-gi>
+    </n-grid>
+  </n-spin>
 </template>
