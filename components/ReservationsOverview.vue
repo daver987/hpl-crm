@@ -11,7 +11,6 @@ import {
   endOfMonth,
   getUnixTime,
 } from 'date-fns'
-// import { z } from 'zod'
 import { ReservationDateAndTotalSchema } from '~/composables'
 import { ComputedRef, Ref } from 'vue'
 import { computed } from '#imports'
