@@ -11,7 +11,6 @@ import {
   startOfDay,
   startOfMonth,
 } from 'date-fns'
-import { computed, ref } from '#imports'
 import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import { RowData } from 'naive-ui/es/data-table/src/interface'
@@ -30,7 +29,9 @@ const tableRef = ref(null)
 const message = useMessage()
 const dialog = useDialog()
 
-const { data: reservationsData, pending } = await useFetch('/api/reservations')
+const { data: reservationsData, pending } = await useFetch(
+  '/api/reservations-all'
+)
 const reservations = computed(() => {
   return reservationsData.value as unknown as ReservationResponse
 })

@@ -1,5 +1,3 @@
-import { ref } from '#imports'
-
 export async function checkForCustomer(email: string) {
   const customerId = ref<number | null | undefined>(null)
   const { data: customerData } =

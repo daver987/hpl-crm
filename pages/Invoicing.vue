@@ -1,6 +1,4 @@
 <script lang="ts">
-import { defineComponent, ref } from '#imports'
-
 export default defineComponent({
   name: 'Invoice',
   setup() {
