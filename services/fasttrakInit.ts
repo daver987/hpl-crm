@@ -1,6 +1,17 @@
-import { AuthResponseSchema } from '~/composables/fasttrak-api'
 import type { AuthResponse } from '~/composables/fasttrak-api'
 import chalk from 'chalk'
+
+type StoredToken = {
+  token: string
+  expiration: number
+}
+
+// This is a type guard function that verifies if an object is of type StoredToken
+function isStoredToken(obj: any): obj is StoredToken {
+  return (
+    obj && typeof obj.token === 'string' && typeof obj.expiration === 'number'
+  )
+}
 
 export const fasttrakAuth = async (): Promise<string> => {
   const runtimeConfig = useRuntimeConfig()
@@ -54,22 +65,32 @@ export const fasttrakAuth = async (): Promise<string> => {
       throw error
     }
   }
-  let authResponse
-  let authToken
-  const token = await useStorage().getItem('fasttrak:token')
-  if (!token) {
-    authResponse = await authenticateFasttrak(
+
+  let storedData = await useStorage().getItem('fasttrak:token')
+  let tokenData: StoredToken | null = null
+
+  if (isStoredToken(storedData)) {
+    tokenData = storedData
+  }
+
+  if (!tokenData || new Date().getTime() > tokenData.expiration) {
+    const authResponse = await authenticateFasttrak(
       runtimeConfig.FASTTRACK_SYSTEM_ID,
       runtimeConfig.FASTTRACK_USER_EMAIL,
       runtimeConfig.FASTTRACK_USER_PASSWORD,
       ''
     )
-    authToken = authResponse.item.token.accessToken
+    const authToken = authResponse.item.token.accessToken
     console.log(chalk.cyanBright('[SET_NEW_TOKEN]', authToken))
-    await useStorage().setItem('fasttrak:token', authToken)
+    const expiration = new Date().getTime() + 30 * 60 * 1000 // 30 minutes from now
+    tokenData = {
+      token: authToken,
+      expiration,
+    }
+    await useStorage().setItem('fasttrak:token', tokenData)
   } else {
-    console.log(chalk.green('[OLD_TOKEN]', token))
-    authToken = token
+    console.log(chalk.green('[OLD_TOKEN]', tokenData.token))
   }
-  return authToken as string
+
+  return tokenData.token
 }

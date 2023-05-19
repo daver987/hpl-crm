@@ -34,6 +34,7 @@
     "chalk": "^5.2.0",
     "chart.js": "^4.3.0",
     "date-fns": "^2.30.0",
+    "echarts": "^5.4.2",
     "libphonenumber-js": "^1.10.30",
     "lodash": "^4.17.21",
     "naive-ui": "^2.34.3",

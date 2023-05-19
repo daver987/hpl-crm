@@ -1,12 +1,9 @@
-<script lang="ts" setup>
-definePageMeta({
-  name: 'Dispatch',
-  layout: 'default',
-})
-</script>
-
 <template>
   <n-layout-content>
-    <n-h3>Dispatch Mirror</n-h3>
+    <n-card title="Dispatch Mirror"></n-card>
   </n-layout-content>
 </template>
+
+<script setup lang="ts"></script>
+
+<style scoped></style>
