@@ -6,7 +6,7 @@ import {
 import { ReservationResponse } from '~/composables'
 import chalk from 'chalk'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   const reservations = await useStorage().getItem('fasttrak:reservations')
   let accessToken
   if (!reservations) {
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
     console.log(chalk.blue('[RESERVATIONS_NEW]'))
     return fasttrakData
   } else {
-    console.log(chalk.green('[RESERVATIONS_OLD]', JSON.stringify(reservations)))
+    console.log(chalk.green('[RESERVATIONS_OLD]'))
     return reservations as ReservationResponse
   }
 })
