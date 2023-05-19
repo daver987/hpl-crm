@@ -1,2 +1,2 @@
-export * from './services/getData'
+export * from './services'
 export * from './formUtils'
