@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
     console.log(chalk.blue('[RESERVATIONS_NEW]'))
     return fasttrakData
   } else {
-    console.log(chalk.green('[RESERVATIONS_OLD]', JSON.stringify(reservations)))
+    console.log(chalk.green('[RESERVATIONS_OLD]'))
     return reservations as ReservationResponse
   }
 })
