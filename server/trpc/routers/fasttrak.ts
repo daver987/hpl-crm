@@ -1,8 +1,10 @@
 import { router, publicProcedure } from '../trpc'
-import type { CustomerArray } from '~/composables/fasttrak-api'
-import type { ReservationResponse } from '~/composables/fasttrak-api/schemas/reservationSchema'
 import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
-import type { PricingPlan } from '~/composables/fasttrak-api/schemas'
+import type {
+  PricingPlan,
+  ReservationResponse,
+  CustomerArray,
+} from '~/composables/fasttrak-api/schemas'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
 import chalk from 'chalk'
@@ -40,15 +42,21 @@ export const fasttrakRouter = router({
         new Date().toISOString()
       )
       const endpoint = 'reservations/search-advanced'
-      const today = new Date()
-      const millisecondsPerDay = 24 * 60 * 60 * 1000
+      const currentYear = new Date().getFullYear()
 
-      const startDate = new Date(today.getTime() - 14 * millisecondsPerDay)
-      const endDate = new Date(today.getTime() + 30 * millisecondsPerDay)
+      const startDate = new Date()
+      startDate.setFullYear(currentYear)
+      startDate.setMonth(0)
+      startDate.setDate(1)
+
+      const endDate = new Date()
+      endDate.setFullYear(currentYear)
+      endDate.setMonth(11)
+      endDate.setDate(31)
 
       const body = {
-        startDate: startDate,
-        endDate: endDate,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
       }
 
       const requestOptions: FasttrakRequestOptions = {
@@ -68,7 +76,7 @@ export const fasttrakRouter = router({
       console.log(
         chalk.green('[RESERVATIONS_OLD]', JSON.stringify(reservations))
       )
-      return reservations
+      return reservations as ReservationResponse
     }
   }),
   getPricingPlans: publicProcedure.query(async ({ ctx }) => {

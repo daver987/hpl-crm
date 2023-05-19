@@ -3,7 +3,7 @@ const route = useRoute()
 </script>
 <template>
   <n-layout style="height: 100dvh">
-    <n-layout-header style="height: 48px; padding: 16px" bordered>
+    <n-layout-header style="height: 56px; padding: 16px" bordered>
       <n-h5>{{ route.name }}</n-h5>
     </n-layout-header>
     <n-layout position="absolute" style="top: 48px; bottom: 4px" has-sider>

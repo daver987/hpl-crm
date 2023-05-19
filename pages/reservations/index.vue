@@ -1,11 +1,14 @@
-<script lang="ts" setup>
-//scripts
+<script setup lang="ts">
+definePageMeta({
+  name: 'Reservations',
+  layout: 'default',
+})
 </script>
 
 <template>
-	<n-layout-content>
-		<n-card title="Overview"> Reservations overview </n-card>
-	</n-layout-content>
+  <n-layout-content style="padding: 16px">
+    <n-card>
+      <ReservationsOverview />
+    </n-card>
+  </n-layout-content>
 </template>
-
-<style scoped></style>
