@@ -19,6 +19,11 @@ definePageMeta({
           <ReservationsOverview />
         </n-card>
       </n-grid-item>
+      <n-grid-item>
+        <n-card title="Quotes By Day">
+          <ChartsBarQuotes />
+        </n-card>
+      </n-grid-item>
     </n-grid>
   </n-layout-content>
 </template>

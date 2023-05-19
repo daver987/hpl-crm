@@ -38,7 +38,6 @@ import type {
 } from 'echarts/components'
 import { LabelLayout, UniversalTransition } from 'echarts/features'
 import { CanvasRenderer } from 'echarts/renderers'
-import { useThemeStore } from '@/store'
 
 export type ECOption = echarts.ComposeOption<
   | BarSeriesOption
@@ -86,8 +85,6 @@ export function useEcharts(
   options: Ref<ECOption> | ComputedRef<ECOption>,
   renderFun?: (chartInstance: echarts.ECharts) => void
 ) {
-  const theme = useThemeStore()
-
   const domRef = ref<HTMLElement>()
 
   const initialSize = { width: 0, height: 0 }
@@ -112,9 +109,8 @@ export function useEcharts(
 
   async function render() {
     if (domRef.value) {
-      const chartTheme = theme.darkMode ? 'dark' : 'light'
       await nextTick()
-      chart = echarts.init(domRef.value, chartTheme)
+      chart = echarts.init(domRef.value)
       if (renderFun) {
         renderFun(chart)
       }
@@ -160,13 +156,6 @@ export function useEcharts(
         update(newValue)
       },
       { deep: true }
-    )
-
-    watch(
-      () => theme.darkMode,
-      () => {
-        updateTheme()
-      }
     )
   })
 
