@@ -126,11 +126,6 @@ export function useEcharts(
     chart?.dispose()
   }
 
-  function updateTheme() {
-    destroy()
-    render()
-  }
-
   const scope = effectScope()
 
   scope.run(() => {
