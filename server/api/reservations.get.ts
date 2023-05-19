@@ -6,7 +6,7 @@ import {
 import { ReservationResponse } from '~/composables'
 import chalk from 'chalk'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   const reservations = await useStorage().getItem('fasttrak:reservations')
   let accessToken
   if (!reservations) {

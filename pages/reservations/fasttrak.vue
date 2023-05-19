@@ -218,7 +218,7 @@ const createColumns = (): DataTableColumns<Reservation> => [
   {
     title: 'Delete',
     key: 'delete',
-    render(row) {
+    render() {
       return h(
         NButton,
         {
