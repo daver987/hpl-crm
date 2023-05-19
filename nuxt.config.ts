@@ -20,16 +20,16 @@ export default defineNuxtConfig({
         ? [
             'naive-ui',
             'vueuc',
-            '@juggle/resize-observer',
             'libphonenumber-js',
             '@googlemaps/js-api-loader',
             'trpc-nuxt',
+            'echarts',
           ]
         : [
-            '@juggle/resize-observer',
             'libphonenumber-js',
             '@googlemaps/js-api-loader',
             'trpc-nuxt',
+            'echarts',
           ],
   },
 
