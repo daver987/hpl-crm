@@ -10,24 +10,15 @@ import {
   endOfWeek,
   getUnixTime,
 } from 'date-fns'
-import { z } from 'zod'
 import { ComputedRef, Ref } from 'vue'
-import {
-  QuoteReturnedPickedSchema,
-  ReturnedQuoteSchema,
-} from '~/schema/QuoteFormSchema'
+import { QuoteReturnedPickedSchema } from '~/schema/QuoteFormSchema'
+import { computed } from '#imports'
 
-type ReturnedQuote = z.infer<typeof ReturnedQuoteSchema>
-type PickedQuotes = z.infer<typeof QuoteReturnedPickedSchema>
+const { data: quotes, pending } = await useFetch('/api/quotes')
 
-interface Props {
-  quotes: PickedQuotes[]
-}
-
-const props = defineProps<Props>()
-
-const pickedQuotes = ref(props.quotes)
-console.log('Props', props.quotes)
+const pickedQuotes = await computed(() => {
+  return QuoteReturnedPickedSchema.array().parse(quotes.value)
+})
 
 const startOfWeekTimestamp = getUnixTime(startOfWeek(new Date()))
 const endOfWeekTimestamp = getUnixTime(endOfWeek(new Date()))
@@ -120,26 +111,31 @@ const averageQuote = computed(() => {
       </n-space>
     </n-grid-item>
   </n-grid>
-  <n-grid :cols="4" :x-gap="12">
-    <n-gi>
-      <n-card>
-        <n-statistic label="Today's Quotes" :value="todayItemCount" />
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card>
-        <n-statistic label="Total Quotes This Week" :value="itemCount" />
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card>
-        <n-statistic label="Total Quotes Value" :value="totalQuotesFormatted" />
-      </n-card>
-    </n-gi>
-    <n-gi>
-      <n-card>
-        <n-statistic label="Average Amount" :value="averageQuote" />
-      </n-card>
-    </n-gi>
-  </n-grid>
+  <n-spin :show="pending">
+    <n-grid :cols="4" :x-gap="12">
+      <n-gi>
+        <n-card>
+          <n-statistic label="Today's Quotes" :value="todayItemCount" />
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic label="Total Quotes This Week" :value="itemCount" />
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic
+            label="Total Quotes Value"
+            :value="totalQuotesFormatted"
+          />
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card>
+          <n-statistic label="Average Amount" :value="averageQuote" />
+        </n-card>
+      </n-gi>
+    </n-grid>
+  </n-spin>
 </template>

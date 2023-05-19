@@ -4,7 +4,7 @@ export const ReturnedQuoteSchema = z.object({
   quote_number: z.number(),
   quote_total: z.number(),
   is_booked: z.boolean(),
-  created_at: z.date(),
+  created_at: z.coerce.date(),
   selected_passengers: z.number(),
   user: z.object({
     id: z.string(),
