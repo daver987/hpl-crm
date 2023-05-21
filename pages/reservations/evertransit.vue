@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 definePageMeta({
   name: 'Evertransit',
   layout: 'default',
+  path: '/reservations/evertransit',
 })
 
 const rideQuery = 'Scheduled'

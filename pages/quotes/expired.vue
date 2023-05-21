@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Resources',
-  layout: 'default',
-  path: '/resources',
+  name: 'Expired Quotes',
+  path: '/quotes/expired',
 })
 </script>
 
 <template>
-  <div>Page: resources</div>
+  <div>Page: expired</div>
 </template>
 
 <style scoped></style>

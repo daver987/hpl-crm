@@ -7,7 +7,7 @@ definePageMeta({
   key: (route) => route.fullPath,
   name: 'Quote Settings',
   layout: 'default',
-  path: '/settings/quotes'
+  path: '/settings/quotes',
 })
 
 // const quotesToSnakeCase = toSnakeCase(quotes)
@@ -81,5 +81,4 @@ definePageMeta({
   </n-layout-content>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
