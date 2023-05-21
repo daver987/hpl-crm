@@ -70,13 +70,10 @@ async function handlePrompt(row: RowData) {
   quoteModalPending.value = true
   showModal.value = true
 
-  const { data: completion, pending } = useFetch(
-    '/.netlify/functions/hello-background',
-    {
-      method: 'POST',
-      body: prompt,
-    }
-  )
+  const { data: completion, pending } = useFetch('/api/quote-followup', {
+    method: 'POST',
+    body: prompt,
+  })
 
   watch(pending, (newVal) => {
     if (!newVal) {
