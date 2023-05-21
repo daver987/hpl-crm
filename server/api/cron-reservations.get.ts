@@ -3,20 +3,12 @@ import {
   fasttrakRequest,
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
-import {
-  ReservationDateAndTotalSchema,
-  ReservationResponse,
-} from '~/composables'
+import { ReservationResponse } from '~/composables'
 
 export default defineEventHandler(async (event) => {
   let accessToken
   accessToken = await fasttrakAuth()
-  console.log(
-    'Access token',
-    accessToken,
-    'Calling authenticateFasttrak from [get]',
-    new Date().toISOString()
-  )
+  console.log('Access token', accessToken, new Date().toISOString())
   const endpoint = 'reservations/search-advanced'
   const currentYear = new Date().getFullYear()
 
@@ -45,17 +37,12 @@ export default defineEventHandler(async (event) => {
   const fasttrakData: ReservationResponse = await fasttrakRequest(
     requestOptions
   )
-  const pickedReservations = ReservationDateAndTotalSchema.array().parse(
-    fasttrakData?.items
-  )
-  console.log(pickedReservations)
   const response = await event.context.prisma.fasttrak.upsert({
     where: {
       id: 1,
     },
-    update: { reservations: pickedReservations },
-    create: { reservations: pickedReservations },
+    update: { reservations: fasttrakData },
+    create: { reservations: fasttrakData },
   })
-  console.log('Picked Reservations', response)
-  return pickedReservations
+  return response
 })

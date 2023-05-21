@@ -1,52 +1,35 @@
-<script lang="ts">
-export default defineComponent({
-  name: 'Invoice',
-  setup() {
-    const invoiceNumber = ref('0001')
-    const invoiceDate = ref('2023-04-23')
-    const lineItems = ref([
-      { description: 'Base Fare', amount: ' $100.00' },
-      { description: 'Fuel Surcharge', amount: ' $10.00' },
-      { description: 'Gratuity', amount: ' $15.00' },
-      // Add more line items if needed
-    ])
-    const totals = ref([
-      { label: 'Subtotal', amount: ' $125.00' },
-      { label: 'HST', amount: ' $16.25' },
-      { label: 'Total', amount: ' $141.25' },
-    ])
-    const pickupAddress = ref('123 Main St')
-    const pickupTime = ref('08:00 AM')
-    const pickupDay = ref('2023-04-24')
-    const dropOffAddress = ref('789 Second St')
-
-    const billToName = ref('John Doe')
-    const billToAddress = ref('123 Anywhere St, Toronto, ON')
-    const passengerName = ref('Jane Smith')
-    const pickupDateTime = ref('2023-04-24, 08:00 AM')
-    const pickupLocation = ref('123 Main St')
-    const dropOffLocation = ref('789 Second St')
-    const memo = ref('Please confirm pickup time.')
-
-    return {
-      invoiceNumber,
-      invoiceDate,
-      lineItems,
-      totals,
-      pickupAddress,
-      pickupTime,
-      pickupDay,
-      dropOffAddress,
-      billToName,
-      billToAddress,
-      passengerName,
-      pickupDateTime,
-      pickupLocation,
-      dropOffLocation,
-      memo,
-    }
-  },
+<script setup lang="ts">
+definePageMeta({
+  name: 'Invoicing',
+  layout: 'default',
+  path: '/billing/invoicing',
 })
+
+const invoiceNumber = ref('0001')
+const invoiceDate = ref('2023-04-23')
+const lineItems = ref([
+  { description: 'Base Fare', amount: ' $100.00' },
+  { description: 'Fuel Surcharge', amount: ' $10.00' },
+  { description: 'Gratuity', amount: ' $15.00' },
+  // Add more line items if needed
+])
+const totals = ref([
+  { label: 'Subtotal', amount: ' $125.00' },
+  { label: 'HST', amount: ' $16.25' },
+  { label: 'Total', amount: ' $141.25' },
+])
+const pickupAddress = ref('123 Main St')
+const pickupTime = ref('08:00 AM')
+const pickupDay = ref('2023-04-24')
+const dropOffAddress = ref('789 Second St')
+
+const billToName = ref('John Doe')
+const billToAddress = ref('123 Anywhere St, Toronto, ON')
+const passengerName = ref('Jane Smith')
+const pickupDateTime = ref('2023-04-24, 08:00 AM')
+const pickupLocation = ref('123 Main St')
+const dropOffLocation = ref('789 Second St')
+const memo = ref('Please confirm pickup time.')
 </script>
 
 <template>

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-definePageMeta({})
+definePageMeta({
+  path: '/communication/schedule',
+})
 </script>
 
 <template>

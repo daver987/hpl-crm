@@ -1,11 +1,9 @@
 <script setup lang="ts">
-definePageMeta({
-  name: 'Affiliates',
-})
+definePageMeta({})
 </script>
 
 <template>
-  <div>
+  <n-layout-content>
     <NuxtPage />
-  </div>
+  </n-layout-content>
 </template>

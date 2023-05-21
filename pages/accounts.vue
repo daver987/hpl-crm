@@ -1,9 +1,9 @@
+<script lang="ts" setup></script>
+
 <template>
   <n-layout-content>
-    <n-card title="Dispatch Mirror"></n-card>
+    <NuxtPage />
   </n-layout-content>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped></style>

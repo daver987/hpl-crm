@@ -2,6 +2,7 @@
 definePageMeta({
   name: 'Messaging',
   layout: 'default',
+  path: '/communication/messaging',
 })
 
 const options = [

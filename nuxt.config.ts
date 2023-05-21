@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/color-mode',
     'nuxt-icon',
+    'nuxt-chatgpt',
     [
       '@pinia/nuxt',
       {
@@ -32,25 +33,14 @@ export default defineNuxtConfig({
             'echarts',
           ],
   },
-
+  chatgpt: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
   typescript: {
     strict: true,
     shim: false,
   },
   css: ['vue-tel-input/vue-tel-input.css'],
-
-  // nitro: {
-  //   storage: {
-  //     redis: {
-  //       driver: 'redis',
-  //       base: 'default',
-  //       host: 'us1-relevant-bull-40231.upstash.io',
-  //       tls: false,
-  //       port: 40231,
-  //       password: '9dd43bff8d8d46afb67935590b75182c',
-  //     },
-  //   },
-  // },
 
   naiveUI: {
     themeOverrides: {
@@ -59,7 +49,6 @@ export default defineNuxtConfig({
         primaryColorSuppl: 'rgba(165, 124, 82, 1)',
         primaryColorHover: '#BD9975FF',
         primaryColorPressed: '#8A6642FF',
-        bodyColor: '#121417',
       },
     },
   },
@@ -73,6 +62,7 @@ export default defineNuxtConfig({
     FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
     EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,

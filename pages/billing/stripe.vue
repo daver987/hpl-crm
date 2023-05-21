@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Drivers',
+  name: 'Stripe',
   layout: 'default',
+  path: '/billing/stripe',
 })
 </script>
 
 <template>
-  <n-layout-content>
-    <DriverTable/>
-  </n-layout-content>
+  <div>Page: stripe</div>
 </template>
+
+<style scoped></style>

@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import { checkForCustomer, h, parseAddress, ref, computed } from '#imports'
+import { checkForCustomer, computed, h, parseAddress, ref } from '#imports'
 import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, NP, NTag, useDialog } from 'naive-ui'
-import type { DataTableRowKey, DataTableColumns } from 'naive-ui'
 import type {
-  ReservationResponse,
   ReservationDetail,
+  ReservationResponse,
 } from '~/composables/fasttrak-api/schemas'
 import type { Ref } from 'vue'
+import { formatResponse } from '~/utils'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -26,10 +27,19 @@ type LineItemsList = {
   tax: number
 }
 
+interface GPTResponse {
+  role: string
+  content: string
+}
+
 const refTable = ref(null)
 const searchInput = ref('')
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const isDeleting = ref(true)
+const showModal = ref(false)
+const quoteModalContent = ref('')
+const quoteModalPending = ref(false)
+const isBooking = ref(true)
 const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
@@ -49,6 +59,28 @@ const rowKey = (row: RowData) => row.quote_number
 function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys
   console.log('Selected Row', checkedRowKeysRef)
+}
+
+async function handlePrompt(row: RowData) {
+  const promptData = preparePromptData(row)
+  const prompt = constructPrompt(promptData)
+
+  quoteModalContent.value =
+    'Generating your personalized message. Please wait...'
+  quoteModalPending.value = true
+  showModal.value = true
+
+  const { data: completion, pending } = useFetch('/api/quote-followup', {
+    method: 'POST',
+    body: prompt,
+  })
+
+  watch(pending, (newVal) => {
+    if (!newVal) {
+      quoteModalContent.value = formatResponse(completion.value as GPTResponse)
+      quoteModalPending.value = false
+    }
+  })
 }
 
 const createColumns = (): DataTableColumns<RowData> => [
@@ -172,19 +204,21 @@ const createColumns = (): DataTableColumns<RowData> => [
     width: 135,
   },
   {
-    key: 'base_rate',
-    title: 'Base Rate',
+    key: 'reply',
+    title: 'Reply',
     render(row) {
       return h(
-        NP,
+        NButton,
         {
+          size: 'small',
+          color: 'purple',
+          textColor: '#fff',
+          onClick: () => handleQuoteEmailReply(row),
           strong: true,
         },
-        //@ts-ignore
-        { default: () => `$${row.trips[0].price.line_items_list[0].total}` }
+        { default: () => 'Reply' }
       )
     },
-
     width: 100,
   },
   {
@@ -281,6 +315,24 @@ const filteredData = computed(() => {
     )
   })
 })
+function handleQuoteEmailReply(event: RowData) {
+  const d = dialog.warning({
+    title: 'Confirm Generate Reply Email',
+    content: 'Are you sure you want to generate a reply email',
+    positiveText: 'Confirm',
+    negativeText: 'Cancel',
+    onPositiveClick: async () => {
+      try {
+        await handlePrompt(event)
+      } catch (error) {
+        message.error('Failed to generate email')
+      }
+    },
+    onNegativeClick: () => {
+      message.error('Wow That was Close')
+    },
+  })
+}
 
 async function deleteQuote(quoteNumber: number) {
   isDeleting.value = true
@@ -318,8 +370,6 @@ function handleConfirmDelete(event: DeleteEvent) {
     },
   })
 }
-
-const isBooking = ref(true)
 
 function handleConfirmBook(event: RowData) {
   console.log('Booking event:', event)
@@ -661,5 +711,10 @@ async function handleBook(event: RowData) {
     virtual-scroll
     :scroll-x="1800"
     size="small"
+  />
+  <QuoteModal
+    v-model="showModal"
+    :content="quoteModalContent"
+    :pending="quoteModalPending"
   />
 </template>

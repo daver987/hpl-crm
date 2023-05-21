@@ -1,9 +1,8 @@
 <script setup lang="ts">
-definePageMeta({})
 </script>
 
 <template>
-  <div>
-    <NuxtPage />
-  </div>
+  <n-layout-content>
+    <NuxtPage/>
+  </n-layout-content>
 </template>

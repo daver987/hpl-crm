@@ -18,4 +18,3 @@ export const AuthResponseSchema = z.object({
   includesOperationalMessage: z.boolean(),
 })
 export type AuthResponse = z.infer<typeof AuthResponseSchema>
-// Define other Zod schemas as needed
