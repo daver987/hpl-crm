@@ -83,8 +83,4 @@ export default defineNuxtConfig({
   },
   //@ts-ignore
   devtools: true,
-
-  nitro: {
-    preset: 'netlify',
-  },
 })
