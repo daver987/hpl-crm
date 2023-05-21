@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Quotes',
+  name: 'Quotes Overview',
   layout: 'default',
+  path: '/quotes'
 })
 </script>
 
