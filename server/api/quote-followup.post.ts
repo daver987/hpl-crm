@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const role =
+  const agentRole =
     'You are a customer service representative for a High Park Livery, a luxury transportation company. '
   const openai = event.context.openai
   const body = await readBody(event)
@@ -10,8 +10,7 @@ export default defineEventHandler(async (event) => {
     messages: [
       {
         role: 'system',
-        content:
-          'You are a customer service representative for a High Park Livery, a luxury transportation company. ',
+        content: agentRole,
       },
       { role: 'user', content: body },
     ],

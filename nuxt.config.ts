@@ -42,19 +42,6 @@ export default defineNuxtConfig({
   },
   css: ['vue-tel-input/vue-tel-input.css'],
 
-  // nitro: {
-  //   storage: {
-  //     redis: {
-  //       driver: 'redis',
-  //       base: 'default',
-  //       host: 'us1-relevant-bull-40231.upstash.io',
-  //       tls: false,
-  //       port: 40231,
-  //       password: '9dd43bff8d8d46afb67935590b75182c',
-  //     },
-  //   },
-  // },
-
   naiveUI: {
     themeOverrides: {
       common: {
@@ -96,4 +83,8 @@ export default defineNuxtConfig({
   },
   //@ts-ignore
   devtools: true,
+
+  nitro: {
+    preset: 'netlify',
+  },
 })
