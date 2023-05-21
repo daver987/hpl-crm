@@ -9,7 +9,8 @@ export default defineEventHandler(async (event) => {
   let accessToken
   accessToken = await fasttrakAuth()
   console.log('Access token', accessToken, new Date().toISOString())
-  const endpoint = 'reservations/search-advanced'
+  const endpoint = 'employee-pays/search'
+
   const currentYear = new Date().getFullYear()
 
   const startDate = new Date()
@@ -31,7 +32,9 @@ export default defineEventHandler(async (event) => {
     method: 'POST',
     endpoint: endpoint,
     token: accessToken,
-    body: body,
+    body: {
+      payStatus: 'ALL',
+    },
   }
 
   const fasttrakData: ReservationResponse = await fasttrakRequest(
