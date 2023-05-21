@@ -41,8 +41,8 @@ export default defineEventHandler(async (event) => {
     where: {
       id: 1,
     },
-    update: { reservations: fasttrakData },
-    create: { reservations: fasttrakData },
+    update: { reservations: fasttrakData.items },
+    create: { reservations: fasttrakData.items },
   })
   return response
 })

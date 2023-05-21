@@ -46,6 +46,6 @@ export default defineEventHandler(async (event) => {
       },
     },
   })
-  const pickedQuotes = await QuoteReturnedPickedSchema.array().parse(quotes)
+  const pickedQuotes = QuoteReturnedPickedSchema.array().parse(quotes)
   return pickedQuotes
 })
