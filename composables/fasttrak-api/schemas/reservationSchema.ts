@@ -410,7 +410,6 @@ export const ReservationResponseSchema = z.object({
   includesOperationalMessage: z.boolean(),
 })
 
-const ReservationArraySchema = ReservationSchema.array()
 export const ReservationDateAndTotalSchema = ReservationSchema.pick({
   totalCharges: true,
   scheduledPickupTime: true,
@@ -421,4 +420,3 @@ export const ReservationDateAndTotalSchema = ReservationSchema.pick({
 
 export type Reservation = z.infer<typeof ReservationSchema>
 export type ReservationResponse = z.infer<typeof ReservationResponseSchema>
-export type ReservationArray = z.infer<typeof ReservationArraySchema>

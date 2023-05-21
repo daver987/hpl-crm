@@ -4,8 +4,10 @@
 // import _ from 'lodash'
 
 definePageMeta({
-  name: 'Profile',
+  key: (route) => route.fullPath,
+  name: 'Quote Settings',
   layout: 'default',
+  path: '/settings/quotes'
 })
 
 // const quotesToSnakeCase = toSnakeCase(quotes)
@@ -71,8 +73,13 @@ definePageMeta({
 
 <template>
   <n-layout-content style="padding: 24px">
-    <n-card title="Profile Page"> </n-card>
+    <n-row>
+      <n-card title="Quote Form Settings">
+        <SettingsTable />
+      </n-card>
+    </n-row>
   </n-layout-content>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

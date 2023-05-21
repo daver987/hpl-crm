@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-//script
 </script>
 
 <template>
   <n-layout-content>
-    <div>
-      <n-card title="Overview"> Accounts overview </n-card>
-    </div>
+    <NuxtPage/>
   </n-layout-content>
 </template>
