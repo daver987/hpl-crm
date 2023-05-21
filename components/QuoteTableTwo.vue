@@ -70,10 +70,25 @@ async function handlePrompt(row: RowData) {
   quoteModalPending.value = true
   showModal.value = true
 
-  const { data: completion, pending } = useFetch('/api/quote-followup', {
-    method: 'POST',
-    body: prompt,
-  })
+  const completion = ref<GPTResponse | null>(null)
+  const pending = ref(false)
+  const data = await $fetch(
+    'http://localhost:8888/.netlify/functions/chat-completion-background',
+    {
+      method: 'POST',
+      body: prompt,
+    }
+  )
+  console.log('Data:', data)
+  completion.value = data as GPTResponse
+  pending.value = true
+  // const { data: completion, pending } = await useFetch(
+  //   '/api/quote-followup-background',
+  //   {
+  //     method: 'POST',
+  //     body: prompt,
+  //   }
+  // )
 
   watch(pending, (newVal) => {
     if (!newVal) {
@@ -315,6 +330,7 @@ const filteredData = computed(() => {
     )
   })
 })
+
 function handleQuoteEmailReply(event: RowData) {
   const d = dialog.warning({
     title: 'Confirm Generate Reply Email',
