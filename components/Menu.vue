@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Component } from 'vue'
-import { NIcon } from 'naive-ui'
+import { MenuOption, NIcon } from 'naive-ui'
 import { NuxtLink, Icon } from '#components'
 
 const SettingsIcon = h(Icon, { name: 'ic:outline-settings' })
@@ -10,10 +10,17 @@ const DispatchIcon = h(Icon, { name: 'ic:outline-directions-car' })
 const MessageIcon = h(Icon, { name: 'ic:outline-message' })
 const ReservationsIcon = h(Icon, { name: 'ic:outline-calendar-month' })
 const AccountsIcon = h(Icon, { name: 'ic:outline-account-circle' })
-const HomeIcon = h(Icon, { name: 'ic:outline-inbox' })
+const InboxIcon = h(Icon, { name: 'ic:outline-inbox' })
 const ContactsIcon = h(Icon, { name: 'ic:outline-group' })
 const QuoteIcon = h(Icon, { name: 'ic:outline-request-page' })
 const PersonIcon = h(Icon, { name: 'basil:user-outline' })
+const UsersIcon = h(Icon, { name: 'heroicons:users' })
+const FolderIcon = h(Icon, { name: 'heroicons:folder' })
+const HomeIcon = h(Icon, { name: 'heroicons:home' })
+const DocumentDuplicateIcon = h(Icon, { name: 'heroicons:document-duplicate' })
+const ChartPieIcon = h(Icon, { name: 'heroicons:chart-pie' })
+const CalendarIcon = h(Icon, { name: 'heroicons:calendar-20-solid' })
+const CarIcon = h(Icon, { name: 'material-symbols:directions-car-outline' })
 
 interface RenderNavOptions {
   navigateTo: string
@@ -37,52 +44,230 @@ const createMenuLabel = (labelText: string, route: string) => {
       }
     )
 }
+
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 
-const menuOptions = computed(() => [
-  renderNav('/', 'My Office', HomeIcon, 0),
-  renderNav('/accounts', 'Accounts', AccountsIcon, '100', [
-    {
-      type: 'group',
-      label: 'Account Types',
-      key: '1.1',
-      children: [
-        renderNav('/accounts/fasttrak', 'Fasttrak', null, '1.1.1'),
-        renderNav('/accounts/stripe', 'Stripe', null, '1.1.2'),
-      ],
+const menuOptions: MenuOption[] = [
+  renderNav('/', 'Dashboard', HomeIcon, 0),
+  {
+    key: 'divider-1',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
     },
-  ]),
-  renderNav('/contacts', 'Contacts', ContactsIcon, 2),
-  renderNav('/quotes', 'Quotes', QuoteIcon, 3),
-  renderNav('/reservations', 'Reservations', ReservationsIcon, 4, [
-    {
-      type: 'group',
-      label: 'Active Reservations',
-      key: '4.1',
-      children: [
-        renderNav('/reservations/evertransit', 'Evertransit', null, '4.1.1'),
-        renderNav('/reservations/fasttrak', 'Fasttrak', null, '4.1.2'),
-      ],
+  },
+  {
+    label: 'Accounts',
+    key: 'Accounts',
+    icon: renderIcon(AccountsIcon),
+    children: [
+      {
+        key: 'divider-2',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/accounts', 'Overview', null, '1.1'),
+      renderNav('/accounts/fasttrak', 'Fasttrak', null, '1.2'),
+      renderNav('/accounts/stripe', 'Stripe', null, '1.3'),
+    ],
+  },
+  {
+    key: 'divider-3',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
     },
-  ]),
-  renderNav('/dispatch', 'Dispatch', DispatchIcon, 5),
-  renderNav('/messaging', 'Messaging', MessageIcon, 6),
-  renderNav('/schedule', 'Schedule', ScheduleIcon, 7),
-  renderNav('/affiliates', 'Affiliates', ScheduleIcon, 8, [
-    {
-      type: 'group',
-      label: 'Affiliates Overview',
-      key: '8.1',
-      children: [renderNav('/affiliates/fasttrak', 'Fasttrak', null, '8.1.1')],
+  },
+  {
+    label: 'Contacts',
+    key: 'contacts',
+    icon: renderIcon(ContactsIcon),
+    children: [
+      renderNav('/contacts', 'Overview', null, '2'),
+      renderNav('/accounts/fasttrak', 'Fasttrak', null, '2.1'),
+      renderNav('/accounts/stripe', 'Stripe', null, '2.2'),
+    ],
+  },
+  {
+    key: 'divider-4',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
     },
-  ]),
-  renderNav('/drivers', 'Drivers', ScheduleIcon, 9),
-  renderNav('/invoicing', 'Invoicing', InvoiceIcon, 10),
-  renderNav('/profile', 'My Profile', PersonIcon, 11),
-  renderNav('/settings', 'Settings', SettingsIcon, 12),
-])
+  },
+  {
+    label: 'Quotes',
+    key: 'Quotes',
+    icon: renderIcon(QuoteIcon),
+    children: [
+      {
+        key: 'divider-5',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/quotes', 'Overview', null, 3),
+      renderNav('/quotes/active', 'Active', null, '3.2'),
+      renderNav('/quotes/expired', 'Expired', null, '3.3'),
+    ],
+  },
+  {
+    key: 'divider-6',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
+    },
+  },
+  {
+    label: 'Reservations',
+    key: 'Reservations',
+    icon: renderIcon(ReservationsIcon),
+    children: [
+      {
+        key: 'divider-7',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/reservations', 'Overview', null, '4'),
+      renderNav('/reservations/active', 'Active', null, '4.2'),
+      renderNav('/reservations/completed', 'Expired', null, '4.3'),
+      renderNav('/reservations/finalized', 'Finalized', null, '4.3'),
+    ],
+  },
+  {
+    key: 'divider-8',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
+    },
+  },
+  {
+    label: 'Communication',
+    key: 'communication',
+    icon: renderIcon(MessageIcon),
+    children: [
+      {
+        key: 'divider-9',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/communication', 'Schedule', null, 5),
+      renderNav('/communication/messaging', 'Messaging', null, '5.2'),
+    ],
+  },
+  {
+    key: 'divider-10',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
+    },
+  },
+  {
+    label: 'Resources',
+    key: 'Resources',
+    icon: renderIcon(FolderIcon),
+    children: [
+      {
+        key: 'divider-11',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/resources', 'Overview', null, '6'),
+      renderNav('/resources/drivers', 'Drivers', null, '6.2'),
+      renderNav('/resources/affiliates', 'Affiliates', null, '6.3'),
+      renderNav('/resources/vehicles', 'Vehicles', null, '6.4'),
+    ],
+  },
+  {
+    key: 'divider-12',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
+    },
+  },
+  {
+    label: 'Billing',
+    key: 'Billing',
+    icon: renderIcon(InvoiceIcon),
+    children: [
+      {
+        key: 'divider-13',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/billing', 'Overview', null, 6),
+      renderNav('/billing/receivables', 'Receivables', null, '6.2'),
+      renderNav('/billing/payable', 'Payable', null, '6.3'),
+      renderNav('/billing/invoicing', 'Invoicing', null, '6.4'),
+    ],
+  },
+  {
+    key: 'divider-14',
+    type: 'divider',
+    props: {
+      style: {
+        marginLeft: '32px',
+      },
+    },
+  },
+  {
+    label: 'Settings',
+    key: 'Settings',
+    icon: renderIcon(SettingsIcon),
+    children: [
+      {
+        key: 'divider-15',
+        type: 'divider',
+        props: {
+          style: {
+            marginLeft: '32px',
+          },
+        },
+      },
+      renderNav('/settings', 'Profile', null, '7'),
+      renderNav('/settings/quotes', 'Quotes', null, '7.2'),
+    ],
+  },
+]
 
 function renderNav(
   navigateTo: string,

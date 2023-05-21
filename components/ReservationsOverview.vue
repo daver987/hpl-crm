@@ -13,7 +13,9 @@ import {
 } from 'date-fns'
 import { ComputedRef, Ref } from 'vue'
 
-const { data: response, pending } = await useFetch('/api/reservations')
+const { data: response, pending } = await useFetch('/api/reservations', {
+  query: { howMany: '[ALL]' },
+})
 const pickedReservations = computed(() => {
   return ReservationDateAndTotalSchema.array().parse(
     response.value?.reservations

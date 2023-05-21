@@ -51,6 +51,49 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
   console.log('Selected Row', checkedRowKeysRef)
 }
 
+const showModal = ref(false)
+const quoteModalContent = ref('')
+const quoteModalPending = ref(false)
+
+async function handlePrompt(row: RowData) {
+  const promptData = preparePromptData(row)
+  const prompt = constructPrompt(promptData)
+
+  // Open the modal with a loading message.
+  quoteModalContent.value =
+    'Generating your personalized message. Please wait...'
+  quoteModalPending.value = true
+  showModal.value = true
+
+  const { data: completion, pending } = useFetch('/api/quote-followup', {
+    method: 'POST',
+    body: prompt,
+  })
+
+  // Update the modal with the completed response when it's ready.
+  watch(pending, (newVal) => {
+    if (!newVal) {
+      quoteModalContent.value = formatResponse(completion.value)
+      quoteModalPending.value = false
+    }
+  })
+}
+
+interface GPTResponse {
+  role: string
+  content: string
+}
+
+function formatResponse(response: GPTResponse | null): string {
+  if (response === null || response.content.trim() === '') {
+    return 'Still generating your personalized message. Please wait...'
+  }
+
+  const content = response.content
+  const formattedContent = content.replace(/\n/g, '<br/>')
+  return formattedContent
+}
+
 const createColumns = (): DataTableColumns<RowData> => [
   {
     key: 'created_at',
@@ -172,19 +215,21 @@ const createColumns = (): DataTableColumns<RowData> => [
     width: 135,
   },
   {
-    key: 'base_rate',
-    title: 'Base Rate',
+    key: 'reply',
+    title: 'Reply',
     render(row) {
       return h(
-        NP,
+        NButton,
         {
+          size: 'small',
+          color: 'purple',
+          textColor: '#fff',
+          onClick: () => handleQuoteEmailReply(row),
           strong: true,
         },
-        //@ts-ignore
-        { default: () => `$${row.trips[0].price.line_items_list[0].total}` }
+        { default: () => 'Reply' }
       )
     },
-
     width: 100,
   },
   {
@@ -281,6 +326,28 @@ const filteredData = computed(() => {
     )
   })
 })
+const isGenerating = ref(true)
+function handleQuoteEmailReply(event: RowData) {
+  console.log('Quote email event:', event)
+  const d = dialog.warning({
+    title: 'Confirm Generate Reply Email',
+    content: 'Are you sure you want to generate a reply email',
+    positiveText: 'Confirm',
+    negativeText: 'Cancel',
+    onPositiveClick: async () => {
+      d.loading = isGenerating.value
+      try {
+        await handlePrompt(event)
+        d.loading = isGenerating.value
+      } catch (error) {
+        message.error('Failed to generate email')
+      }
+    },
+    onNegativeClick: () => {
+      message.error('Wow That was Close')
+    },
+  })
+}
 
 async function deleteQuote(quoteNumber: number) {
   isDeleting.value = true
@@ -661,5 +728,10 @@ async function handleBook(event: RowData) {
     virtual-scroll
     :scroll-x="1800"
     size="small"
+  />
+  <QuoteModal
+    v-model="showModal"
+    :content="quoteModalContent"
+    :pending="quoteModalPending"
   />
 </template>

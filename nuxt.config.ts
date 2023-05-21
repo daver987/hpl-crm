@@ -59,7 +59,6 @@ export default defineNuxtConfig({
         primaryColorSuppl: 'rgba(165, 124, 82, 1)',
         primaryColorHover: '#BD9975FF',
         primaryColorPressed: '#8A6642FF',
-        bodyColor: '#121417',
       },
     },
   },
@@ -73,6 +72,7 @@ export default defineNuxtConfig({
     FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
     EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,

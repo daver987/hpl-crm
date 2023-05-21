@@ -30,10 +30,13 @@ const message = useMessage()
 const dialog = useDialog()
 
 const { data: reservationsData, pending } = await useFetch(
-  '/api/reservations-all'
+  '/api/reservations',
+  {
+    query: { howMany: '[ALL]' },
+  }
 )
 const reservations = computed(() => {
-  return reservationsData.value as unknown as ReservationResponse
+  return reservationsData.value?.reservations
 })
 const rowKey = (row: Reservation) => row.reservationId
 

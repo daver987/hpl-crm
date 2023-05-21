@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Quotes',
+  name: 'Drivers',
   layout: 'default',
+  path: '/resources/drivers'
 })
 </script>
 
 <template>
-  <n-layout-content>
-    <QuoteTableTwo />
-  </n-layout-content>
+    <DriverTable />
 </template>
