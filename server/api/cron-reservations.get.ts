@@ -3,7 +3,10 @@ import {
   fasttrakRequest,
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
-import { ReservationResponse } from '~/composables'
+import {
+  ReservationDateAndTotalSchema,
+  ReservationResponse,
+} from '~/composables'
 
 export default defineEventHandler(async (event) => {
   let accessToken
@@ -37,12 +40,16 @@ export default defineEventHandler(async (event) => {
   const fasttrakData: ReservationResponse = await fasttrakRequest(
     requestOptions
   )
+  const parsedReservations = ReservationDateAndTotalSchema.array().parse(
+    fasttrakData.items
+  )
   const response = await event.context.prisma.fasttrak.upsert({
     where: {
       id: 1,
     },
-    update: { reservations: fasttrakData.items },
-    create: { reservations: fasttrakData.items },
+    update: { reservations: parsedReservations },
+    create: { reservations: parsedReservations },
   })
+
   return response
 })
