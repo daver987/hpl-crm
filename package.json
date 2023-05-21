@@ -18,6 +18,7 @@
     "@css-render/vue3-ssr": "^0.15.12",
     "@googlemaps/js-api-loader": "^1.15.2",
     "@huntersofbook/naive-ui-nuxt": "^0.7.1",
+    "@netlify/functions": "^1.6.0",
     "@nuxt/devtools": "^0.5.0",
     "@nuxt/kit": "^3.5.0",
     "@nuxt/test-utils": "^3.5.0",

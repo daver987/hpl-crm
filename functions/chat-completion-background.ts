@@ -1,15 +1,26 @@
+import type {
+  BackgroundHandler,
+  HandlerEvent,
+  HandlerContext,
+} from '@netlify/functions'
 import { Configuration, OpenAIApi } from 'openai'
 
 const configuration = new Configuration({
-  apiKey: useRuntimeConfig().OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 })
 const openai = new OpenAIApi(configuration)
 
-exports.handler = async (event, context) => {
+export const handler: BackgroundHandler = async (event: HandlerEvent) => {
+  if (!event.body) {
+    return
+  }
   const role =
     'You are a customer service representative for a High Park Livery, a luxury transportation company.'
 
-  const body = JSON.parse(event.body)
+  let body
+
+  body = JSON.parse(event.body)
+  console.log('[EVENT_BODY]', body)
 
   const completion = await openai.createChatCompletion({
     model: 'gpt-4',
@@ -26,7 +37,6 @@ exports.handler = async (event, context) => {
   const message = completion.data.choices[0].message
   console.log(message)
   return {
-    statusCode: 200,
     body: JSON.stringify(message),
   }
 }
