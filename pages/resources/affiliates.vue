@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Resources',
+  name: 'Affiliates',
   layout: 'default',
-  path: '/resources',
+  path: '/resources/affiliates',
 })
 </script>
 
 <template>
-  <div>Page: resources</div>
+  <n-layout-content>
+    <affiliate-table />
+  </n-layout-content>
 </template>
 
 <style scoped></style>

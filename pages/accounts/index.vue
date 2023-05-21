@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-//script
+definePageMeta({
+  path: '/accounts',
+})
 </script>
 
 <template>

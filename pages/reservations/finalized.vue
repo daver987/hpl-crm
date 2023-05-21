@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Resources',
+  name: 'Finalized',
   layout: 'default',
-  path: '/resources',
+  path: '/reservations/finalized',
 })
 </script>
 
 <template>
-  <div>Page: resources</div>
+  <div>Page: finalized</div>
 </template>
 
 <style scoped></style>

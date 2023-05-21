@@ -2,6 +2,7 @@
 definePageMeta({
   name: 'Profile',
   layout: 'default',
+  path: '/settings',
 })
 </script>
 

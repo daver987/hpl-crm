@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 definePageMeta({
-  name: 'Resources',
+  name: 'Stripe',
   layout: 'default',
-  path: '/resources',
+  path: '/billing/stripe',
 })
 </script>
 
 <template>
-  <div>Page: resources</div>
+  <div>Page: stripe</div>
 </template>
 
 <style scoped></style>

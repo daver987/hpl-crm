@@ -23,6 +23,7 @@ import type {
 definePageMeta({
   name: 'Fasttrak',
   layout: 'default',
+  path: '/reservations/active',
 })
 
 const tableRef = ref(null)

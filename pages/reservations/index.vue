@@ -1,7 +1,8 @@
 <script setup lang="ts">
 definePageMeta({
-  name: 'Reservations',
+  name: 'Reservations Overview',
   layout: 'default',
+  path: '/reservations',
 })
 </script>
 
