@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import { checkForCustomer, h, parseAddress, ref, computed } from '#imports'
+import { checkForCustomer, computed, h, parseAddress, ref } from '#imports'
 import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, NP, NTag, useDialog } from 'naive-ui'
-import type { DataTableRowKey, DataTableColumns } from 'naive-ui'
 import type {
-  ReservationResponse,
   ReservationDetail,
+  ReservationResponse,
 } from '~/composables/fasttrak-api/schemas'
 import type { Ref } from 'vue'
+import { formatResponse } from '~/utils'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -26,10 +27,19 @@ type LineItemsList = {
   tax: number
 }
 
+interface GPTResponse {
+  role: string
+  content: string
+}
+
 const refTable = ref(null)
 const searchInput = ref('')
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const isDeleting = ref(true)
+const showModal = ref(false)
+const quoteModalContent = ref('')
+const quoteModalPending = ref(false)
+const isBooking = ref(true)
 const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
@@ -51,15 +61,10 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
   console.log('Selected Row', checkedRowKeysRef)
 }
 
-const showModal = ref(false)
-const quoteModalContent = ref('')
-const quoteModalPending = ref(false)
-
 async function handlePrompt(row: RowData) {
   const promptData = preparePromptData(row)
   const prompt = constructPrompt(promptData)
 
-  // Open the modal with a loading message.
   quoteModalContent.value =
     'Generating your personalized message. Please wait...'
   quoteModalPending.value = true
@@ -70,28 +75,12 @@ async function handlePrompt(row: RowData) {
     body: prompt,
   })
 
-  // Update the modal with the completed response when it's ready.
   watch(pending, (newVal) => {
     if (!newVal) {
-      quoteModalContent.value = formatResponse(completion.value)
+      quoteModalContent.value = formatResponse(completion.value as GPTResponse)
       quoteModalPending.value = false
     }
   })
-}
-
-interface GPTResponse {
-  role: string
-  content: string
-}
-
-function formatResponse(response: GPTResponse | null): string {
-  if (response === null || response.content.trim() === '') {
-    return 'Still generating your personalized message. Please wait...'
-  }
-
-  const content = response.content
-  const formattedContent = content.replace(/\n/g, '<br/>')
-  return formattedContent
 }
 
 const createColumns = (): DataTableColumns<RowData> => [
@@ -326,19 +315,15 @@ const filteredData = computed(() => {
     )
   })
 })
-const isGenerating = ref(true)
 function handleQuoteEmailReply(event: RowData) {
-  console.log('Quote email event:', event)
   const d = dialog.warning({
     title: 'Confirm Generate Reply Email',
     content: 'Are you sure you want to generate a reply email',
     positiveText: 'Confirm',
     negativeText: 'Cancel',
     onPositiveClick: async () => {
-      d.loading = isGenerating.value
       try {
         await handlePrompt(event)
-        d.loading = isGenerating.value
       } catch (error) {
         message.error('Failed to generate email')
       }
@@ -385,8 +370,6 @@ function handleConfirmDelete(event: DeleteEvent) {
     },
   })
 }
-
-const isBooking = ref(true)
 
 function handleConfirmBook(event: RowData) {
   console.log('Booking event:', event)

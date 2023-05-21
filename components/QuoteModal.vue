@@ -9,8 +9,9 @@
       aria-modal="true"
     >
       <p v-if="pending" style="text-align: center">
-        <n-spin size="large" />
-        generating...
+        <n-spin size="large">
+          Generating your email follow-up message. Please wait...
+        </n-spin>
       </p>
       <p v-else v-html="content"></p>
     </n-card>

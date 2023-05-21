@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/color-mode',
     'nuxt-icon',
+    'nuxt-chatgpt',
     [
       '@pinia/nuxt',
       {
@@ -32,7 +33,9 @@ export default defineNuxtConfig({
             'echarts',
           ],
   },
-
+  chatgpt: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
   typescript: {
     strict: true,
     shim: false,

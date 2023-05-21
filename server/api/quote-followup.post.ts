@@ -17,6 +17,6 @@ export default defineEventHandler(async (event) => {
     ],
   })
   const message = completion.data.choices[0].message
-  console.log(message.content)
+  console.log(message)
   return message
 })
