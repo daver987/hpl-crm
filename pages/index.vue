@@ -4,6 +4,7 @@ definePageMeta({
   layout: 'default',
   middleware: ['auth'],
 })
+const { data: quotes, pending } = await useFetch('/api/quotes')
 </script>
 
 <template>
@@ -11,7 +12,7 @@ definePageMeta({
     <n-grid :cols="1" :y-gap="12">
       <n-grid-item>
         <n-card title="Quotes Overview">
-          <QuotesOverview />
+          <QuotesOverview :pending="pending" :quotes="quotes" />
         </n-card>
       </n-grid-item>
       <n-grid-item>
@@ -21,7 +22,7 @@ definePageMeta({
       </n-grid-item>
       <n-grid-item>
         <n-card title="Quotes By Day">
-          <ChartsBarQuotes />
+          <ChartsBarQuotes :quotes="quotes" />
         </n-card>
       </n-grid-item>
     </n-grid>
