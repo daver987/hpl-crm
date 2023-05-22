@@ -2,11 +2,20 @@
 import { useEcharts } from '~/composables/useEcharts'
 import type { ECOption } from '~/composables/useEcharts'
 import { format } from 'date-fns'
-import { QuoteReturnedPickedSchema } from '~/schema/QuoteFormSchema'
+import { defineProps, computed, ref } from 'vue'
+import {
+  QuoteReturnedPickedSchema,
+  ReturnedQuote,
+} from '~/schema/QuoteFormSchema'
 
-const { data: quotes, pending } = await useFetch('/api/quotes')
+interface Props {
+  quotes: ReturnedQuote
+}
+
+const props = defineProps<Props>()
+
 const pickedQuotes = computed(() => {
-  return QuoteReturnedPickedSchema.array().parse(quotes.value)
+  return QuoteReturnedPickedSchema.array().parse(props.quotes)
 })
 
 const weeklyData = {
@@ -25,7 +34,7 @@ pickedQuotes.value.forEach((quote) => {
   weeklyData[dayOfWeek] += 1
 })
 
-const options: ECOption = ref({
+const options: Ref<ECOption> = ref({
   xAxis: {
     type: 'category',
     data: Object.keys(weeklyData),

@@ -10,14 +10,22 @@ import {
   endOfWeek,
   getUnixTime,
 } from 'date-fns'
-import { ComputedRef, Ref } from 'vue'
-import { QuoteReturnedPickedSchema } from '~/schema/QuoteFormSchema'
+import { ComputedRef, defineProps, Ref } from 'vue'
+import {
+  QuoteReturnedPickedSchema,
+  ReturnedQuote,
+} from '~/schema/QuoteFormSchema'
 import { computed } from '#imports'
 
-const { data: quotes, pending } = await useFetch('/api/quotes')
+interface Props {
+  quotes: ReturnedQuote
+  pending: boolean
+}
 
-const pickedQuotes = await computed(() => {
-  return QuoteReturnedPickedSchema.array().parse(quotes.value)
+const props = defineProps<Props>()
+
+const pickedQuotes = computed(() => {
+  return QuoteReturnedPickedSchema.array().parse(props.quotes)
 })
 
 const startOfWeekTimestamp = getUnixTime(startOfWeek(new Date()))

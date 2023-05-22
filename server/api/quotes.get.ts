@@ -1,5 +1,5 @@
-export default defineEventHandler(async (event) => {
-  return await event.context.prisma.quote.findMany({
+export default defineEventHandler((event) => {
+  return event.context.prisma.quote.findMany({
     orderBy: {
       quote_number: 'desc',
     },
