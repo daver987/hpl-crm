@@ -1,5 +1,13 @@
 <script lang="ts" setup>
-import { checkForCustomer, computed, h, parseAddress, ref } from '#imports'
+import {
+  checkForCustomer,
+  computed,
+  constructPrompt,
+  h,
+  parseAddress,
+  preparePromptData,
+  ref,
+} from '#imports'
 import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
 import { format } from 'date-fns'
 import { z } from 'zod'
@@ -36,9 +44,6 @@ const refTable = ref(null)
 const searchInput = ref('')
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const isDeleting = ref(true)
-const showModal = ref(false)
-const quoteModalContent = ref('')
-const quoteModalPending = ref(false)
 const isBooking = ref(true)
 const filterSearch = () => {}
 const dialog = useDialog()
@@ -61,6 +66,9 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
   console.log('Selected Row', checkedRowKeysRef)
 }
 
+const showModal = ref(false)
+const quoteModalContent = ref('')
+const quoteModalPending = ref(false)
 async function handlePrompt(row: RowData) {
   const promptData = preparePromptData(row)
   const prompt = constructPrompt(promptData)
@@ -70,25 +78,10 @@ async function handlePrompt(row: RowData) {
   quoteModalPending.value = true
   showModal.value = true
 
-  const completion = ref<GPTResponse | null>(null)
-  const pending = ref(false)
-  const data = await $fetch(
-    'http://localhost:8888/.netlify/functions/chat-completion-background',
-    {
-      method: 'POST',
-      body: prompt,
-    }
-  )
-  console.log('Data:', data)
-  completion.value = data as GPTResponse
-  pending.value = true
-  // const { data: completion, pending } = await useFetch(
-  //   '/api/quote-followup-background',
-  //   {
-  //     method: 'POST',
-  //     body: prompt,
-  //   }
-  // )
+  const { data: completion, pending } = useFetch('/api/quote-followup', {
+    method: 'POST',
+    body: prompt,
+  })
 
   watch(pending, (newVal) => {
     if (!newVal) {
@@ -331,7 +324,7 @@ const filteredData = computed(() => {
   })
 })
 
-function handleQuoteEmailReply(event: RowData) {
+async function handleQuoteEmailReply(event: RowData) {
   const d = dialog.warning({
     title: 'Confirm Generate Reply Email',
     content: 'Are you sure you want to generate a reply email',

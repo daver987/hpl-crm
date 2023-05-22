@@ -1,13 +1,17 @@
-export default defineEventHandler(async (event) => {
-  console.time('Function Execution Time')
+import chalk from 'chalk'
 
+export default defineEventHandler(async (event) => {
   const agentRole =
-    'You are a customer service representative for High Park Livery, a luxury transportation company. '
+    'You are a customer service representative for a High Park Livery, a luxury transportation company. '
   const openai = event.context.openai
   const body = await readBody(event)
+  console.log(chalk.green(`[EVENT_BODY]`), body)
+  if (!body) {
+    return
+  }
 
   const completion = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     max_tokens: 512,
     messages: [
       {
@@ -19,8 +23,5 @@ export default defineEventHandler(async (event) => {
   })
   const message = completion.data.choices[0].message
   console.log(message)
-
-  console.timeEnd('Function Execution Time')
-
   return message
 })
