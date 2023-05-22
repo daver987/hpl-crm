@@ -106,34 +106,34 @@ export function constructPrompt(data: PromptData) {
   return prompt
 }
 
-export function constructPromptTwo(data: PromptData) {
-  const {
-    quote_number,
-    quote_total,
-    first_name,
-    service_label,
-    vehicle_label,
-    pickup_date,
-    pickup_time,
-    pickup_location,
-    destination,
-    duration_text,
-    line_items_list,
-  } = data
-
-  let line_items_str = line_items_list
-    .map((item) => `${item.label}: $${item.total.toFixed(2)}`)
-    .join(', ')
-  let prompt = `You are a customer service representative for a luxury transportation company, High Park Livery. You need to write a quote request follow-up email to a customer named ${first_name}. In the email, you should:
-- Include the quote number HPL-${quote_number}
-- Make sure to mention the service type (${service_label}), the vehicle (${vehicle_label}), and the pickup date and time (${pickup_date}, ${pickup_time})
-- Give the pickup location (${pickup_location}) and destination (${destination})
-- Give the all in price the total cost ($${quote_total.toFixed(2)})
-- Convey your excitement about wanting to serve them
-- Encourage them to reach out if they have any further questions or needs regarding their quote info@hihgparklivery.com, 647-360-9631
-= The email is from the High Park Livery Team
-
-Remember to maintain a professional and friendly tone.`
-
-  return prompt
-}
+// export function constructPromptTwo(data: PromptData) {
+//   const {
+//     quote_number,
+//     quote_total,
+//     first_name,
+//     service_label,
+//     vehicle_label,
+//     pickup_date,
+//     pickup_time,
+//     pickup_location,
+//     destination,
+//     duration_text,
+//     line_items_list,
+//   } = data
+//
+//   let line_items_str = line_items_list
+//     .map((item) => `${item.label}: $${item.total.toFixed(2)}`)
+//     .join(', ')
+//   let prompt = `You are a customer service representative for a luxury transportation company, High Park Livery. You need to write a quote request follow-up email to a customer named ${first_name}. In the email, you should:
+// - Include the quote number HPL-${quote_number}
+// - Make sure to mention the service type (${service_label}), the vehicle (${vehicle_label}), and the pickup date and time (${pickup_date}, ${pickup_time})
+// - Give the pickup location (${pickup_location}) and destination (${destination})
+// - Give the all in price the total cost ($${quote_total.toFixed(2)})
+// - Convey your excitement about wanting to serve them
+// - Encourage them to reach out if they have any further questions or needs regarding their quote info@hihgparklivery.com, 647-360-9631
+// = The email is from the High Park Livery Team
+//
+// Remember to maintain a professional and friendly tone.`
+//
+//   return prompt
+// }

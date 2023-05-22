@@ -69,7 +69,7 @@ export const fasttrakRouter = router({
       const fasttrakData: ReservationResponse = await fasttrakRequest(
         requestOptions
       )
-      await useStorage().setItem('redis:reservations', fasttrakData)
+      // await useStorage().setItem('redis:reservations', fasttrakData)
       console.log(chalk.blue('[RESERVATIONS_NEW]'))
       return fasttrakData
     } else {
