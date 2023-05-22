@@ -1,24 +1,6 @@
-<template>
-  <n-modal v-model:show="visible">
-    <n-card
-      style="width: 600px"
-      title="Quote Reply Generator"
-      :bordered="false"
-      size="huge"
-      role="dialog"
-      aria-modal="true"
-    >
-      <p v-if="pending" style="text-align: center">
-        <n-spin size="large">
-          Generating your email follow-up message. Please wait...
-        </n-spin>
-      </p>
-      <p v-else v-html="content"></p>
-    </n-card>
-  </n-modal>
-</template>
-
 <script setup lang="ts">
+import { watch, ref } from '#imports'
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -28,12 +10,8 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  pending: {
-    type: Boolean,
-    default: false,
-  },
 })
-
+const formattedContent = computed(() => props.content.replace(/\n/g, '<br>'))
 const visible = ref(props.modelValue)
 
 watch(
@@ -51,3 +29,18 @@ watch(visible, (newVal, oldVal) => {
   }
 })
 </script>
+
+<template>
+  <n-modal v-model:show="visible">
+    <n-card
+      style="width: 600px"
+      title="Quote Reply Generator"
+      :bordered="false"
+      size="huge"
+      role="dialog"
+      aria-modal="true"
+    >
+      <p v-html="formattedContent"></p>
+    </n-card>
+  </n-modal>
+</template>
