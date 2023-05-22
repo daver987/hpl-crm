@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import { getChatStream } from '~/utils'
 
 export default defineEventHandler(async (event) => {
   const agentRole =
@@ -9,19 +10,7 @@ export default defineEventHandler(async (event) => {
   if (!body) {
     return
   }
+  const stream = await getChatStream(openai, body)
 
-  const completion = await openai.createChatCompletion({
-    model: 'gpt-4',
-    max_tokens: 512,
-    messages: [
-      {
-        role: 'system',
-        content: agentRole,
-      },
-      { role: 'user', content: body },
-    ],
-  })
-  const message = completion.data.choices[0].message
-  console.log(message)
-  return message
+  return sendStream(event, stream)
 })

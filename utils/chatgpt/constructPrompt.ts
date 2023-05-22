@@ -1,3 +1,5 @@
+import { OpenAIApi } from 'openai'
+
 interface LineItem {
   tax: number
   label: string
@@ -38,6 +40,20 @@ interface QuoteData {
   trips: Trip[]
 }
 
+interface PromptData {
+  quote_number: number
+  quote_total: number
+  first_name: string
+  service_label: string
+  vehicle_label: string
+  pickup_date: string
+  pickup_time: string
+  duration_text: string
+  line_items_list: LineItem[]
+  pickup_location: string
+  destination: string
+}
+
 export function preparePromptData(data: QuoteData) {
   let preparedData = {
     quote_number: data.quote_number,
@@ -62,20 +78,6 @@ export function preparePromptData(data: QuoteData) {
   })
 
   return preparedData
-}
-
-interface PromptData {
-  quote_number: number
-  quote_total: number
-  first_name: string
-  service_label: string
-  vehicle_label: string
-  pickup_date: string
-  pickup_time: string
-  duration_text: string
-  line_items_list: LineItem[]
-  pickup_location: string
-  destination: string
 }
 
 export function constructPrompt(data: PromptData) {
@@ -106,34 +108,24 @@ export function constructPrompt(data: PromptData) {
   return prompt
 }
 
-// export function constructPromptTwo(data: PromptData) {
-//   const {
-//     quote_number,
-//     quote_total,
-//     first_name,
-//     service_label,
-//     vehicle_label,
-//     pickup_date,
-//     pickup_time,
-//     pickup_location,
-//     destination,
-//     duration_text,
-//     line_items_list,
-//   } = data
-//
-//   let line_items_str = line_items_list
-//     .map((item) => `${item.label}: $${item.total.toFixed(2)}`)
-//     .join(', ')
-//   let prompt = `You are a customer service representative for a luxury transportation company, High Park Livery. You need to write a quote request follow-up email to a customer named ${first_name}. In the email, you should:
-// - Include the quote number HPL-${quote_number}
-// - Make sure to mention the service type (${service_label}), the vehicle (${vehicle_label}), and the pickup date and time (${pickup_date}, ${pickup_time})
-// - Give the pickup location (${pickup_location}) and destination (${destination})
-// - Give the all in price the total cost ($${quote_total.toFixed(2)})
-// - Convey your excitement about wanting to serve them
-// - Encourage them to reach out if they have any further questions or needs regarding their quote info@hihgparklivery.com, 647-360-9631
-// = The email is from the High Park Livery Team
-//
-// Remember to maintain a professional and friendly tone.`
-//
-//   return prompt
-// }
+export const getChatStream = async (openai: OpenAIApi, body: string) => {
+  const response = await openai.createChatCompletion(
+    {
+      max_tokens: 2048,
+      model: 'gpt-4',
+      temperature: 0.5,
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a customer service representative for a High Park Livery, a luxury transportation company. ',
+        },
+        { role: 'user', content: body },
+      ],
+      stream: true,
+    },
+    { responseType: 'stream' }
+  )
+
+  return response.data
+}
