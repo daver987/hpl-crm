@@ -1,5 +1,3 @@
-import { OpenAIApi } from 'openai'
-
 interface LineItem {
   tax: number
   label: string
@@ -106,26 +104,4 @@ export function constructPrompt(data: PromptData) {
   Can you help us write an engaging and friendly follow-up email? Let's make sure they feel valued and appreciated. Also, let's encourage them to ask any questions they might have about the service or the quote. The email is from the High Park Livery Team info@highparklivery.com and the phone number is 647-360-9631 We also don't need the email too long Thanks!`
 
   return prompt
-}
-
-export const getChatStream = async (openai: OpenAIApi, body: string) => {
-  const response = await openai.createChatCompletion(
-    {
-      max_tokens: 2048,
-      model: 'gpt-4',
-      temperature: 0.5,
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a customer service representative for a High Park Livery, a luxury transportation company. ',
-        },
-        { role: 'user', content: body },
-      ],
-      stream: true,
-    },
-    { responseType: 'stream' }
-  )
-
-  return response.data
 }
