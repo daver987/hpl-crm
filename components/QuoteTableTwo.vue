@@ -18,7 +18,6 @@ import type {
   ReservationResponse,
 } from '~/composables/fasttrak-api/schemas'
 import type { Ref } from 'vue'
-import { formatResponse } from '~/utils'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -33,11 +32,6 @@ type LineItemsList = {
   total: number
   label: string
   tax: number
-}
-
-interface GPTResponse {
-  role: string
-  content: string
 }
 
 const refTable = ref(null)
@@ -68,25 +62,43 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
 
 const showModal = ref(false)
 const quoteModalContent = ref('')
-const quoteModalPending = ref(false)
+
 async function handlePrompt(row: RowData) {
   const promptData = preparePromptData(row)
   const prompt = constructPrompt(promptData)
 
   quoteModalContent.value =
     'Generating your personalized message. Please wait...'
-  quoteModalPending.value = true
   showModal.value = true
 
-  const { data: completion, pending } = useFetch('/api/quote-followup', {
+  const response = await fetch('/api/email-followup', {
     method: 'POST',
-    body: prompt,
+    body: JSON.stringify(prompt),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
 
-  watch(pending, (newVal) => {
-    if (!newVal) {
-      quoteModalContent.value = formatResponse(completion.value as GPTResponse)
-      quoteModalPending.value = false
+  if (!response.body) {
+    console.error('ReadableStream not yet supported in this browser.')
+    return
+  }
+
+  const { data } = useChatStream({
+    stream: response.body,
+    onChunk: (chunk) => {
+      console.log('Received chunk:', chunk)
+      quoteModalContent.value += chunk.data
+    },
+    onReady: () => {
+      console.log('Stream complete')
+    },
+  })
+
+  watchEffect(() => {
+    if (data.value) {
+      console.log('Data updated:', data.value)
+      quoteModalContent.value = data.value
     }
   })
 }
@@ -721,9 +733,5 @@ async function handleBook(event: RowData) {
     :scroll-x="1800"
     size="small"
   />
-  <QuoteModal
-    v-model="showModal"
-    :content="quoteModalContent"
-    :pending="quoteModalPending"
-  />
+  <QuoteModal v-model="showModal" :content="quoteModalContent" />
 </template>
