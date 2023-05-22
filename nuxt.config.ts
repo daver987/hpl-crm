@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/color-mode',
     'nuxt-icon',
-    'nuxt-chatgpt',
     [
       '@pinia/nuxt',
       {
@@ -53,6 +52,10 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    preset: 'aws-lambda',
+  },
+
   runtimeConfig: {
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
@@ -61,12 +64,10 @@ export default defineNuxtConfig({
     FASTTRACK_USER_PASSWORD: process.env.FASTTRACK_USER_PASSWORD,
     FASTTRACK_USER_EMAIL: process.env.FASTTRACK_USER_EMAIL,
     EVER_TRANSIT_API_KEY: process.env.EVER_TRANSIT_API_KEY,
-    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,
-      CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
     },
   },
 
