@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed } from '#imports'
 import { useEcharts } from '~/composables/useEcharts'
 import type { ECOption } from '~/composables/useEcharts'
 import { format, parseISO } from 'date-fns'
-import { ReservationDateAndTotalSchema } from '~/composables/fasttrak-api/schemas'
+import { defineProps } from 'vue'
+import {
+  ReservationDateAndTotalSchema,
+  Reservation,
+} from '~/composables/fasttrak-api/schemas'
 
-const { data: response, pending } = await useFetch('/api/reservations')
+interface Props {
+  reservations: Reservation[]
+}
+
+const props = defineProps<Props>()
 
 const pickedReservations = computed(() => {
-  return ReservationDateAndTotalSchema.array().parse(
-    response.value?.reservations
-  )
+  return ReservationDateAndTotalSchema.array().parse(props.reservations)
 })
 
 const weeklyData = {
@@ -29,7 +35,7 @@ pickedReservations.value.forEach((reservation) => {
   weeklyData[dayOfWeek] += 1
 })
 
-const options: ECOption = ref({
+const options: Ref<ECOption> = ref({
   xAxis: {
     type: 'category',
     data: Object.keys(weeklyData),
