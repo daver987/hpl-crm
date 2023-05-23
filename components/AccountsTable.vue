@@ -45,8 +45,8 @@ const deleteCustomer = (stripeCustomerId: string) => {
         stripe_customer_id: stripeCustomerId,
       })
       if (deleted.deleted) {
-        message.info(`The Customer was successfully Deleted`)
         await refetchStripeCustomers()
+        message.info(`The Customer was successfully Deleted`)
         d.loading = false
       } else {
         message.error(
