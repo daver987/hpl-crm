@@ -9,7 +9,7 @@ import {
   ref,
 } from '#imports'
 import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
-import { format } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import { z } from 'zod'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, NP, NTag, useDialog } from 'naive-ui'
@@ -18,7 +18,6 @@ import type {
   ReservationResponse,
 } from '~/composables/fasttrak-api/schemas'
 import type { Ref } from 'vue'
-import { useClipboard } from '@vueuse/core'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -43,6 +42,8 @@ const isBooking = ref(true)
 const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
+const showModal = ref(false)
+const quoteModalContent = ref('')
 
 const {
   data: quoteData,
@@ -60,9 +61,6 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys
   console.log('Selected Row', checkedRowKeysRef)
 }
-
-const showModal = ref(false)
-const quoteModalContent = ref('')
 
 async function handlePrompt(row: RowData) {
   const promptData = preparePromptData(row)
@@ -109,9 +107,12 @@ const createColumns = (): DataTableColumns<RowData> => [
     key: 'created_at',
     title: 'Submitted',
     render(row) {
-      return format(new Date(row.created_at), 'PP, p')
+      const timeDistance = formatDistanceToNow(new Date(row.created_at), {
+        addSuffix: true,
+      })
+      return timeDistance.replace('about ', '')
     },
-    width: 200,
+    width: 125,
   },
   {
     key: 'quote_number',
@@ -150,7 +151,6 @@ const createColumns = (): DataTableColumns<RowData> => [
     },
     width: 250,
   },
-
   {
     key: 'email_address',
     title: 'Email',
@@ -184,7 +184,6 @@ const createColumns = (): DataTableColumns<RowData> => [
     },
     width: 175,
   },
-
   {
     key: 'origin',
     title: 'Pickup',
@@ -207,7 +206,6 @@ const createColumns = (): DataTableColumns<RowData> => [
       tooltip: true,
     },
   },
-
   {
     key: 'service_label',
     title: 'Service Type',
@@ -223,24 +221,6 @@ const createColumns = (): DataTableColumns<RowData> => [
       return row.vehicle.label
     },
     width: 135,
-  },
-  {
-    key: 'reply',
-    title: 'Reply',
-    render(row) {
-      return h(
-        NButton,
-        {
-          size: 'small',
-          color: 'purple',
-          textColor: '#fff',
-          onClick: () => handleQuoteEmailReply(row),
-          strong: true,
-        },
-        { default: () => 'Reply' }
-      )
-    },
-    width: 100,
   },
   {
     key: 'quote_total',
@@ -261,6 +241,24 @@ const createColumns = (): DataTableColumns<RowData> => [
     width: 100,
   },
   {
+    key: 'reply',
+    title: 'Reply Email',
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'small',
+          color: 'purple',
+          textColor: '#fff',
+          onClick: () => handleQuoteEmailReply(row),
+          strong: true,
+        },
+        { default: () => 'Reply' }
+      )
+    },
+    width: 100,
+  },
+  {
     key: 'is_booked',
     title: 'Status',
     render(row) {
@@ -272,13 +270,12 @@ const createColumns = (): DataTableColumns<RowData> => [
           },
           type: row.is_booked ? 'success' : 'info',
         },
-        { default: () => (row.is_booked ? 'Booked' : 'Pending') }
+        { default: () => (row.is_booked ? 'Booked' : 'Quoted') }
       )
     },
 
     width: 100,
   },
-
   {
     key: 'book',
     title: 'Book',
