@@ -3,16 +3,13 @@ import {
   fasttrakRequest,
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
-import {
-  ReservationDateAndTotalSchema,
-  ReservationResponse,
-} from '~/composables'
+import { AgingReport } from '~/composables/fasttrak-api/schemas/AgingReportSchema'
 
 export default defineEventHandler(async (event) => {
   let accessToken
   accessToken = await fasttrakAuth()
   console.log('Access token', accessToken, new Date().toISOString())
-  const endpoint = 'reservations/search-advanced'
+  const endpoint = 'Invoices/aging-report'
   const currentYear = new Date().getFullYear()
 
   const startDate = new Date()
@@ -37,19 +34,7 @@ export default defineEventHandler(async (event) => {
     body: body,
   }
 
-  const fasttrakData: ReservationResponse = await fasttrakRequest(
-    requestOptions
-  )
-  const parsedReservations = ReservationDateAndTotalSchema.array().parse(
-    fasttrakData.items
-  )
-  const response = await event.context.prisma.fasttrak.upsert({
-    where: {
-      id: 1,
-    },
-    update: { reservations: parsedReservations },
-    create: { reservations: parsedReservations },
-  })
+  const fasttrakData: AgingReport = await fasttrakRequest(requestOptions)
 
-  return response
+  return fasttrakData
 })
