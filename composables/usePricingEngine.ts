@@ -5,7 +5,7 @@ import {
   LineItemSchema,
   Vehicle,
   SalesTax,
-} from '~/prisma/generated/zod'
+} from '~/schema/prismaSchemas'
 import {
   DirectionsSchema,
   DirectionsApiResponse,
