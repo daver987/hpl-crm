@@ -15,7 +15,7 @@
     "analyze": "nuxi analyze"
   },
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "devDependencies": {
     "@css-render/vue3-ssr": "^0.15.12",
