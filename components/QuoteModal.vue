@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { watch, ref } from '#imports'
+import { watch, ref, computed } from '#imports'
+import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
   modelValue: {
@@ -11,7 +12,14 @@ const props = defineProps({
     default: '',
   },
 })
+
 const formattedContent = computed(() => props.content.replace(/\n/g, '<br>'))
+
+const clipboardContent = computed(() =>
+  formattedContent.value.replace(/<br>/g, '\n')
+)
+
+const { copy, copied } = useClipboard()
 const visible = ref(props.modelValue)
 
 watch(
@@ -28,6 +36,10 @@ watch(visible, (newVal, oldVal) => {
     emit('update:modelValue', newVal)
   }
 })
+
+const copyToClipboard = () => {
+  copy(clipboardContent.value)
+}
 </script>
 
 <template>
@@ -39,8 +51,18 @@ watch(visible, (newVal, oldVal) => {
       size="huge"
       role="dialog"
       aria-modal="true"
+      :segmented="{
+        content: true,
+        footer: 'soft',
+      }"
     >
+      <template #header-extra>
+        <n-button @click="copyToClipboard" text
+          ><span v-if="!copied">Copy</span> <span v-else>Copied!</span>
+        </n-button>
+      </template>
       <p v-html="formattedContent"></p>
+      <template #footer></template>
     </n-card>
   </n-modal>
 </template>

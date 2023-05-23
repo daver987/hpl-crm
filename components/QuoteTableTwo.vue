@@ -18,6 +18,7 @@ import type {
   ReservationResponse,
 } from '~/composables/fasttrak-api/schemas'
 import type { Ref } from 'vue'
+import { useClipboard } from '@vueuse/core'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
