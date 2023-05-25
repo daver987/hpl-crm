@@ -8,7 +8,7 @@ import {
   ReservationDetailSchema,
   CustomerSummarySchema,
 } from '~/composables/fasttrak-api/schemas'
-import { ReservationResponse } from '~/composables/fasttrak-api/schemas/reservationSchema'
+import { ReservationResponse } from '~/composables/fasttrak-api/schemas/ReservationSchema'
 import { z } from 'zod'
 
 export const reservationsRouter = router({

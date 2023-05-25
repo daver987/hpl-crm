@@ -2,10 +2,14 @@
 definePageMeta({
   name: 'Drivers',
   layout: 'default',
-  path: '/resources/drivers'
+  path: '/resources/drivers',
 })
+const { data, pending, error, refresh } = await useFetch('/api/employees')
 </script>
 
 <template>
-    <DriverTable />
+  <n-grid :x-gap="12" :y-gap="12" :cols="4" layout-shift-disabled>
+    <DriverCard :drivers="data.items" />
+  </n-grid>
+  <!--  <EmployeeTable :data="data" :pending="pending" />-->
 </template>
