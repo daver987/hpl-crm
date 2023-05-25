@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const ReservationSchema = z.object({
+export const SampleReservationSchema = z.object({
   item: z.object({
     createUser: z.string(),
     reservationId: z.number(),

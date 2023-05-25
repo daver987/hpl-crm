@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const vehicleTypeSchema = z.object({
+export const VehicleTypeSchema = z.object({
   items: z.array(
     z.object({
       vehicleTypeImageUrl: z.string(),

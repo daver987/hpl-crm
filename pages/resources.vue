@@ -1,8 +1,7 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <n-layout-content>
-    <NuxtPage/>
+  <n-layout-content style="padding: 16px">
+    <NuxtPage />
   </n-layout-content>
 </template>
