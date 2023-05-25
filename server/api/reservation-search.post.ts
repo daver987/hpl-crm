@@ -6,18 +6,19 @@ import {
 import { ReservationResponse } from '~/composables'
 
 export default defineEventHandler(async (event) => {
+  const body = readBody(event)
   let accessToken
   accessToken = await fasttrakAuth()
-  const endpoint = 'employees'
-  const query = {
-    includeInactive: false,
-  }
+  const endpoint = 'reservations/search-advanced'
+
 
   const requestOptions: FasttrakRequestOptions = {
-    method: 'GET',
+    method: 'POST',
     endpoint: endpoint,
     token: accessToken,
-    query,
+    body: {
+      employeeId: 93,
+    },
   }
 
   const fasttrakData: ReservationResponse = await fasttrakRequest(
