@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { ref } from '#imports'
-import { NTag, NButton, useMessage, useDialog } from 'naive-ui'
+import { NButton, useMessage, useDialog } from 'naive-ui'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Vehicle } from '~/schema/prismaSchemas'
 import type { Ref } from 'vue'
-
 
 type RowData = Vehicle
 
@@ -18,9 +17,11 @@ const {
   refetch: refetchVehicleData,
 } = useQuery({
   queryKey: ['vehicles'],
-  queryFn: () => useTrpc().vehicle.get.query()
+  queryFn: () => useTrpc().vehicle.get.query(),
 })
-const vehicles: ComputedRef<Vehicle[]> = computed(() => vehicleData.value as Vehicle[])
+const vehicles: ComputedRef<Vehicle[]> = computed(
+  () => vehicleData.value as Vehicle[]
+)
 
 const rowKey = (row: RowData) => row.id
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
@@ -64,15 +65,15 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
 const updateVehicle = async (input: any, row: RowData) => {
   await useTrpc().vehicle.update.mutate({
     id: row.id,
-    ...input
+    ...input,
   })
 }
 const inputValue = ref()
 const data: Ref<Vehicle[]> = ref(vehicleData.value as Vehicle[])
 const showDrawer = ref(false)
 const toggleDrawer = () => {
-  showDrawer.value = !showDrawer.value;
-};
+  showDrawer.value = !showDrawer.value
+}
 
 const createColumns = (showDrawer: Ref<boolean>): DataTableColumns<RowData> => [
   {
@@ -146,23 +147,23 @@ const createColumns = (showDrawer: Ref<boolean>): DataTableColumns<RowData> => [
           tertiary: true,
           size: 'small',
           onClick: () => {
-            showDrawer.value = !showDrawer.value;
-            console.log('Open Drawer', showDrawer.value);
-          }
+            showDrawer.value = !showDrawer.value
+            console.log('Open Drawer', showDrawer.value)
+          },
         },
         { default: () => 'Update' }
       )
     },
-  }
+  },
 ]
-const columns = createColumns(showDrawer);
-
+const columns = createColumns(showDrawer)
 </script>
 
 <template>
-  <SettingsVehicleDrawer 
-  :show="showDrawer" 
-  @update:show="showDrawer = $event"/>
+  <SettingsVehicleDrawer
+    :show="showDrawer"
+    @update:show="showDrawer = $event"
+  />
   <n-data-table
     size="small"
     :max-height="685"

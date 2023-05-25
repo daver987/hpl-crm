@@ -11,8 +11,6 @@ import {
 export default defineEventHandler(async (event) => {
   try {
     const accessToken = await fasttrakAuth()
-    console.log('Access token', accessToken, new Date().toISOString())
-
     const currentYear = new Date().getFullYear()
     const startDate = new Date(currentYear, 0, 1)
     const endDate = new Date(currentYear, 11, 31)
