@@ -30,7 +30,7 @@ const hoursOptions = computed(() => {
 const route = useRoute()
 const gtmValues = route.query
 
-//@ts-ignore
+//@ts-expect-error
 const formValue: Ref<FormValue> = ref({
   id: user_id.value,
   first_name: '',
@@ -263,16 +263,7 @@ function disablePreviousDate(ts: number) {
 </script>
 
 <template>
-  <n-card>
-    <n-grid :cols="1" responsive="self">
-      <n-grid-item :span="1">
-        <div
-          class="border-1 rounded border border-white bg-black p-4 sm:mx-auto sm:w-full sm:max-w-2xl sm:overflow-hidden sm:rounded-lg"
-        >
-          <h2 class="mb-4 mt-2 text-center text-3xl uppercase text-white">
-            Instant Quote
-          </h2>
-          <n-form
+  <n-form
             ref="formRef"
             :label-width="80"
             :model="formValue"
@@ -305,80 +296,7 @@ function disablePreviousDate(ts: number) {
                   placeholder="Enter Drop-off Location...."
                 />
               </n-form-item-gi>
-              <n-form-item-gi
-                path="pickup_date"
-                :span="2"
-                :show-label="false"
-                label="Pickup Date"
-              >
-                <n-date-picker
-                  v-model:formatted-value="formValue.pickup_date as string"
-                  type="date"
-                  placeholder="Select Pickup Date..."
-                  :default-value="Date.now()"
-                  :is-date-disabled="disablePreviousDate"
-                  value-format="PPP"
-                  input-readonly
-                />
-              </n-form-item-gi>
-              <n-form-item-gi
-                path="pickup_time"
-                :span="2"
-                :show-label="false"
-                label="Pickup Date and Time"
-              >
-                <n-space justify="space-between">
-                  <n-time-picker
-                    v-model:formatted-value="formValue.pickup_time as string"
-                    format="h:mm a"
-                    :clearable="true"
-                    use12-hours
-                    value-format="p"
-                    input-readonly
-                  />
-                  <n-switch
-                    v-if="false"
-                    v-model:value="formValue.is_round_trip"
-                  >
-                    <template #checked> Round</template>
-                    <template #unchecked> One Way</template>
-                  </n-switch>
-                </n-space>
-              </n-form-item-gi>
             </n-grid>
-            <n-collapse-transition v-if="false" :show="formValue.is_round_trip">
-              <n-grid :cols="2" item-responsive :x-gap="12">
-                <n-form-item-gi
-                  :span="1"
-                  :show-label="false"
-                  label="Return Date"
-                  path="dateTime.return_date"
-                >
-                  <n-date-picker
-                    v-model:value="formValue.return_date as any"
-                    type="date"
-                    placeholder="Select Return Date"
-                    :default-value="Date.now()"
-                    :is-date-disabled="disablePreviousDate"
-                    input-readonly
-                  />
-                </n-form-item-gi>
-                <n-form-item-gi
-                  :span="1"
-                  :show-label="false"
-                  label="Return Time"
-                  path="dateTime.return_time"
-                >
-                  <n-time-picker
-                    v-model:value="formValue.return_time as any"
-                    format="h:mm a"
-                    :clearable="true"
-                    use12-hours
-                    input-readonly
-                  />
-                </n-form-item-gi>
-              </n-grid>
-            </n-collapse-transition>
             <n-grid :cols="2" item-responsive :x-gap="12">
               <n-form-item-gi
                 span="0:2 500:1"
@@ -391,8 +309,8 @@ function disablePreviousDate(ts: number) {
                   :options="serviceOptions as SelectOption[]"
                   placeholder="Select Service Type..."
                   :input-props="{
-                    id: 'service_type',
-                  }"
+                      id: 'service_type',
+                    }"
                 />
               </n-form-item-gi>
 
@@ -407,26 +325,12 @@ function disablePreviousDate(ts: number) {
                   :options="vehicleOptions as SelectOption[]"
                   placeholder="Select Vehicle Type..."
                   :input-props="{
-                    id: 'vehicle_type',
-                  }"
+                      id: 'vehicle_type',
+                    }"
                 />
               </n-form-item-gi>
 
-              <n-form-item-gi
-                span="0:2 500:1"
-                :show-label="false"
-                label="Passengers"
-                path="selected_passengers"
-              >
-                <n-select
-                  v-model:value="formValue.selected_passengers"
-                  :options="passengerOptions as SelectOption[]"
-                  placeholder="Select Passengers..."
-                  :input-props="{
-                    id: 'passengers',
-                  }"
-                />
-              </n-form-item-gi>
+              
 
               <n-form-item-gi
                 span="0:2 500:1"
@@ -440,73 +344,12 @@ function disablePreviousDate(ts: number) {
                   placeholder="For Hourly Service..."
                   :disabled="isDisabled"
                   :input-props="{
-                    id: 'hours',
-                  }"
+                      id: 'hours',
+                    }"
                 />
               </n-form-item-gi>
 
-              <n-form-item-gi
-                :show-label="false"
-                label="First Name"
-                path="first_name"
-                span="0:2 500:1"
-              >
-                <n-input
-                  v-model:value="formValue.first_name"
-                  placeholder="Enter First Name..."
-                  :input-props="{
-                    id: 'first_name',
-                    type: 'text',
-                  }"
-                />
-              </n-form-item-gi>
-
-              <n-form-item-gi
-                span="0:2 500:1"
-                :show-label="false"
-                label="Last Name"
-                path="last_name"
-              >
-                <n-input
-                  v-model:value="formValue.last_name"
-                  placeholder="Enter Last Name..."
-                  :input-props="{
-                    id: 'last_name',
-                    type: 'text',
-                  }"
-                />
-              </n-form-item-gi>
-
-              <n-form-item-gi
-                span="0:2 500:1"
-                :show-label="false"
-                label="Email Address"
-                path="email_address"
-              >
-                <n-input
-                  v-model:value="formValue.email_address"
-                  placeholder="Enter Email Address..."
-                  :input-props="{
-                    id: 'email_address',
-                    type: 'email',
-                  }"
-                />
-              </n-form-item-gi>
-
-              <n-form-item-gi
-                span="0:2 500:1"
-                path="phone_number"
-                :show-label="false"
-                label="Phone Number"
-              >
-                <VueTelInput
-                  v-model="formValue.phone_number"
-                  :dropdown-options="dropdownOptions"
-                  :input-options="inputOptions"
-                  aria-label="phone input"
-                  id="phone_number"
-                />
-              </n-form-item-gi>
+              
             </n-grid>
             <n-button
               style="
@@ -521,8 +364,4 @@ function disablePreviousDate(ts: number) {
               >Get Prices & Availability</n-button
             >
           </n-form>
-        </div>
-      </n-grid-item>
-    </n-grid>
-  </n-card>
 </template>

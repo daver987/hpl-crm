@@ -33,7 +33,6 @@ export function useStripe() {
   const isLoading: Ref<boolean> = ref(false)
   const publicKey: Ref<string> = ref('')
   const clientSecret: Ref<string> = ref('')
-
   let stripePaymentElement: StripePaymentElement | null
   let stripeLinkAuthenticationElement: StripeLinkAuthenticationElement | null
   let stripe: Stripe | null
@@ -129,8 +128,7 @@ export function useStripe() {
             message.innerText =
               'Failed to process payment details. Please try another payment method.'
           }
-          // Redirect your user back to your payment page to attempt collecting
-          // payment again
+
           break
 
         default:
@@ -142,7 +140,6 @@ export function useStripe() {
       }
     } catch (error) {
       console.error('Error during setup intent retrieval:', error)
-      // Handle any other errors during setup intent retrieval, consider using a UI component to show the error
     }
   }
 

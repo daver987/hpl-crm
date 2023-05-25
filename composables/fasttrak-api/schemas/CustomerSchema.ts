@@ -1,5 +1,20 @@
 import { z } from 'zod'
 
+export const CustomerSummarySchema = z
+  .object({
+    doBillCorporate: z.boolean().default(false),
+    doUseCorporatePricingOverrides: z.boolean().default(false),
+    customerId: z.number().optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    emailAddress: z.string().optional(),
+    phoneNumber1: z.string().optional(),
+    cellPhoneNumber: z.string().optional(),
+    accountNumber: z.string().optional(),
+    doRequireReferencePo: z.boolean().default(false),
+  })
+  .optional()
+
 export const CustomerSearchSchema = z.object({
   lastName: z.string().optional(),
   firstName: z.string().optional(),

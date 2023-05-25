@@ -3,7 +3,7 @@ import {
   fasttrakRequest,
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
-import { ReservationResponse } from '~/composables'
+import { EmployeeResponse } from '~/composables/fasttrak-api/schemas/EmployeeSchema'
 
 export default defineEventHandler(async (event) => {
   let accessToken
@@ -20,9 +20,7 @@ export default defineEventHandler(async (event) => {
     query,
   }
 
-  const fasttrakData: ReservationResponse = await fasttrakRequest(
-    requestOptions
-  )
+  const fasttrakData: EmployeeResponse = await fasttrakRequest(requestOptions)
 
   return fasttrakData
 })

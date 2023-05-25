@@ -15,32 +15,24 @@ import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { ComputedRef, Ref } from 'vue'
-import type {
-  ReservationResponse,
-  Reservation,
-} from '~/composables/fasttrak-api/schemas/ReservationSchema'
-
-definePageMeta({
-  name: 'Fasttrak',
-  layout: 'default',
-  path: '/reservations/active',
-})
+import {
+  type EmployeeReservation,
+  EmployeeReservationResponseSchema,
+} from '~/composables'
 
 const tableRef = ref(null)
 const message = useMessage()
 const dialog = useDialog()
 
-const { data: reservationsData, pending } = await useFetch(
-  '/api/reservations',
-  {
-    method: 'GET',
-    query: { howMany: '[ALL]' },
-  }
-)
-const reservations = computed(() => {
-  return reservationsData.value?.reservations
+const { data, pending } = await useFetch('/api/reservation-search', {
+  method: 'POST',
+  body: { employeeId: 93 },
 })
-const rowKey = (row: Reservation) => row.reservationId
+const reservations = computed(() => {
+  return EmployeeReservationResponseSchema.parse(data.value)
+})
+
+const rowKey = (row: EmployeeReservation) => row.reservationId
 
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
 const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
@@ -96,7 +88,7 @@ const handlePush = (evt: RowData) => {
   // })
 }
 
-const createColumns = (): DataTableColumns<Reservation> => [
+const createColumns = (): DataTableColumns<EmployeeReservation> => [
   {
     key: 'reservationId',
     title: 'Res Id',
@@ -136,7 +128,6 @@ const createColumns = (): DataTableColumns<Reservation> => [
       tooltip: true,
     },
   },
-
   {
     key: 'email',
     title: 'Email',
@@ -201,23 +192,6 @@ const createColumns = (): DataTableColumns<Reservation> => [
           type: row.reservationStatus ? 'success' : 'info',
         },
         { default: () => row.reservationStatus }
-      )
-    },
-  },
-  {
-    title: 'To Zoho',
-    key: 'zoho',
-    render(row) {
-      return h(
-        NButton,
-        {
-          type: 'info',
-          strong: true,
-          tertiary: true,
-          size: 'small',
-          onClick: () => handlePush(row),
-        },
-        { default: () => 'To Zoho' }
       )
     },
   },

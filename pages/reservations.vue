@@ -1,6 +1,4 @@
-<script setup lang="ts">
-definePageMeta({})
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <n-layout-content>
