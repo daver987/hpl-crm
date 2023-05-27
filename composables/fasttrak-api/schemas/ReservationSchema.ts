@@ -704,7 +704,7 @@ export const ReservationDetailSchema = z.object({
 })
 
 export type ReservationDetail = z.infer<typeof ReservationDetailSchema>
-export type Reservation = z.infer<typeof ReservationSchema>
+// export type Reservation = z.infer<typeof ReservationSchema>
 export type ReservationResponse = z.infer<typeof ReservationResponseSchema>
 export type ReservationDateAndTotal = z.infer<
   typeof ReservationDateAndTotalSchema

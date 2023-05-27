@@ -13,7 +13,6 @@ import {
 } from 'date-fns'
 import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
-import { RowData } from 'naive-ui/es/data-table/src/interface'
 import { ComputedRef, Ref } from 'vue'
 import type {
   ReservationResponse,
@@ -21,7 +20,7 @@ import type {
 } from '~/composables/fasttrak-api/schemas/ReservationSchema'
 
 definePageMeta({
-  name: 'Fasttrak',
+  name: 'Active Reservations',
   layout: 'default',
   path: '/reservations/active',
 })
@@ -29,17 +28,17 @@ definePageMeta({
 const tableRef = ref(null)
 const message = useMessage()
 const dialog = useDialog()
+const reservations: Ref<ReservationResponse | null> = ref(null)
 
 const { data: reservationsData, pending } = await useFetch(
-  '/api/reservations',
+  '/api/reservations-all',
   {
     method: 'GET',
-    query: { howMany: '[ALL]' },
   }
 )
-const reservations = computed(() => {
-  return reservationsData.value?.reservations
-})
+
+reservations.value = reservationsData.value
+
 const rowKey = (row: Reservation) => row.reservationId
 
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
@@ -69,7 +68,7 @@ const filteredReservations = computed(() => {
   if (!startDate.value || !endDate.value) {
     return []
   }
-  return reservations.value.items.filter((reservation) => {
+  return reservations.value.items.filter((reservation: Reservation[]) => {
     let reservationDate = parseISO(reservation.scheduledPickupTime)
     return (
       (isAfter(reservationDate, startDate.value!) ||
@@ -80,7 +79,7 @@ const filteredReservations = computed(() => {
   })
 })
 
-const handlePush = (evt: RowData) => {
+const handlePush = (evt: Reservation) => {
   console.log('Push event', evt)
   // const d = dialog.success({
   //   title: 'Push to Zoho',
@@ -136,7 +135,6 @@ const createColumns = (): DataTableColumns<Reservation> => [
       tooltip: true,
     },
   },
-
   {
     key: 'email',
     title: 'Email',
@@ -205,23 +203,6 @@ const createColumns = (): DataTableColumns<Reservation> => [
     },
   },
   {
-    title: 'To Zoho',
-    key: 'zoho',
-    render(row) {
-      return h(
-        NButton,
-        {
-          type: 'info',
-          strong: true,
-          tertiary: true,
-          size: 'small',
-          onClick: () => handlePush(row),
-        },
-        { default: () => 'To Zoho' }
-      )
-    },
-  },
-  {
     title: 'Delete',
     key: 'delete',
     render() {
@@ -259,18 +240,21 @@ const columns = createColumns()
           </n-space>
         </n-grid-item>
       </n-grid>
-      <n-data-table
-        :max-height="685"
-        ref="tableRef"
-        remote
-        :data="filteredReservations"
-        :loading="pending"
-        :columns="columns"
-        :row-key="rowKey"
-        virtual-scroll
-        :scroll-x="1800"
-        size="small"
-      />
+      <n-card>
+        <pre>{{ reservations }}</pre>
+      </n-card>
+      <!--      <n-data-table-->
+      <!--        :max-height="685"-->
+      <!--        ref="tableRef"-->
+      <!--        remote-->
+      <!--        :data="filteredReservations"-->
+      <!--        :loading="pending"-->
+      <!--        :columns="columns"-->
+      <!--        :row-key="rowKey"-->
+      <!--        virtual-scroll-->
+      <!--        :scroll-x="1800"-->
+      <!--        size="small"-->
+      <!--      />-->
     </n-spin>
   </n-layout-content>
 </template>
