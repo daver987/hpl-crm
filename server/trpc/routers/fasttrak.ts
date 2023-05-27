@@ -3,8 +3,8 @@ import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
 import type {
   PricingPlan,
   ReservationResponse,
-  CustomerArray,
-} from '~/composables/fasttrak-api/schemas'
+  CustomerResponse,
+} from '~/composables'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
 import chalk from 'chalk'
@@ -26,7 +26,9 @@ export const fasttrakRouter = router({
       queryParams: queryParams,
     }
 
-    const customers: CustomerArray = await fasttrakRequest(requestOptions)
+    const customers: CustomerResponse[] = ([] = await fasttrakRequest(
+      requestOptions
+    ))
     return customers
   }),
 

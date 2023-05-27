@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   let accessToken
   accessToken = await fasttrakAuth()
   console.log('Access token', accessToken, new Date().toISOString())
-  const endpoint = 'reservations/search-advanced'
+  const endpoint = 'employee-pays/search'
   const currentYear = new Date().getFullYear()
 
   const startDate = new Date()
