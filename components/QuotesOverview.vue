@@ -10,7 +10,7 @@ import {
   endOfWeek,
   getUnixTime,
 } from 'date-fns'
-import { ComputedRef, defineProps, Ref } from 'vue'
+import { ComputedRef, Ref } from 'vue'
 import {
   QuoteReturnedPickedSchema,
   ReturnedQuote,
