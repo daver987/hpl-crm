@@ -3,24 +3,38 @@ import {
   fasttrakRequest,
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
-import { ReservationResponse } from '~/composables'
+import type { EmployeePayResponse } from '~/composables/'
 
 export default defineEventHandler(async (event) => {
+  const body = await readBody(event)
+  console.log('[BODY]', body)
   let accessToken
   accessToken = await fasttrakAuth()
-  const endpoint = 'employees'
-  const query = {
-    includeInactive: false,
-  }
+  const endpoint = 'communication/view-document/employee-pay-report'
+  const currentYear = new Date().getFullYear()
+
+  const startDate = new Date()
+  startDate.setFullYear(currentYear)
+  startDate.setMonth(0)
+  startDate.setDate(1)
+
+  const endDate = new Date()
+  endDate.setFullYear(currentYear)
+  endDate.setMonth(11)
+  endDate.setDate(31)
 
   const requestOptions: FasttrakRequestOptions = {
-    method: 'GET',
+    method: 'POST',
     endpoint: endpoint,
     token: accessToken,
-    query,
+    body: {
+      payStatus: 'NotPaid',
+      employeeId: body.employeeId,
+      suppressZeroValueItems: true,
+    },
   }
 
-  const fasttrakData: ReservationResponse = await fasttrakRequest(
+  const fasttrakData: EmployeePayResponse = await fasttrakRequest(
     requestOptions
   )
 
