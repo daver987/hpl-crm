@@ -1,6 +1,8 @@
-import { AuthResponse } from './types'
+import { AuthResponse } from '~/composables'
+
 export * from './schemas'
 export * from './utils'
+export * from './types'
 
 export class FasttrakApi {
   private accessToken: string | null

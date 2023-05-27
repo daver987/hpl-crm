@@ -8,6 +8,7 @@ export interface FasttrakRequestOptions {
   pathParams?: { [key: string]: string | number }
   body?: any
   queryParams?: any
+  useJsonPatchContentType?: boolean
 }
 
 export async function fasttrakRequest(
@@ -32,7 +33,9 @@ export async function fasttrakRequest(
       'Partner-Access-Key': partnerAccessKey,
       'Partner-Api-Version': 'v2.1',
       'System-Id': systemId,
-      'Content-Type': 'application/json',
+      'Content-Type': options.useJsonPatchContentType
+        ? 'application/json-patch+json'
+        : 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
