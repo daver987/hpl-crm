@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { EmployeeResponseSchema } from '~/composables/fasttrak-api/schemas/EmployeeSchema'
+import { EmployeeResponseSchema } from '~/composables'
 
 definePageMeta({
   name: 'Resources',

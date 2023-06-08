@@ -1,13 +1,13 @@
 import { router, publicProcedure } from '../trpc'
-import { CustomerSearchSchema } from '~/composables/fasttrak-api/schemas'
-import type { CustomerResponse } from '~/composables/fasttrak-api/schemas'
+import { CustomerSummarySchema } from '~/composables'
+import type { CustomerSummary } from '~/composables'
 import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
 
 export const fasttrakCustomersRouter = router({
   search: publicProcedure
-    .input(CustomerSearchSchema)
+    .input(CustomerSummarySchema)
     .query(async ({ ctx, input }) => {
       const accessToken = await fasttrakAuth()
 
@@ -23,7 +23,7 @@ export const fasttrakCustomersRouter = router({
         body: body,
       }
 
-      const fasttrakData: CustomerResponse = await fasttrakRequest(
+      const fasttrakData: CustomerSummary = await fasttrakRequest(
         requestOptions
       )
       return fasttrakData
