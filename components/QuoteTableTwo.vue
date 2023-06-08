@@ -11,12 +11,9 @@ import {
 import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
 import { formatDistanceToNow } from 'date-fns'
 import { z } from 'zod'
-import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, NP, NTag, useDialog } from 'naive-ui'
-import type {
-  ReservationDetail,
-  ReservationResponse,
-} from '~/composables/fasttrak-api/schemas'
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
+import type { Reservation } from '~/composables/fasttrak-api/schemas'
 import type { Ref } from 'vue'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
@@ -586,7 +583,7 @@ async function handleBook(event: RowData) {
     }
   })
 
-  const reservationDetails: ReservationDetail = reactive({
+  const reservationDetails: Reservation = reactive({
     vehicleId: 0,
     employeeId: 0,
     greeterId: 0,
@@ -616,28 +613,29 @@ async function handleBook(event: RowData) {
       latitude: fromLocation.lat,
       longitude: fromLocation.lng,
       address: {
-        street1: toAddressParsed.street1,
-        street2: toAddressParsed.street2,
-        city: toAddressParsed.city,
-        region: toAddressParsed.region,
-        postalCode: toAddressParsed.postalCode,
-        country: toAddressParsed.country,
-        displayAddress: fromLocation.full_name,
-        geoLookupAddress: '',
-        cityRegionPostalCode: '',
-      },
-      displayAddress: fromLocation.full_name,
-    },
-    toLocation: {
-      latitude: toLocation.lat,
-      longitude: toLocation.lng,
-      address: {
         street1: fromAddressParsed.street1,
         street2: fromAddressParsed.street2,
         city: fromAddressParsed.city,
         region: fromAddressParsed.region,
         postalCode: fromAddressParsed.postalCode,
         country: fromAddressParsed.country,
+        displayAddress: fromLocation.full_name,
+        geoLookupAddress: '',
+        cityRegionPostalCode: '',
+      },
+
+      displayAddress: fromLocation.full_name,
+    },
+    toLocation: {
+      latitude: toLocation.lat,
+      longitude: toLocation.lng,
+      address: {
+        street1: toAddressParsed.street1,
+        street2: toAddressParsed.street2,
+        city: toAddressParsed.city,
+        region: toAddressParsed.region,
+        postalCode: toAddressParsed.postalCode,
+        country: toAddressParsed.country,
         displayAddress: toLocation.full_name as string,
         geoLookupAddress: '',
         cityRegionPostalCode: '',
@@ -687,14 +685,18 @@ async function handleBook(event: RowData) {
     pricingInformation: buildPricing.value,
   })
 
-  const bookingResult: ReservationResponse =
-    await useTrpc().reservations.add.mutate({
+  const { data: bookingResult, pending } = await useFetch('/api/reservation', {
+    method: 'POST',
+    body: {
       reservationDetail: reservationDetails,
       customerSummary: customerSummary.value,
-    })
-  console.log('Booked Result', bookingResult)
-  if (bookingResult.status === 'SUCCESS') {
-    message.success('Quote booked successfully')
+    },
+  })
+  console.log('Booked Result', bookingResult.value)
+  if (bookingResult.value?.status === 'SUCCESS') {
+    message.success(
+      `Quote booked successfully ${JSON.stringify(bookingResult.value)}`
+    )
   } else {
     message.error(
       'Oops Something Went Wrong, Please Reload the page and try again'

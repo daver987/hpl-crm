@@ -2,7 +2,7 @@
 import { useEcharts } from '~/composables/useEcharts'
 import type { ECOption } from '~/composables/useEcharts'
 import { format } from 'date-fns'
-import { defineProps, computed, ref } from 'vue'
+import { computed, ref } from '#imports'
 import {
   QuoteReturnedPickedSchema,
   ReturnedQuote,

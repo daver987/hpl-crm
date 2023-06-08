@@ -6,7 +6,7 @@ definePageMeta({
   layout: 'default',
   path: '/resources',
 })
-const { data, pending, error, refresh } = await useFetch('/api/employees')
+const { data, pending, error } = await useFetch('/api/employees')
 const employees = EmployeeResponseSchema.parse(data.value)
 </script>
 

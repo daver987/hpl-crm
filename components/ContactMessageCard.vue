@@ -8,12 +8,11 @@ interface ContactMessage {
   is_read: boolean
 }
 
-const props = defineProps({
-  contactMessage: {
-    type: Object as () => ContactMessage,
-    required: true,
-  },
-})
+interface Props {
+  contactMessage: ContactMessage
+}
+
+const props = defineProps<Props>()
 
 const fullName = computed(
   () => `${props.contactMessage.first_name} ${props.contactMessage.last_name}`

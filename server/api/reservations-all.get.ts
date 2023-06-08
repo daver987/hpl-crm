@@ -5,7 +5,7 @@ import {
 } from '~/services/fasttrakRequest'
 import { ReservationResponse } from '~/composables'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   let accessToken
   accessToken = await fasttrakAuth()
   console.log('Access token', accessToken, new Date().toISOString())
@@ -37,6 +37,8 @@ export default defineEventHandler(async (event) => {
   const fasttrakData: ReservationResponse = await fasttrakRequest(
     requestOptions
   )
-
-  return fasttrakData
+  const filterOutStatus = ['Cancelled', 'Dropped', 'Quotation']
+  return fasttrakData.items.filter(
+    (item) => !filterOutStatus.includes(item.reservationStatus)
+  )
 })

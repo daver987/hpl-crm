@@ -1,5 +1,8 @@
-export default defineEventHandler((event) => {
-  return event.context.prisma.quote.findMany({
+import chalk from 'chalk'
+
+export default defineEventHandler(async (event) => {
+  const prisma = event.context.prisma
+  const quotes = await prisma.quote.findMany({
     orderBy: {
       quote_number: 'desc',
     },
@@ -44,4 +47,8 @@ export default defineEventHandler((event) => {
       },
     },
   })
+  console.log(
+    chalk.magentaBright(`[QUOTES_RETURNED] ${JSON.stringify(quotes)}`)
+  )
+  return quotes
 })

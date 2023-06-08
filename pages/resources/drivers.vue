@@ -4,7 +4,7 @@ definePageMeta({
   layout: 'default',
   path: '/resources/drivers',
 })
-const { data, pending, error, refresh } = await useFetch('/api/employees')
+const { data, pending, error } = await useFetch('/api/employees')
 </script>
 
 <template>
