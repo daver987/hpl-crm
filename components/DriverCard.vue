@@ -71,12 +71,7 @@ const emitEditEvent = (employeeId: string) => {
             ghost
             size="small"
             type="primary"
-            @click="
-              emitReservationsEvent({
-                employeeId: driver.employeeId,
-                displayName: driver.displayName,
-              })
-            "
+            @click="emitReservationsEvent(driver.employeeId)"
             >Reservations
           </n-button>
           <n-button
@@ -91,38 +86,3 @@ const emitEditEvent = (employeeId: string) => {
     </n-card>
   </n-gi>
 </template>
-
-<script setup lang="ts">
-interface Driver {
-  displayName: string
-  firstName: string
-  lastName: string
-  emailAddress: string
-  phoneCell: string
-  status: string
-  isInactive: boolean
-  employeeId: number
-}
-
-interface EmployeeInfo {
-  employeeId: number
-  displayName: string
-}
-
-const props = defineProps({
-  drivers: {
-    type: Array as () => Driver[],
-    required: true,
-  },
-})
-
-const emit = defineEmits(['show-reservations', 'edit-driver'])
-
-const emitReservationsEvent = (employeeInfo: EmployeeInfo) => {
-  emit('show-reservations', employeeInfo)
-}
-
-const emitEditEvent = (employeeId: number) => {
-  emit('edit-driver', employeeId)
-}
-</script>
