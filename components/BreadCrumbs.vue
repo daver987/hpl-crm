@@ -1,11 +1,3 @@
-<template>
-  <n-breadcrumb>
-    <n-breadcrumb-item v-for="(route, index) in breadcrumbRoutes" :key="index">
-      <router-link :to="route.path">{{ route.name }}</router-link>
-    </n-breadcrumb-item>
-  </n-breadcrumb>
-</template>
-
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
@@ -33,3 +25,11 @@ const breadcrumbRoutes = computed(() => {
   return breadcrumbRoutes
 })
 </script>
+
+<template>
+  <n-breadcrumb>
+    <n-breadcrumb-item v-for="(route, index) in breadcrumbRoutes" :key="index">
+      <router-link :to="route.path">{{ route.name }}</router-link>
+    </n-breadcrumb-item>
+  </n-breadcrumb>
+</template>

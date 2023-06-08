@@ -1,3 +1,33 @@
+<script setup lang="ts">
+interface Driver {
+  displayName: string
+  firstName: string
+  lastName: string
+  emailAddress: string
+  phoneCell: string
+  status: string
+  isInactive: boolean
+  employeeId: string
+}
+
+const props = defineProps({
+  drivers: {
+    type: Array as () => Driver[],
+    required: true,
+  },
+})
+
+const emit = defineEmits(['show-reservations', 'edit-driver'])
+
+const emitReservationsEvent = (employeeId: string) => {
+  emit('show-reservations', employeeId)
+}
+
+const emitEditEvent = (employeeId: string) => {
+  emit('edit-driver', employeeId)
+}
+</script>
+
 <template>
   <n-gi :span="1" v-for="(driver, index) in drivers" :key="index">
     <n-card

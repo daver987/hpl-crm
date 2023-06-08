@@ -94,3 +94,56 @@ export const fasttrakAuth = async (): Promise<string> => {
 
   return tokenData.token
 }
+
+///new version
+//
+// interface AuthRequestBody {
+//   systemId: string
+//   username: string
+//   password: string
+//   refreshToken: string
+// }
+//
+// const runtimeConfig = useRuntimeConfig()
+//
+// const config = (
+//   partnerAccessKey: string,
+//   systemId: string
+// ): {
+//   headers: {
+//     'Partner-Access-Key': string
+//     'Partner-Api-Version': string
+//     'System-Id': string
+//     'Content-Type': string
+//   }
+// } => ({
+//   headers: {
+//     'Partner-Access-Key': partnerAccessKey,
+//     'Partner-Api-Version': 'v2.1',
+//     'System-Id': systemId,
+//     'Content-Type': 'application/json',
+//   },
+// })
+//
+// export async function fasttrakAuth(
+//   systemId: string,
+//   username: string,
+//   password: string,
+//   refreshToken: string
+// ) {
+//   const requestBody: AuthRequestBody = {
+//     systemId,
+//     username,
+//     password,
+//     refreshToken,
+//   }
+//
+//   return await $fetch(
+//     'https://api.ifasttrak.com/partner/api/authentication/web-service-user',
+//     {
+//       method: 'POST',
+//       body: requestBody,
+//       ...config(runtimeConfig.FASTTRACK_PARTNER_ACCESS_KEY, systemId),
+//     }
+//   )
+// }
