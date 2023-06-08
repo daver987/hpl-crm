@@ -7,24 +7,7 @@ definePageMeta({
   layout: 'default',
   path: '/resources/drivers',
 })
-
-interface EmployeeInfo {
-  employeeId: number
-  displayName: string
-}
-const employeeId: Ref<number | null> = ref(null)
-const displayName: Ref<string | null> = ref(null)
-const { data, pending, error, refresh } = await useFetch('/api/employees')
-
-const getEmployeeId = async (employeeInfo: EmployeeInfo) => {
-  employeeId.value = employeeInfo.employeeId
-  displayName.value = employeeInfo.displayName
-}
-
-const goBack = () => {
-  employeeId.value = null
-  displayName.value = null
-}
+const { data, pending, error } = await useFetch('/api/employees')
 </script>
 
 <template>
