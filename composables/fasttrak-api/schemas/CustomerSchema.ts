@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const CustomerSummarySchemaNew = z
+export const CustomerSummarySchema = z
   .object({
     doBillCorporate: z.boolean().default(false),
     doUseCorporatePricingOverrides: z.boolean().default(false),
