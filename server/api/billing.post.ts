@@ -3,13 +3,13 @@ import {
   fasttrakRequest,
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
-import { AgingReport } from '~/composables/fasttrak-api/schemas/AgingReportSchema'
+import type { AgingReport } from '~/composables'
 
 export default defineEventHandler(async (event) => {
+  const body = readBody(event)
   let accessToken
   accessToken = await fasttrakAuth()
-  console.log('Access token', accessToken, new Date().toISOString())
-  const endpoint = 'Invoices/aging-report'
+  const endpoint = 'communication/view-document/employee-pay-report'
   const currentYear = new Date().getFullYear()
 
   const startDate = new Date()
@@ -21,11 +21,6 @@ export default defineEventHandler(async (event) => {
   endDate.setFullYear(currentYear)
   endDate.setMonth(11)
   endDate.setDate(31)
-
-  const body = {
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-  }
 
   const requestOptions: FasttrakRequestOptions = {
     method: 'POST',
