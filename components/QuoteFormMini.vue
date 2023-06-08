@@ -30,7 +30,6 @@ const hoursOptions = computed(() => {
 const route = useRoute()
 const gtmValues = route.query
 
-//@ts-expect-error
 const formValue: Ref<FormValue> = ref({
   id: user_id.value,
   first_name: '',
@@ -65,7 +64,6 @@ formValue.value.vehicle = computed(() => {
 })
 
 const maxPassengers = computed(() => {
-  //@ts-ignore
   const vehicleType = vehicleOptions.value?.find(
     (type: SelectOption) =>
       type.value === (formValue.value.vehicle_number as number)
@@ -264,104 +262,96 @@ function disablePreviousDate(ts: number) {
 
 <template>
   <n-form
-            ref="formRef"
-            :label-width="80"
-            :model="formValue"
-            :rules="rules"
-            id="quote_form"
-          >
-            <n-grid :x-gap="12" :cols="4" item-responsive>
-              <n-form-item-gi
-                :show-label="false"
-                label="Pickup Location"
-                :span="4"
-                path="origin"
-              >
-                <InputPlacesAutocompleteDark
-                  @change="handleChangeOrigin"
-                  name="origin"
-                  placeholder="Enter Pickup Location...."
-                />
-              </n-form-item-gi>
+    ref="formRef"
+    :label-width="80"
+    :model="formValue"
+    :rules="rules"
+    id="quote_form"
+  >
+    <n-grid :x-gap="12" :cols="4" item-responsive>
+      <n-form-item-gi
+        :show-label="false"
+        label="Pickup Location"
+        :span="4"
+        path="origin"
+      >
+        <InputPlacesAutocompleteDark
+          @change="handleChangeOrigin"
+          name="origin"
+          placeholder="Enter Pickup Location...."
+        />
+      </n-form-item-gi>
 
-              <n-form-item-gi
-                :show-label="false"
-                :span="4"
-                label="Drop-off Location"
-                path="destination"
-              >
-                <InputPlacesAutocompleteDark
-                  name="destination"
-                  @change="handleChangeDestination"
-                  placeholder="Enter Drop-off Location...."
-                />
-              </n-form-item-gi>
-            </n-grid>
-            <n-grid :cols="2" item-responsive :x-gap="12">
-              <n-form-item-gi
-                span="0:2 500:1"
-                :show-label="false"
-                label="Service Type"
-                path="service_number"
-              >
-                <n-select
-                  v-model:value="formValue.service_number as number"
-                  :options="serviceOptions as SelectOption[]"
-                  placeholder="Select Service Type..."
-                  :input-props="{
-                      id: 'service_type',
-                    }"
-                />
-              </n-form-item-gi>
+      <n-form-item-gi
+        :show-label="false"
+        :span="4"
+        label="Drop-off Location"
+        path="destination"
+      >
+        <InputPlacesAutocompleteDark
+          name="destination"
+          @change="handleChangeDestination"
+          placeholder="Enter Drop-off Location...."
+        />
+      </n-form-item-gi>
+    </n-grid>
+    <n-grid :cols="2" item-responsive :x-gap="12">
+      <n-form-item-gi
+        span="0:2 500:1"
+        :show-label="false"
+        label="Service Type"
+        path="service_number"
+      >
+        <n-select
+          v-model:value="formValue.service_number as number"
+          :options="serviceOptions as SelectOption[]"
+          placeholder="Select Service Type..."
+          :input-props="{
+            id: 'service_type',
+          }"
+        />
+      </n-form-item-gi>
 
-              <n-form-item-gi
-                span="0:2 500:1"
-                :show-label="false"
-                label="Vehicle Type"
-                path="vehicle_number"
-              >
-                <n-select
-                  v-model:value="formValue.vehicle_number"
-                  :options="vehicleOptions as SelectOption[]"
-                  placeholder="Select Vehicle Type..."
-                  :input-props="{
-                      id: 'vehicle_type',
-                    }"
-                />
-              </n-form-item-gi>
+      <n-form-item-gi
+        span="0:2 500:1"
+        :show-label="false"
+        label="Vehicle Type"
+        path="vehicle_number"
+      >
+        <n-select
+          v-model:value="formValue.vehicle_number"
+          :options="vehicleOptions as SelectOption[]"
+          placeholder="Select Vehicle Type..."
+          :input-props="{
+            id: 'vehicle_type',
+          }"
+        />
+      </n-form-item-gi>
 
-              
-
-              <n-form-item-gi
-                span="0:2 500:1"
-                :show-label="false"
-                label="Hours"
-                path="selected_hours"
-              >
-                <n-select
-                  v-model:value="formValue.selected_hours"
-                  :options="hoursOptions"
-                  placeholder="For Hourly Service..."
-                  :disabled="isDisabled"
-                  :input-props="{
-                      id: 'hours',
-                    }"
-                />
-              </n-form-item-gi>
-
-              
-            </n-grid>
-            <n-button
-              style="
-                width: 100%;
-                text-transform: uppercase;
-                background-color: #b91c1c;
-              "
-              :loading="loading"
-              @click="handleValidateButtonClick"
-              size="large"
-              color="#b91c1c"
-              >Get Prices & Availability</n-button
-            >
-          </n-form>
+      <n-form-item-gi
+        span="0:2 500:1"
+        :show-label="false"
+        label="Hours"
+        path="selected_hours"
+      >
+        <n-select
+          v-model:value="formValue.selected_hours"
+          :options="hoursOptions"
+          placeholder="For Hourly Service..."
+          :disabled="isDisabled"
+          :input-props="{
+            id: 'hours',
+          }"
+        />
+      </n-form-item-gi>
+    </n-grid>
+    <n-button
+      style="width: 100%; text-transform: uppercase; background-color: #b91c1c"
+      :loading="loading"
+      @click="handleValidateButtonClick"
+      size="large"
+      color="#b91c1c"
+      >Get Prices & Availability</n-button
+    >
+  </n-form>
 </template>
