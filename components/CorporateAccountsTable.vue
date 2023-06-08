@@ -2,7 +2,6 @@
 import { ref } from '#imports'
 import { NuxtLink } from '#components'
 import { NButton, useMessage } from 'naive-ui'
-import type { Customer } from '~/composables/fasttrak-api'
 import type { DataTableColumns } from 'naive-ui'
 
 const refTable = ref(null)

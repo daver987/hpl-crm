@@ -101,7 +101,7 @@ const averageCharge = computed(() => {
 <template>
   <n-spin :show="pending">
     <n-grid :cols="1">
-      <n-grid-item style="padding: 16px; padding-top: 0">
+      <n-grid-item style="padding: 0 16px 16px">
         <n-space justify-between>
           <n-date-picker
             v-model:value="range"

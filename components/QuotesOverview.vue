@@ -10,10 +10,11 @@ import {
   endOfWeek,
   getUnixTime,
 } from 'date-fns'
-import { ComputedRef, defineProps, Ref } from 'vue'
+import { ComputedRef, Ref } from 'vue'
 import {
   QuoteReturnedPickedSchema,
   ReturnedQuote,
+  ReturnedQuoteSchema,
 } from '~/schema/QuoteFormSchema'
 import { computed } from '#imports'
 
@@ -25,7 +26,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const pickedQuotes = computed(() => {
-  return QuoteReturnedPickedSchema.array().parse(props.quotes)
+  return props.quotes
 })
 
 const startOfWeekTimestamp = getUnixTime(startOfWeek(new Date()))
@@ -108,7 +109,7 @@ const averageQuote = computed(() => {
 <template>
   <n-spin :show="pending">
     <n-grid :cols="1">
-      <n-grid-item style="padding: 16px; padding-top: 0">
+      <n-grid-item style="padding: 0 16px 16px">
         <n-space justify-between>
           <n-date-picker
             v-model:value="range"
