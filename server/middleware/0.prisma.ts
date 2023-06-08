@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import useAccelerate from '@prisma/extension-accelerate'
+// import useAccelerate from '@prisma/extension-accelerate'
 
 let prisma: PrismaClient
 declare module 'h3' {
@@ -10,7 +10,7 @@ declare module 'h3' {
 
 export default eventHandler((event) => {
   if (!prisma) {
-    prisma = new PrismaClient().$extends(useAccelerate)
+    prisma = new PrismaClient()
   }
   event.context.prisma = prisma
 })
