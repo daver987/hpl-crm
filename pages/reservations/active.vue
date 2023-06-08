@@ -13,33 +13,45 @@ import {
 } from 'date-fns'
 import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
-import { ComputedRef, Ref } from 'vue'
-import type {
-  ReservationResponse,
-  Reservation,
-} from '~/composables/fasttrak-api/schemas/ReservationSchema'
+import type { ComputedRef, Ref } from 'vue'
+import { SingleReservation } from '~/composables/fasttrak-api/schemas/SingleReservation'
+import chalk from 'chalk'
 
 definePageMeta({
-  name: 'Active Reservations',
+  name: 'Fasttrak',
   layout: 'default',
   path: '/reservations/active',
 })
 
+type ReservationStatus =
+  | 'None'
+  | 'Quotation'
+  | 'Trip_Confirmed'
+  | 'Driver_Confirmed'
+  | 'En_route'
+  | 'On_Location'
+  | 'Dropped'
+  | 'No_Show'
+  | 'Cancelled'
+  | 'On_Board'
+  | 'Booked'
+  | 'Driver_Scheduled'
+
 const tableRef = ref(null)
 const message = useMessage()
 const dialog = useDialog()
-const reservations: Ref<ReservationResponse | null> = ref(null)
 
-const { data: reservationsData, pending } = await useFetch(
-  '/api/reservations-all',
-  {
-    method: 'GET',
-  }
-)
-
-reservations.value = reservationsData.value
-
-const rowKey = (row: Reservation) => row.reservationId
+const {
+  data: reservationsData,
+  pending,
+  error,
+} = await useFetch('/api/reservations-all', {
+  lazy: true,
+})
+const reservations = computed(() => {
+  return reservationsData.value as unknown as SingleReservation[]
+})
+const rowKey = (row: SingleReservation) => row.reservationId
 
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
 const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
@@ -68,8 +80,8 @@ const filteredReservations = computed(() => {
   if (!startDate.value || !endDate.value) {
     return []
   }
-  return reservations.value.items.filter((reservation: Reservation[]) => {
-    let reservationDate = parseISO(reservation.scheduledPickupTime)
+  return reservations.value.filter((reservation: SingleReservation) => {
+    let reservationDate = parseISO(<string>reservation.scheduledPickupTime)
     return (
       (isAfter(reservationDate, startDate.value!) ||
         isSameDay(reservationDate, startDate.value!)) &&
@@ -79,37 +91,40 @@ const filteredReservations = computed(() => {
   })
 })
 
-const handlePush = (evt: Reservation) => {
+async function handlePushReservation(evt: SingleReservation) {
   console.log('Push event', evt)
-  // const d = dialog.success({
-  //   title: 'Push to Zoho',
-  //   content: 'Are you sure you want to push to Zoho',
-  //   positiveText: 'Confirm',
-  //   onPositiveClick: async () => {
-  //     // d.loading = true
-  //     const response = pushToZoho(evt)
-  //     console.log(chalk.blue('[RETURNED_ZOHO]', response))
-  //     // message.info(`The Customer was successfully Deleted`)
-  //     // d.loading = false
-  //   },
-  // })
+  const d = dialog.success({
+    title: 'Push to Evertransit',
+    content: 'Are you sure you want to push to Evertransit',
+    positiveText: 'Confirm',
+    onPositiveClick: async () => {
+      d.loading = true
+      const response = pushToZoho(evt)
+      console.log(chalk.blue('[RETURNED_ZOHO]', response))
+      // message.info(`The Customer was successfully Deleted`)
+      // d.loading = false
+    },
+  })
 }
 
-const createColumns = (): DataTableColumns<Reservation> => [
+const pagination = {
+  pageSize: 13,
+}
+
+const createColumns = (): DataTableColumns<SingleReservation> => [
   {
     key: 'reservationId',
     title: 'Res Id',
-    width: 125,
-    fixed: 'left',
+    width: 100,
     sortOrder: false,
     sorter: 'default',
     render(row) {
       return h(
         'span',
         {
-          style: { color: '#F44336' },
+          style: { color: '#F44336', marginLeft: '10px' },
         },
-        `HPL-${row.reservationId}`
+        `${row.reservationId}`
       )
     },
   },
@@ -117,9 +132,7 @@ const createColumns = (): DataTableColumns<Reservation> => [
     key: 'date',
     title: 'Date & Time',
     render(row) {
-      return `${format(new Date(row.scheduledPickupTime), 'PP, p')} ${
-        row.estimatedHours
-      }`
+      return `${format(new Date(row.scheduledPickupTime), 'Pp')}`
     },
     ellipsis: {
       tooltip: true,
@@ -127,43 +140,12 @@ const createColumns = (): DataTableColumns<Reservation> => [
   },
   {
     key: 'full_name',
-    title: 'Name',
+    title: 'Passenger',
     render(row) {
       return `${row.customerSummary.firstName} ${row.customerSummary.lastName}`
     },
     ellipsis: {
       tooltip: true,
-    },
-  },
-  {
-    key: 'email',
-    title: 'Email',
-    render(row) {
-      return h(
-        'a',
-        {
-          href: `mailto:${row.customerSummary.emailAddress}`,
-          style: { color: '#93c5fd' },
-        },
-        row.customerSummary.emailAddress
-      )
-    },
-    ellipsis: {
-      tooltip: true,
-    },
-  },
-  {
-    key: 'phone_number',
-    title: 'Phone',
-    render(row) {
-      return h(
-        'a',
-        {
-          href: `tel:${row.customerSummary.cellPhoneNumber}`,
-          style: { color: '#93c5fd' },
-        },
-        { default: () => row.customerSummary.cellPhoneNumber }
-      )
     },
   },
   {
@@ -190,32 +172,57 @@ const createColumns = (): DataTableColumns<Reservation> => [
     key: 'status',
     title: 'Status',
     render(row) {
+      const statusTypeMap: { [key in ReservationStatus]: string } = {
+        None: 'default',
+        Quotation: 'primary',
+        Trip_Confirmed: 'primary',
+        Driver_Confirmed: 'success',
+        En_route: 'info',
+        On_Location: 'info',
+        Dropped: 'error',
+        No_Show: 'error',
+        Cancelled: 'error',
+        On_Board: 'info',
+        Booked: 'primary',
+        Driver_Scheduled: 'error',
+      }
+
+      const type =
+        statusTypeMap[row.reservationStatus as keyof typeof statusTypeMap] ||
+        'default'
+
+      const humanFriendlyStatus = row.reservationStatus.split('_').join(' ')
+
       return h(
         NTag,
         {
           style: {
             marginRight: '6px',
           },
-          type: row.reservationStatus ? 'success' : 'info',
+          type: type,
+          bordered: false,
+          round: true,
+          size: 'small',
         },
-        { default: () => row.reservationStatus }
+        { default: () => humanFriendlyStatus }
       )
     },
   },
+
   {
-    title: 'Delete',
-    key: 'delete',
-    render() {
+    title: 'To EVT',
+    key: 'everTransit',
+    render(row) {
       return h(
         NButton,
         {
-          type: 'error',
+          type: 'info',
           strong: true,
           tertiary: true,
           size: 'small',
-          onClick: () => message.info('Feature Under Construction'),
+          onClick: () => handlePushReservation(row),
         },
-        { default: () => 'Delete' }
+        { default: () => 'To EVT' }
       )
     },
   },
@@ -226,35 +233,30 @@ const columns = createColumns()
 
 <template>
   <n-layout-content>
-    <n-spin :show="pending">
-      <n-grid :cols="1">
-        <n-grid-item style="padding: 16px">
-          <n-space justify-between>
-            <n-date-picker
-              v-model:value="range"
-              type="daterange"
-              clearable
-              :default-value="range"
-              format="PP"
-            />
-          </n-space>
-        </n-grid-item>
-      </n-grid>
-      <n-card>
-        <pre>{{ reservations }}</pre>
-      </n-card>
-      <!--      <n-data-table-->
-      <!--        :max-height="685"-->
-      <!--        ref="tableRef"-->
-      <!--        remote-->
-      <!--        :data="filteredReservations"-->
-      <!--        :loading="pending"-->
-      <!--        :columns="columns"-->
-      <!--        :row-key="rowKey"-->
-      <!--        virtual-scroll-->
-      <!--        :scroll-x="1800"-->
-      <!--        size="small"-->
-      <!--      />-->
-    </n-spin>
+    <!--    <n-spin :show="pending">-->
+    <n-grid :cols="1">
+      <n-grid-item style="padding: 16px">
+        <n-space justify-between>
+          <n-date-picker
+            v-model:value="range"
+            type="daterange"
+            clearable
+            :default-value="range"
+            format="PP"
+          />
+        </n-space>
+      </n-grid-item>
+    </n-grid>
+    <n-data-table
+      :max-height="685"
+      ref="tableRef"
+      :data="filteredReservations"
+      :loading="pending"
+      :columns="columns"
+      :row-key="rowKey"
+      size="small"
+      :pagination="pagination"
+    />
+    <!--    </n-spin>-->
   </n-layout-content>
 </template>

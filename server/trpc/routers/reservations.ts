@@ -4,8 +4,11 @@ import {
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
-import { ReservationDetailSchema, CustomerSummarySchema } from '~/composables'
-import { ReservationResponse } from '~/composables'
+import {
+  ReservationSchema,
+  CustomerSummarySchema,
+} from '~/composables/fasttrak-api/schemas'
+import { ReservationResponse } from '~/composables/fasttrak-api/schemas/ReservationSchema'
 import { z } from 'zod'
 
 export const reservationsRouter = router({
@@ -13,7 +16,7 @@ export const reservationsRouter = router({
     .input(
       z
         .object({
-          reservationDetail: ReservationDetailSchema.optional(),
+          reservationDetail: ReservationSchema.optional(),
           customerSummary: CustomerSummarySchema.optional(),
         })
         .passthrough()

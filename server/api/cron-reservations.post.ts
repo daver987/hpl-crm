@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
       status: 200,
       message: 'Success: Data has been successfully updated.',
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error: ${error.message}`)
     return {
       status: 500,

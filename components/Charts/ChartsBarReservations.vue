@@ -3,7 +3,6 @@ import { ref, computed } from '#imports'
 import { useEcharts } from '~/composables/useEcharts'
 import type { ECOption } from '~/composables/useEcharts'
 import { format, parseISO } from 'date-fns'
-import { defineProps } from 'vue'
 import {
   ReservationDateAndTotalSchema,
   Reservation,
