@@ -71,7 +71,6 @@ export function usePricingEngine(
   const taxesList = ref(salesTaxes)
   const lineItemsList = ref(lineItems)
 
-  // methods
   async function updateDistance() {
     const { data: route, distance: dist } = await calculateDistance(
       origin.value,

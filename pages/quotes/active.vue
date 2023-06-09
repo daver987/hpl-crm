@@ -9,6 +9,3 @@ definePageMeta({
 <template>
   <QuoteTableTwo />
 </template>
-
-<style scoped>
-</style>

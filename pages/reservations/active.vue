@@ -14,7 +14,7 @@ import {
 import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import type { ComputedRef, Ref } from 'vue'
-import { SingleReservation } from '~/composables/fasttrak-api/schemas/SingleReservation'
+import { SingleReservation } from '~/composables'
 import chalk from 'chalk'
 
 definePageMeta({
@@ -45,9 +45,7 @@ const {
   data: reservationsData,
   pending,
   error,
-} = await useFetch('/api/reservations-all', {
-  lazy: true,
-})
+} = await useFetch('/api/reservations-all')
 const reservations = computed(() => {
   return reservationsData.value as unknown as SingleReservation[]
 })

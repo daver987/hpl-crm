@@ -1,11 +1,9 @@
 export function parseAddress(formattedAddress: string) {
 	const parts = formattedAddress.split(', ')
-
 	const country = parts.pop()
 	let city, region, postalCode
-
 	const regionPostalCodeString = parts.pop()
-	const regionPostalCode = regionPostalCodeString.match(
+	const regionPostalCode = regionPostalCodeString!.match(
 		/([a-zA-Z]+)(\s+\w+\s*\w*)?/
 	)
 

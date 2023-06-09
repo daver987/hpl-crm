@@ -16,11 +16,13 @@ import { ComputedRef, Ref } from 'vue'
 const { data: response, pending } = await useFetch('/api/reservations', {
   query: { howMany: '[ALL]' },
 })
+
 const pickedReservations = computed(() => {
   return ReservationDateAndTotalSchema.array().parse(
     response.value?.reservations
   )
 })
+
 const startOfMonthTimestamp = getUnixTime(startOfMonth(new Date()))
 const endOfMonthTimestamp = getUnixTime(endOfMonth(new Date()))
 const range: Ref<[number, number]> = ref([

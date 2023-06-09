@@ -5,13 +5,11 @@ import { NButton, useMessage } from 'naive-ui'
 import type {
   EmployeeReservationResponse,
   EmployeeReservation,
+  EmployeePay,
+  EmployeePayResponse,
 } from '~/composables'
 import { Ref } from 'vue'
 import { h } from '#imports'
-import {
-  EmployeePay,
-  EmployeePayResponse,
-} from '~/composables/fasttrak-api/schemas/EmployeePay'
 
 interface Props {
   employeeId: number
@@ -19,17 +17,11 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const driverPay: Ref<EmployeePay | null> = ref(null)
 const refTable = ref(null)
 const message = useMessage()
 const driverReservations: Ref<EmployeeReservationResponse | null> = ref(null)
 
-const {
-  data,
-  pending: isLoading,
-  error,
-  refresh,
-} = await useFetch('/api/reservation-search', {
+const { data, pending: isLoading } = await useFetch('/api/reservation-search', {
   method: 'POST',
   body: {
     employeeId: props.employeeId,
@@ -37,17 +29,14 @@ const {
 })
 driverReservations.value = data.value as unknown as EmployeeReservationResponse
 
-const getPayout = async (resId: number): EmployeePayResponse => {
-  const { data, pending, error, refresh } = await useFetch(
-    '/api/employee-pay',
-    {
-      method: 'POST',
-      body: {
-        employeeId: resId,
-      },
-    }
-  )
-  driverPay.value = data.value
+const getPayout = async (resId: number) => {
+  const { data } = await useFetch('/api/employee-pay', {
+    method: 'POST',
+    body: {
+      employeeId: resId,
+    },
+  })
+  return data.value
 }
 
 const rowKey = (row: EmployeeReservation) => row.reservationId
@@ -105,7 +94,7 @@ const createColumns = (): DataTableColumns<EmployeeReservation> => [
           size: 'small',
           onClick: async () => {
             const payoutData = await getPayout(row.reservationId)
-            payout.value = payoutData.item.total
+            payout.value = payoutData?.items.total
           },
         },
         { default: () => 'Payout' }
