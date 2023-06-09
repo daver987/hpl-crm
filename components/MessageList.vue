@@ -1,12 +1,23 @@
 <script setup lang="ts">
-const props = defineProps({
-  messages: {
-    type: Array,
-    required: true,
-  },
-})
-const formatMessageData = (messageData: any) => {
+interface Message {
+  first_name: string
+  last_name: string
+  phone_number: string
+  email: string
+  message: string
+  is_read: boolean
+  id: string
+}
+
+interface Props {
+  messages: Message[]
+}
+
+const props = defineProps<Props>()
+
+const formatMessageData = (messageData: Messages) => {
   return {
+    id: messageData.user.id,
     first_name: messageData.user.first_name,
     last_name: messageData.user.last_name,
     phone_number: messageData.user.phone_number,

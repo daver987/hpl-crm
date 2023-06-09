@@ -36,7 +36,6 @@ export async function getOrCreateStripCustomerId({
     return user.stripe_customer_id
   }
 
-  // create a new customer
   const customer = await stripe.customers.create({
     email: user.email_address ?? undefined,
     name: user.full_name ?? undefined,
@@ -46,7 +45,6 @@ export async function getOrCreateStripCustomerId({
     },
   })
 
-  // update with new customer id
   const updatedUser: User = await prisma.user.update({
     where: {
       id: userId,

@@ -561,13 +561,23 @@ export const ReservationSchema = z.object({
   tripType: z
     .enum([
       'Point to Point',
+      'Point to point',
+      'Point To Point',
       'To Airport',
       'From Airport',
       'Livery',
       'Hourly As Directed',
     ])
     .default('Point to Point')
-    .transform((val) => (val === 'Hourly As Directed' ? 'Livery' : val)),
+    .transform((val) => {
+      if (val === 'Hourly As Directed') {
+        return 'Livery'
+      } else if (val === 'Point To Point') {
+        return 'Point to point'
+      } else {
+        return val
+      }
+    }),
   orderedBy: z.string().nullable(),
   orderedByPhone: z.string().optional().nullable(),
   confirmedBy: z.string().nullable(),

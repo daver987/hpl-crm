@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     ],
   ],
 
+  nuxtIcon: {
+    size: '32px',
+    class: 'icon',
+  },
+
   build: {
     transpile:
       process.env.NODE_ENV === 'production'
@@ -31,9 +36,6 @@ export default defineNuxtConfig({
             'trpc-nuxt',
             'echarts',
           ],
-  },
-  chatgpt: {
-    apiKey: process.env.OPENAI_API_KEY,
   },
   typescript: {
     strict: true,
