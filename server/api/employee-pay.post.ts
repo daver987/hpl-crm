@@ -4,6 +4,7 @@ import {
   FasttrakRequestOptions,
 } from '~/services/fasttrakRequest'
 import type { EmployeePayResponse } from '~/composables'
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { employeeId } = body

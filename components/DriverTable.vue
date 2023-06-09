@@ -13,14 +13,8 @@ const { data: driverData, isLoading: isLoading } = useQuery({
 })
 
 const drivers = computed(() => driverData.value?.items)
-console.log('Drivers:', drivers.value)
 
 const rowKey = (row: Driver) => row.userId
-
-const pagination = {
-  rowsPerPage: 12,
-  sortBy: 'quote_number',
-}
 
 const createColumns = (): DataTableColumns<Driver> => [
   {

@@ -2,33 +2,29 @@
 import { watch, ref, computed } from '#imports'
 import { useClipboard } from '@vueuse/core'
 
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
-  content: {
-    type: String,
-    default: '',
-  },
-})
+interface Props {
+  modelValue: boolean
+  content: string
+  title: string
+}
+
+const props = defineProps<Props>()
 
 const formattedContent = computed(() => props.content.replace(/\n/g, '<br>'))
-
 const clipboardContent = computed(() =>
   formattedContent.value.replace(/<br>/g, '\n')
 )
-
 const { copy, copied } = useClipboard()
 const visible = ref(props.modelValue)
-
+const copyToClipboard = () => {
+  copy(clipboardContent.value)
+}
 watch(
   () => props.modelValue,
   (newVal) => {
     visible.value = newVal
   }
 )
-
 const emit = defineEmits(['update:modelValue'])
 
 watch(visible, (newVal, oldVal) => {
@@ -36,17 +32,13 @@ watch(visible, (newVal, oldVal) => {
     emit('update:modelValue', newVal)
   }
 })
-
-const copyToClipboard = () => {
-  copy(clipboardContent.value)
-}
 </script>
 
 <template>
   <n-modal v-model:show="visible">
     <n-card
       style="width: 600px"
-      title="Quote Reply Generator"
+      :title="title"
       :bordered="false"
       size="huge"
       role="dialog"

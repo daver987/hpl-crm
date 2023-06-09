@@ -196,21 +196,21 @@ export type CompanySummary = {
 export type CustomerSummary = {
   doBillCorporate: boolean
   doUseCorporatePricingOverrides: boolean
-  profileNotes: string
-  invoiceMessage: string
+  profileNotes?: string
+  invoiceMessage?: string
   invoiceCreateHandlingType: string
-  corporateProfileId: number
-  deliveryMethod: string
-  deliveryFrequency: string
+  corporateProfileId?: number
+  deliveryMethod?: string
+  deliveryFrequency?: string
   customerId: number
   companyId: number
   firstName: string
   lastName: string
-  middleName: string
+  middleName?: string
   emailAddress: string
-  phoneNumber1: string
-  cellPhoneNumber: string
-  accountNumber: string
+  phoneNumber1?: string
+  cellPhoneNumber?: string
+  accountNumber?: string
   doRequireReferencePo: boolean
 }
 
@@ -275,7 +275,7 @@ export type Reservation = {
   reservationStatus: ReservationStatusEnum
   travelType: TravelTypeEnum
   reservationPhoneNumber: string
-  referencePO: string
+  referencePO?: string
   costCode: string
   bookingSource: BookingSourceEnum
   bookingCategory: BookingCategoryEnum
@@ -814,7 +814,7 @@ export type EmployeePayResponse = {
   includesOperationalMessage: boolean
 }
 
-export type ReservationsResponse = {
+export type ReservationResponse = {
   items: Reservation[]
   status: string
   message: string

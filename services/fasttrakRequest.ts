@@ -54,7 +54,6 @@ export async function fasttrakRequest(
         } at ${new Date().toISOString()}`
       )
     )
-    // console.log(`${options.method} data`, data)
     return data
   } catch (error) {
     console.error(
