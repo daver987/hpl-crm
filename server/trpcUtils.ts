@@ -1,9 +1,8 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import type { QuoteFormReturn } from '~/schema/QuoteFormSchema'
 
 export async function updateShortLink(
   prisma: PrismaClient,
-  quote: QuoteFormReturn,
+  quote: any,
   shortLink: string
 ) {
   try {
@@ -85,8 +84,8 @@ export const createQuoteFromForm = (quotes: {
     trips: {
       create: [
         {
-          pickup_date: quotes.pickup_date,
-          pickup_time: quotes.pickup_time,
+          pickup_date: quotes.pickup_date.toString(),
+          pickup_time: quotes.pickup_time.toString(),
           distance_text: quotes.distance_text,
           duration_text: quotes.duration_text,
           duration_value: quotes.duration_value,
@@ -158,7 +157,7 @@ export const createQuoteFromForm = (quotes: {
     },
     sales_tax: {
       connect: {
-        id: quotes.salesTaxId,
+        id: quotes.salesTaxId.toString(),
       },
     },
     vehicle: {
@@ -184,6 +183,7 @@ const TripsInclude = Prisma.validator<Prisma.QuoteInclude>()({
   trips: {
     include: {
       locations: true,
+      flight: true,
     },
   },
   vehicle: true,

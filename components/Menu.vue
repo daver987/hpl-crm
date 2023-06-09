@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Component } from 'vue'
-import { MenuOption, NIcon } from 'naive-ui'
+import type { MenuOption } from 'naive-ui'
+import { NIcon } from 'naive-ui'
 import { NuxtLink, Icon } from '#components'
 
 const SettingsIcon = h(Icon, { name: 'ic:outline-settings' })
@@ -31,18 +32,6 @@ interface NavigationItem {
   label: any
   key: number
   icon?: any
-}
-const createMenuLabel = (labelText: string, route: string) => {
-  return () =>
-    h(
-      NuxtLink,
-      {
-        to: route,
-      },
-      {
-        default: () => labelText,
-      }
-    )
 }
 
 function renderIcon(icon: Component) {
@@ -94,8 +83,8 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(ContactsIcon),
     children: [
       renderNav('/contacts', 'Overview', null, '2'),
-      renderNav('/accounts/fasttrak', 'Fasttrak', null, '2.1'),
-      renderNav('/accounts/stripe', 'Stripe', null, '2.2'),
+      renderNav('/contacts/fasttrak', 'Fasttrak', null, '2.1'),
+      renderNav('/contacts/stripe', 'Stripe', null, '2.2'),
     ],
   },
   {

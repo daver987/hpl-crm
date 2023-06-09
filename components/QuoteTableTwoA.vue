@@ -1,4 +1,13 @@
 <script lang="ts" setup>
+import type { Ref } from 'vue'
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
+import type {
+  ReservationDetail,
+  ReservationResponse,
+  CustomerSummary,
+} from '~/composables'
+import { combineDateAndTime } from '~/composables'
+import { NButton, NP, NTag, useDialog } from 'naive-ui'
 import {
   checkForCustomer,
   computed,
@@ -8,14 +17,8 @@ import {
   preparePromptData,
   ref,
 } from '#imports'
-import { combineDateAndTime } from '~/composables/fasttrak-api/utils/combineDateAndTime'
 import { formatDistanceToNow } from 'date-fns'
 import { z } from 'zod'
-import { NButton, NP, NTag, useDialog } from 'naive-ui'
-import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
-import type { Ref } from 'vue'
-import type { QuoteRow } from '~/schema/QuoteRowSchema'
-
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -37,7 +40,7 @@ const searchInput = ref('')
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const isDeleting = ref(true)
 const isBooking = ref(true)
-const filterSearch = () => { }
+const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
 const showModal = ref(false)
@@ -61,7 +64,6 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
 }
 
 async function handlePrompt(row: RowData) {
-  //@ts-ignore
   const promptData = preparePromptData(row)
   const prompt = constructPrompt(promptData)
 
@@ -102,28 +104,6 @@ async function handlePrompt(row: RowData) {
 }
 
 const createColumns = (): DataTableColumns<RowData> => [
-  // {
-  //   type: 'selection',
-  // },
-  {
-    key: 'info',
-    title: 'Info',
-    render(row) {
-      return h(
-        NButton,
-        {
-          size: 'small',
-          textColor: '#fff',
-          type: 'primary',
-          //@ts-ignore
-          onClick: () => QuoteRowDetails(row),
-        },
-        { default: () => 'Info' }
-      )
-    },
-
-    width: 100,
-  },
   {
     key: 'created_at',
     title: 'Submitted',
@@ -307,7 +287,6 @@ const createColumns = (): DataTableColumns<RowData> => [
           size: 'small',
           color: 'green',
           textColor: '#fff',
-          //@ts-ignore
           onClick: () => handleConfirmBook(row),
           strong: true,
         },
@@ -412,7 +391,7 @@ function handleConfirmDelete(event: DeleteEvent) {
   })
 }
 
-function handleConfirmBook(event: QuoteRow) {
+function handleConfirmBook(event: RowData) {
   console.log('Booking event:', event)
   const d = dialog.warning({
     title: 'Confirm Booking',
@@ -425,8 +404,7 @@ function handleConfirmBook(event: QuoteRow) {
         await handleBook(event)
         d.loading = isBooking.value
       } catch (error) {
-        message.error(`Failed to book order  ${JSON.stringify(error)}`)
-        console.error(error)
+        message.error('Failed to book order')
       }
     },
     onNegativeClick: () => {
@@ -435,8 +413,8 @@ function handleConfirmBook(event: QuoteRow) {
   })
 }
 
-async function handleBook(event: QuoteRow) {
-  const customerSummary = ref({})
+async function handleBook(event: RowData) {
+  const customerSummary: Ref<CustomerSummary | null> = ref(null)
   const vehicleId: Ref<number> = ref(1)
   const user = event.user
   const vehicle = event.vehicle
@@ -445,13 +423,12 @@ async function handleBook(event: QuoteRow) {
   const fromLocation = trips[0].locations[0]
   const toLocation = trips[0].locations[1]
   const trip = trips[0]
-  const lineItemsList = trips[0].price?.line_items_list
+  const lineItemsList = trip.price?.line_items_list as LineItemsList[]
   const travelType = getTravelType(service.label)
   const travelCategory = getTripCategory(service.label)
   const toAddressParsed = parseAddress(toLocation.formatted_address)
   const fromAddressParsed = parseAddress(fromLocation.formatted_address)
   const customerId = await checkForCustomer(event.user.email_address)
-
 
   if (
     vehicle.fasttrak_id !== null &&
@@ -465,23 +442,13 @@ async function handleBook(event: QuoteRow) {
   const TripTypeSchema = z
     .enum([
       'Point to Point',
-      'Point To Point',
-      'Point to point',
       'To Airport',
       'From Airport',
       'Livery',
       'Hourly As Directed',
     ])
     .default('Point to Point')
-    .transform((val) => {
-      if (val === 'Hourly As Directed') {
-        return 'Livery'
-      } else if (val === 'Point To Point') {
-        return 'Point to point'
-      } else {
-        return val
-      }
-    })
+    .transform((val) => (val === 'Hourly As Directed' ? 'Livery' : val))
 
   if (customerId === null) {
     customerSummary.value = {
@@ -620,7 +587,7 @@ async function handleBook(event: QuoteRow) {
     }
   })
 
-  const reservationDetails = reactive({
+  const reservationDetails: ReservationDetail = reactive({
     vehicleId: 0,
     employeeId: 0,
     greeterId: 0,
@@ -650,32 +617,15 @@ async function handleBook(event: QuoteRow) {
       latitude: fromLocation.lat,
       longitude: fromLocation.lng,
       address: {
-        street1: fromAddressParsed.street1,
-        street2: fromAddressParsed.street2,
-        city: fromAddressParsed.city,
-        region: fromAddressParsed.region,
-        postalCode: fromAddressParsed.postalCode,
-        country: fromAddressParsed.country,
+        street1: toAddressParsed.street1,
+        street2: toAddressParsed.street2,
+        city: toAddressParsed.city,
+        region: toAddressParsed.region,
+        postalCode: toAddressParsed.postalCode,
+        country: toAddressParsed.country,
         displayAddress: fromLocation.full_name,
         geoLookupAddress: '',
         cityRegionPostalCode: '',
-      },
-      airportAirlineFlightInfo: {
-        airportId: 563,
-        airportCode: 'YYZ',
-        airportName: 'Toronto Pearson International Airport',
-        airlineId: 4,
-        airlineCode: 'AC',
-        airlineName: 'Air Canada',
-        flightNumber: '1123',
-        scheduledDateTime: combineDateAndTime(
-          trip.pickup_date!,
-          trip.pickup_time!
-        ),
-        actualDateTime: null,
-        flightStatus: '',
-        flightStatusAdditional: '',
-        flightStatusType: 'None',
       },
       displayAddress: fromLocation.full_name,
     },
@@ -683,12 +633,12 @@ async function handleBook(event: QuoteRow) {
       latitude: toLocation.lat,
       longitude: toLocation.lng,
       address: {
-        street1: toAddressParsed.street1,
-        street2: toAddressParsed.street2,
-        city: toAddressParsed.city,
-        region: toAddressParsed.region,
-        postalCode: toAddressParsed.postalCode,
-        country: toAddressParsed.country,
+        street1: fromAddressParsed.street1,
+        street2: fromAddressParsed.street2,
+        city: fromAddressParsed.city,
+        region: fromAddressParsed.region,
+        postalCode: fromAddressParsed.postalCode,
+        country: fromAddressParsed.country,
         displayAddress: toLocation.full_name as string,
         geoLookupAddress: '',
         cityRegionPostalCode: '',
@@ -696,8 +646,7 @@ async function handleBook(event: QuoteRow) {
       displayAddress: toLocation.full_name as string,
     },
     passengerCount: event.selected_passengers,
-    luggageCount:
-      (trips[0].large_luggage || 0) + (trips[0].carry_on_luggage || 0),
+    luggageCount: trips[0].large_luggage!,
     reservationOrigin: 'FASTTRAK',
     primaryPassenger: {
       name: user.full_name,
@@ -739,77 +688,19 @@ async function handleBook(event: QuoteRow) {
     pricingInformation: buildPricing.value,
   })
 
-  try {
-    const { data: bookingResult, pending } = await useFetch(
-      '/api/reservation',
-      {
-        method: 'POST',
-        body: {
-          reservationDetail: reservationDetails,
-          customerSummary: customerSummary.value,
-        },
-      }
-    )
-
-    console.log('Booked Result', bookingResult.value)
-
-    if (bookingResult.value?.status === 'SUCCESS') {
-      message.success(
-        `Quote booked successfully ${JSON.stringify(bookingResult.value)}`
-      )
-    } else {
-      message.error(
-        `Oops Something Went Wrong, Please Reload the page and try again ${JSON.stringify(
-          bookingResult.value
-        )}`
-      )
-    }
-  } catch (error) {
+  const bookingResult: ReservationResponse =
+    await useTrpc().reservations.add.mutate({
+      reservationDetail: reservationDetails,
+      customerSummary: customerSummary?.value!,
+    })
+  console.log('Booked Result', bookingResult)
+  if (bookingResult.status === 'SUCCESS') {
+    message.success('Quote booked successfully')
+  } else {
     message.error(
-      `Oops Something Went Wrong, Please Reload the page and try again ${JSON.stringify(
-        error
-      )}`
+      'Oops Something Went Wrong, Please Reload the page and try again'
     )
-    console.error('Fetch failed', error)
-    message.error('Fetch failed, please check the console for more details.')
   }
-}
-
-const showQuote = ref(false)
-const firstName = ref('')
-const lastName = ref('')
-const quoteNumber = ref('')
-const origin = ref('')
-const destination = ref('')
-const flight = ref('')
-const price = ref('')
-const isBooked = ref(false)
-const pickupDateTime = ref('')
-const travelTime = ref('')
-const travelDistance = ref('')
-const tripNotes = ref('')
-const vehicleLabel = ref('')
-const serviceLabel = ref('')
-
-function QuoteRowDetails(row: QuoteRow) {
-  console.log('Show Quote event:', row)
-  showQuote.value = true
-  firstName.value = row.user.first_name
-  lastName.value = row.user.last_name
-  quoteNumber.value = row.quote_number.toString()
-  origin.value = row.trips[0].locations[0].full_name
-  destination.value = row.trips[0].locations[1].full_name
-  flight.value = row.trips[0]?.flights?.flight_number
-    ? row.trips[0].flights.flight_number
-    : 'N / A'
-  price.value = row.quote_total.toString()
-  isBooked.value = row.is_booked
-  pickupDateTime.value = `${row.trips[0].pickup_date}, ${row.trips[0].pickup_time}`
-  travelTime.value = row.trips[0].duration_text
-  travelDistance.value = row.trips[0].distance_text
-  tripNotes.value = row.trips[0].notes!
-  vehicleLabel.value = row.vehicle.label
-  serviceLabel.value = row.service.label
 }
 </script>
 
@@ -842,21 +733,4 @@ function QuoteRowDetails(row: QuoteRow) {
     size="small"
   />
   <QuoteModal v-model="showModal" :content="quoteModalContent" />
-  <QuoteDrawer
-    v-model:show="showQuote"
-    :title="`HPL-${quoteNumber}`"
-    :firstName="firstName"
-    :lastName="lastName"
-    :quoteNumber="quoteNumber"
-    :origin="origin"
-    :destination="destination"
-    :flight="flight"
-    :price="price"
-    :is_booked="isBooked"
-    :pickupDateTime="pickupDateTime"
-    :travelTime="travelTime"
-    :travelDistance="travelDistance"
-    :serviceLabel="serviceLabel"
-    :vehicleLabel="vehicleLabel"
-  />
 </template>

@@ -1,6 +1,7 @@
 export * from './AgingReportSchema'
 export * from './AuthResponseSchema'
 export * from './CustomerSchema'
+export * from './CustomerSearchSchema'
 export * from './DriverSchema'
 export * from './EmployeePaySchema'
 export * from './EmployeeSchema'

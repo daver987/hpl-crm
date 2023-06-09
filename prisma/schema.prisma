@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fieldReference", "jsonProtocol","clientExtensions"]
+  previewFeatures = ["fieldReference", "jsonProtocol", "clientExtensions"]
 }
 
 datasource db {
@@ -201,13 +201,14 @@ model Trip {
   quote               Quote       @relation(fields: [quote_number], references: [quote_number], onDelete: Cascade)
   payment             Payment?
   locations           Location[]
-  flight              Flight?
+  flights             Flight[]
   Driver              Driver?     @relation(fields: [driverId], references: [id])
   driverId            String?
   DriverPay           DriverPay[]
 
   @@index([quote_number])
   @@index([price_id])
+  @@index([driverId])
 }
 
 model Location {
@@ -277,18 +278,17 @@ model Flight {
   is_arrived            Boolean  @default(false)
   departure_time_actual String?
   arrival_time_actual   String?
-  trip_id               String?  @unique
+  trip_id               String
   airline_id            Int?
   airport_id            Int?
   departure_time        String?
   arrival_time          String?
-  trip                  Trip?    @relation(fields: [trip_id], references: [id], onDelete: Cascade)
-  airline               Airline? @relation(fields: [airline_id], references: [id], onDelete: Cascade)
-  airport               Airport? @relation(fields: [airport_id], references: [id], onDelete: Cascade)
+  trip                  Trip     @relation(fields: [trip_id], references: [id], onDelete: Cascade)
 
-  @@index([airline_id])
-  @@index([airport_id])
+  @@index([trip_id])
 }
+
+
 
 model Service {
   id               String   @id @unique @default(uuid())
@@ -356,30 +356,6 @@ model LineItemToQuote {
   @@unique([A, B], map: "_LineItemToQuote_AB_unique")
   @@index([B], map: "_LineItemToQuote_B_index")
   @@map("_LineItemToQuote")
-}
-
-model Airline {
-  id       Int      @id @unique @default(autoincrement())
-  name     String?
-  iata     String?
-  icao     String?
-  callsign String?
-  country  String?
-  flight   Flight[]
-}
-
-model Airport {
-  id       Int      @id @unique @default(autoincrement())
-  name     String
-  city     String?
-  country  String?
-  lat      Float
-  lng      Float
-  timezone String
-  type     String
-  iata     String?
-  icao     String?
-  flight   Flight[]
 }
 
 model Fasttrak {
