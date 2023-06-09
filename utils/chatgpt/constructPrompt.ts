@@ -100,7 +100,6 @@ export function constructPrompt(data: PromptData) {
   let prompt = `Hello ChatGPT! Let's help a customer named ${first_name}. They recently received a quote, quote number HPL-${quote_number}, for a ${service_label} service using a ${vehicle_label} on ${pickup_date} at ${pickup_time}. The trip from ${pickup_location} to ${destination} is expected to take ${duration_text}. The quote includes the following cost breakdown: ${line_items_str}, making the total cost $${quote_total.toFixed(
     2
   )}. 
-
   Can you help us write an engaging and friendly follow-up email? Let's make sure they feel valued and appreciated. Also, let's encourage them to ask any questions they might have about the service or the quote. The email is from the High Park Livery Team info@highparklivery.com and the phone number is 647-360-9631 We also don't need the email too long Thanks!`
 
   return prompt

@@ -3,8 +3,8 @@ import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
 import type {
   PricingPlan,
   ReservationResponse,
-  CustomerResponse,
-} from '~/composables'
+  CustomerArray,
+} from '~/composables/fasttrak-api/schemas'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
 import chalk from 'chalk'
@@ -26,9 +26,7 @@ export const fasttrakRouter = router({
       queryParams: queryParams,
     }
 
-    const customers: CustomerResponse[] = ([] = await fasttrakRequest(
-      requestOptions
-    ))
+    const customers: CustomerArray = await fasttrakRequest(requestOptions)
     return customers
   }),
 
@@ -71,7 +69,7 @@ export const fasttrakRouter = router({
       const fasttrakData: ReservationResponse = await fasttrakRequest(
         requestOptions
       )
-      // await useStorage().setItem('redis:reservations', fasttrakData)
+      await useStorage().setItem('fasttrak:reservations', fasttrakData)
       console.log(chalk.blue('[RESERVATIONS_NEW]'))
       return fasttrakData
     } else {

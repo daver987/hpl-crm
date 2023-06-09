@@ -125,7 +125,14 @@ const averageQuote = computed(() => {
     <n-grid :cols="4" :x-gap="12">
       <n-gi>
         <n-card>
-          <n-statistic label="Today's Quotes" :value="todayItemCount" />
+          <n-statistic tabular-nums label="Today's Quotes">
+            <n-number-animation
+              ref="numberAnimationInstRef"
+              :from="0"
+              :to="todayItemCount"
+              :active="false"
+            />
+          </n-statistic>
         </n-card>
       </n-gi>
       <n-gi>

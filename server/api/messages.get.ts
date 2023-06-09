@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-
 export default defineEventHandler(async (event) => {
   const prisma = event.context.prisma
   const messages = await prisma.message.findMany({
@@ -7,6 +6,6 @@ export default defineEventHandler(async (event) => {
       user: true,
     },
   })
-  console.log(chalk.blue('[MESSAGES]', messages))
+  console.log(chalk.green('[MESSAGES]'), messages)
   return messages
 })

@@ -6,6 +6,6 @@ definePageMeta({
 
 <template>
   <n-layout-content style="padding: 24px">
-    <n-calendar></n-calendar>
+    <n-calendar>test</n-calendar>
   </n-layout-content>
 </template>

@@ -15,16 +15,6 @@ export const CustomerSummarySchema = z
   })
   .optional()
 
-export const CustomerSearchSchema = z.object({
-  lastName: z.string().optional(),
-  firstName: z.string().optional(),
-  emailAddress: z.string(),
-  corporateProfileId: z.number().optional(),
-  includeInactive: z.boolean().default(false).optional(),
-})
-
-export type CustomerSearch = z.infer<typeof CustomerSearchSchema>
-
 export const CustomerResponseSchema = z.object({
   items: z.array(
     z.object({
