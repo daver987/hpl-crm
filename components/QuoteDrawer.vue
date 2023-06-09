@@ -14,6 +14,11 @@ interface Props {
   price: string
   isBooked: boolean
   pickupDateTime: string
+  travelTime: string
+  travelDistance: string
+  tripNotes: string
+  vehicleLabel: string
+  serviceLabel: string
 }
 
 const props = defineProps<Props>()
@@ -51,9 +56,9 @@ watch(visible, (newVal, oldVal) => {
       role="dialog"
       aria-modal="true"
       :segmented="{
-        content: true,
-        footer: 'soft',
-      }"
+          content: true,
+          footer: 'soft',
+        }"
     >
       <template #header-extra>
         <n-button @click="copyToClipboard" text
@@ -64,10 +69,22 @@ watch(visible, (newVal, oldVal) => {
       <p><strong>Pickup Date: </strong>{{ pickupDateTime }}</p>
       <p><strong>Pickup Location: </strong>{{ origin }}</p>
       <p><strong>Drop Off Location: </strong>{{ destination }}</p>
-      <p><strong>Price: </strong>$ {{ price }}</p>
+      <p><strong>Vehicle Type: </strong>{{ vehicleLabel }}</p>
+      <p><strong>Service Type: </strong>{{ serviceLabel }}</p>
+      <p><strong>Trip Time:</strong> {{ travelTime }}</p>
+      <p> <strong>Trip Distance:</strong> {{ travelDistance }}</p>
       <p><strong>Flight: </strong>{{ flight }}</p>
+      <p><strong>Price: </strong>$ {{ price }}</p>
 
-      <template #footer></template>
+      <template #footer>
+        Trip Notes: {{ tripNotes }}
+      </template>
+      <template #action>
+        <n-space justify="space-between">
+          <n-button type="primary">Edit</n-button>
+          <n-button typeof="info">Book</n-button>
+        </n-space>
+      </template>
     </n-card>
   </n-modal>
 </template>
