@@ -15,7 +15,7 @@ import { NButton, NP, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Ref } from 'vue'
 import type { QuoteRow } from '~/schema/QuoteRowSchema'
-import { Reservation } from '~/composables/fasttrak-api/types'
+
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -37,7 +37,7 @@ const searchInput = ref('')
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const isDeleting = ref(true)
 const isBooking = ref(true)
-const filterSearch = () => {}
+const filterSearch = () => { }
 const dialog = useDialog()
 const message = useMessage()
 const showModal = ref(false)
@@ -61,6 +61,7 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
 }
 
 async function handlePrompt(row: RowData) {
+  //@ts-ignore
   const promptData = preparePromptData(row)
   const prompt = constructPrompt(promptData)
 
@@ -101,9 +102,9 @@ async function handlePrompt(row: RowData) {
 }
 
 const createColumns = (): DataTableColumns<RowData> => [
-  {
-    type: 'selection',
-  },
+  // {
+  //   type: 'selection',
+  // },
   {
     key: 'info',
     title: 'Info',
@@ -114,6 +115,7 @@ const createColumns = (): DataTableColumns<RowData> => [
           size: 'small',
           textColor: '#fff',
           type: 'primary',
+          //@ts-ignore
           onClick: () => QuoteRowDetails(row),
         },
         { default: () => 'Info' }
@@ -305,6 +307,7 @@ const createColumns = (): DataTableColumns<RowData> => [
           size: 'small',
           color: 'green',
           textColor: '#fff',
+          //@ts-ignore
           onClick: () => handleConfirmBook(row),
           strong: true,
         },
@@ -448,6 +451,7 @@ async function handleBook(event: QuoteRow) {
   const toAddressParsed = parseAddress(toLocation.formatted_address)
   const fromAddressParsed = parseAddress(fromLocation.formatted_address)
   const customerId = await checkForCustomer(event.user.email_address)
+
 
   if (
     vehicle.fasttrak_id !== null &&
@@ -616,7 +620,7 @@ async function handleBook(event: QuoteRow) {
     }
   })
 
-  const reservationDetails: Reservation = reactive({
+  const reservationDetails = reactive({
     vehicleId: 0,
     employeeId: 0,
     greeterId: 0,
@@ -781,6 +785,11 @@ const flight = ref('')
 const price = ref('')
 const isBooked = ref(false)
 const pickupDateTime = ref('')
+const travelTime = ref('')
+const travelDistance = ref('')
+const tripNotes = ref('')
+const vehicleLabel = ref('')
+const serviceLabel = ref('')
 
 function QuoteRowDetails(row: QuoteRow) {
   console.log('Show Quote event:', row)
@@ -795,8 +804,12 @@ function QuoteRowDetails(row: QuoteRow) {
     : 'N / A'
   price.value = row.quote_total.toString()
   isBooked.value = row.is_booked
-  message.info(row.quote_number.toString())
   pickupDateTime.value = `${row.trips[0].pickup_date}, ${row.trips[0].pickup_time}`
+  travelTime.value = row.trips[0].duration_text
+  travelDistance.value = row.trips[0].distance_text
+  tripNotes.value = row.trips[0].notes!
+  vehicleLabel.value = row.vehicle.label
+  serviceLabel.value = row.service.label
 }
 </script>
 
@@ -841,5 +854,9 @@ function QuoteRowDetails(row: QuoteRow) {
     :price="price"
     :is_booked="isBooked"
     :pickupDateTime="pickupDateTime"
+    :travelTime="travelTime"
+    :travelDistance="travelDistance"
+    :serviceLabel="serviceLabel"
+    :vehicleLabel="vehicleLabel"
   />
 </template>
