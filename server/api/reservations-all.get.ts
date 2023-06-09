@@ -9,7 +9,7 @@ export default defineEventHandler(async () => {
   let accessToken
   accessToken = await fasttrakAuth()
   console.log('Access token', accessToken, new Date().toISOString())
-  const endpoint = 'employee-pays/search'
+  const endpoint = 'reservations/search'
   const currentYear = new Date().getFullYear()
 
   const startDate = new Date()
@@ -37,6 +37,7 @@ export default defineEventHandler(async () => {
   const fasttrakData: ReservationResponse = await fasttrakRequest(
     requestOptions
   )
+  console.log('Fasttrak Data', fasttrakData)
   const filterOutStatus = ['Cancelled', 'Dropped', 'Quotation']
   return fasttrakData.items.filter(
     (item) => !filterOutStatus.includes(item.reservationStatus)

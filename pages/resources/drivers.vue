@@ -7,7 +7,28 @@ definePageMeta({
   layout: 'default',
   path: '/resources/drivers',
 })
-const { data, pending, error } = await useFetch('/api/employees')
+
+interface EmployeeInfo {
+  employeeId: number
+  displayName: string
+}
+
+const employeeId: Ref<number | null> = ref(null)
+const displayName: Ref<string | null> = ref(null)
+const employees: Ref<EmployeeResponse | null> = ref(null)
+
+const { data } = await useFetch('/api/employees')
+employees.value = data.value?.items
+
+const getEmployeeId = async (employeeInfo: EmployeeInfo) => {
+  employeeId.value = employeeInfo.employeeId
+  displayName.value = employeeInfo.displayName
+}
+
+const goBack = () => {
+  employeeId.value = null
+  displayName.value = null
+}
 </script>
 
 <template>
@@ -24,7 +45,7 @@ const { data, pending, error } = await useFetch('/api/employees')
     <n-grid v-else :x-gap="12" :y-gap="12" :cols="4" layout-shift-disabled>
       <DriverCard
         @show-reservations="getEmployeeId($event)"
-        :drivers="data.items"
+        :drivers="employees"
       />
     </n-grid>
   </n-layout-content>

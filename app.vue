@@ -2,6 +2,11 @@
 import { darkTheme } from 'naive-ui'
 useHead({
   title: 'High Park Livery CRM',
+  meta: [
+    {
+      name: 'naive-ui-style',
+    },
+  ],
 })
 </script>
 

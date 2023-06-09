@@ -4,21 +4,28 @@ import { useClipboard } from '@vueuse/core'
 
 interface Props {
   modelValue: boolean
-  content: string
+  quoteNumber: string
+  firstName?: string
+  lastName?: string
   title: string
+  origin?: string | null
+  destination?: string | null
+  flight?: string | null
+  price: string
+  isBooked: boolean
+  pickupDateTime: string
 }
 
 const props = defineProps<Props>()
+const formattedContent = computed(() => props.firstName)
+const clipboardContent = computed(() => formattedContent.value)
 
-const formattedContent = computed(() => props.content.replace(/\n/g, '<br>'))
-const clipboardContent = computed(() =>
-  formattedContent.value.replace(/<br>/g, '\n')
-)
 const { copy, copied } = useClipboard()
 const visible = ref(props.modelValue)
 const copyToClipboard = () => {
-  copy(clipboardContent.value)
+  copy(JSON.stringify(clipboardContent.value))
 }
+
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -53,7 +60,13 @@ watch(visible, (newVal, oldVal) => {
           ><span v-if="!copied">Copy</span> <span v-else>Copied!</span>
         </n-button>
       </template>
-      <p v-html="formattedContent"></p>
+      <h2>{{ firstName }} {{ lastName }}</h2>
+      <p><strong>Pickup Date: </strong>{{ pickupDateTime }}</p>
+      <p><strong>Pickup Location: </strong>{{ origin }}</p>
+      <p><strong>Drop Off Location: </strong>{{ destination }}</p>
+      <p><strong>Price: </strong>$ {{ price }}</p>
+      <p><strong>Flight: </strong>{{ flight }}</p>
+
       <template #footer></template>
     </n-card>
   </n-modal>

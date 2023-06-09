@@ -1,6 +1,6 @@
 import { publicProcedure, router } from '../trpc'
 import type { FasttrakRequestOptions } from '~/services/fasttrakRequest'
-import type { DriverResponse } from '~/composables/fasttrak-api/schemas'
+import type { DriverResponse, Employee } from '~/composables'
 import { fasttrakRequest } from '~/services/fasttrakRequest'
 import { fasttrakAuth } from '~/services/fasttrakInit'
 import { z } from 'zod'

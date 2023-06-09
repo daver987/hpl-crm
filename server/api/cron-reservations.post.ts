@@ -10,7 +10,7 @@ import {
 
 export default defineEventHandler(async (event) => {
   try {
-    const body = readBody(event)
+    const body = await readBody(event)
     const accessToken = await fasttrakAuth()
     const currentYear = new Date().getFullYear()
     const startDate = new Date(currentYear, 0, 1)

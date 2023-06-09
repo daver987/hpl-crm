@@ -12,11 +12,3 @@ export function convertDurationToHoursAndMinutes(
     throw new Error('Oops you did not pass in a number')
   }
 }
-
-type DateAndTime = [
-  year: number,
-  month: number,
-  day: number,
-  hours: number,
-  minutes: number
-]

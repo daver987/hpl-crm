@@ -11,13 +11,14 @@ const lineItems = ref([
   { description: 'Base Fare', amount: ' $100.00' },
   { description: 'Fuel Surcharge', amount: ' $10.00' },
   { description: 'Gratuity', amount: ' $15.00' },
-  // Add more line items if needed
 ])
+
 const totals = ref([
   { label: 'Subtotal', amount: ' $125.00' },
   { label: 'HST', amount: ' $16.25' },
   { label: 'Total', amount: ' $141.25' },
 ])
+
 const pickupAddress = ref('123 Main St')
 const pickupTime = ref('08:00 AM')
 const pickupDay = ref('2023-04-24')
