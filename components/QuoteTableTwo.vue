@@ -115,6 +115,9 @@ const createColumns = (): DataTableColumns<RowData> => [
           size: 'small',
           textColor: '#fff',
           type: 'primary',
+          style: {
+            marginLeft: '12px'
+          },
           //@ts-ignore
           onClick: () => QuoteRowDetails(row),
         },
