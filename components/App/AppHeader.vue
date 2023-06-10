@@ -6,25 +6,22 @@ const getShowLogo = computed(() => true)
 
 <template>
   <n-layout-header
-    style="
-      height: 56px;
-      padding: 16px;
-      border-bottom: 1px;
-      border-color: aliceblue;
-    "
+  style="padding-inline: 24px;"
     bordered
   >
-    <div class="flex h-full text-large justify-between">
-      <div class="flex justify-between items-center h-full">
-        <h5 class="text-lg">High Park Livery CRM</h5>
+    <n-space justify="space-between" align="center">
+<n-space size="large">
+  <h5 style="margin-top: 6px;">High Park Livery CRM</h5>
+</n-space>
+        
         <!--        <LayoutBreadcrumb class="ml-3" />-->
-      </div>
-      <div class="flex items-center h-full">
+
+      <n-space justify="space-around">
         <!--        <AppSearch />-->
         <Notify />
         <FullScreen />
         <!--        <UserDropDown />-->
-      </div>
-    </div>
+      </n-space>
+    </n-space>
   </n-layout-header>
 </template>
