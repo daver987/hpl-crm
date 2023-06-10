@@ -105,6 +105,10 @@ async function handlePushReservation(evt: SingleReservation) {
   })
 }
 
+async function handlePreAuth() {
+  const data = await $fetch('/api/payment-preauth')
+}
+
 const pagination = {
   pageSize: 13,
 }
@@ -203,6 +207,23 @@ const createColumns = (): DataTableColumns<SingleReservation> => [
           size: 'small',
         },
         { default: () => humanFriendlyStatus }
+      )
+    },
+  },
+  {
+    title: 'Pre-Auth',
+    key: 'everTransit',
+    render(row) {
+      return h(
+        NButton,
+        {
+          type: 'info',
+          strong: true,
+          tertiary: true,
+          size: 'small',
+          onClick: () => handlePreAuth(row),
+        },
+        { default: () => 'Pre-Auth' }
       )
     },
   },
