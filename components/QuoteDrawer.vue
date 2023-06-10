@@ -19,6 +19,8 @@ interface Props {
   tripNotes: string
   vehicleLabel: string
   serviceLabel: string
+  phoneNumber: string
+  emailAddress: string
 }
 
 const props = defineProps<Props>()
@@ -75,6 +77,8 @@ watch(visible, (newVal, oldVal) => {
       <p> <strong>Trip Distance:</strong> {{ travelDistance }}</p>
       <p><strong>Flight: </strong>{{ flight }}</p>
       <p><strong>Price: </strong>$ {{ price }}</p>
+      <a style="color:aquamarine; text-decoration: none;" :href="`tel:${phoneNumber}`"><strong>Phone Number:</strong> {{ phoneNumber }}</a><br>
+      <a style="color:aquamarine; text-decoration: none;" :href="`mailto:${emailAddress}`"><strong>Email Address:</strong> {{ emailAddress }}</a>
 
       <template #footer>
         Trip Notes: {{ tripNotes }}

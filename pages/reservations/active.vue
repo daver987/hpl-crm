@@ -97,16 +97,22 @@ async function handlePushReservation(evt: SingleReservation) {
     positiveText: 'Confirm',
     onPositiveClick: async () => {
       d.loading = true
-      const response = pushToZoho(evt)
-      console.log(chalk.blue('[RETURNED_ZOHO]', response))
+      // const response = pushToZoho(evt)
+      // console.log(chalk.blue('[RETURNED_ZOHO]', response))
       // message.info(`The Customer was successfully Deleted`)
       // d.loading = false
     },
   })
 }
 
-async function handlePreAuth() {
-  const data = await $fetch('/api/payment-preauth')
+async function handlePreAuth(stripeCustomerId: string, amountToAuth: number) {
+  const data = await $fetch('/api/payment-preauth', {
+    method: 'POST',
+    body: {
+      stripeCustomerId: stripeCustomerId,
+      totalToAuth: amountToAuth
+    }
+  })
 }
 
 const pagination = {
@@ -188,13 +194,10 @@ const createColumns = (): DataTableColumns<SingleReservation> => [
         Booked: 'primary',
         Driver_Scheduled: 'error',
       }
-
       const type =
         statusTypeMap[row.reservationStatus as keyof typeof statusTypeMap] ||
         'default'
-
       const humanFriendlyStatus = row.reservationStatus.split('_').join(' ')
-
       return h(
         NTag,
         {
@@ -221,7 +224,7 @@ const createColumns = (): DataTableColumns<SingleReservation> => [
           strong: true,
           tertiary: true,
           size: 'small',
-          onClick: () => handlePreAuth(row),
+          onClick: () => handlePreAuth(row.user.stripe_customer_id,),
         },
         { default: () => 'Pre-Auth' }
       )
