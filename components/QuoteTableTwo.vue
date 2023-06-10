@@ -115,6 +115,9 @@ const createColumns = (): DataTableColumns<RowData> => [
           size: 'small',
           textColor: '#fff',
           type: 'primary',
+          style: {
+            marginLeft: '12px'
+          },
           //@ts-ignore
           onClick: () => QuoteRowDetails(row),
         },
@@ -790,6 +793,8 @@ const travelDistance = ref('')
 const tripNotes = ref('')
 const vehicleLabel = ref('')
 const serviceLabel = ref('')
+const phoneNumber = ref('')
+const emailAddress = ref('')
 
 function QuoteRowDetails(row: QuoteRow) {
   console.log('Show Quote event:', row)
@@ -810,6 +815,8 @@ function QuoteRowDetails(row: QuoteRow) {
   tripNotes.value = row.trips[0].notes!
   vehicleLabel.value = row.vehicle.label
   serviceLabel.value = row.service.label
+  emailAddress.value = row.user.email_address
+  phoneNumber.value = row.user.phone_number
 }
 </script>
 
@@ -847,6 +854,8 @@ function QuoteRowDetails(row: QuoteRow) {
     :title="`HPL-${quoteNumber}`"
     :firstName="firstName"
     :lastName="lastName"
+    :phoneNumber="phoneNumber"
+    :emailAddress="emailAddress"
     :quoteNumber="quoteNumber"
     :origin="origin"
     :destination="destination"

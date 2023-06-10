@@ -42,20 +42,18 @@ export default defineEventHandler(async (event) => {
   )
   console.log('[FASTTRAK_DATA]', fasttrakData)
 
-  if (fasttrakData.status === 'SUCCESS') {
-    let quoteNumber: number
-    const quoteNumberAsString = fasttrakData.item.referencePO.match(/\d+/g)
-    if (typeof quoteNumberAsString === 'string') {
-      quoteNumber = parseInt(quoteNumberAsString)
-      await prisma.quote.update({
-        where: {
-          quote_number: quoteNumber,
-        },
-        data: {
-          is_booked: true,
-        },
-      })
-    }
+  let quoteNumber: number
+  const quoteNumberAsString = fasttrakData.item.referencePO.match(/\d+/g)
+  if (quoteNumberAsString && quoteNumberAsString.length > 0) {
+    quoteNumber = parseInt(quoteNumberAsString[0])
+    await prisma.quote.update({
+      where: {
+        quote_number: quoteNumber,
+      },
+      data: {
+        is_booked: true,
+      },
+    })
   }
   return fasttrakData
 })
