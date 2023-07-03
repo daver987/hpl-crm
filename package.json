@@ -14,9 +14,6 @@
     "test:coverage": "vitest --coverage",
     "analyze": "nuxi analyze"
   },
-  "engines": {
-    "node": "16.x"
-  },
   "devDependencies": {
     "@css-render/vue3-ssr": "^0.15.12",
     "@googlemaps/js-api-loader": "^1.15.2",
