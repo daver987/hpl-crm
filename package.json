@@ -58,7 +58,7 @@
   "dependencies": {
     "@prisma/client": "^4.15.0",
     "@trpc/client": "^10.28.2",
-    "@trpc/server": "^10.28.2",
+    "@trpc/server": "^10.30.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/compiler-dom": "^3.3.4",
     "pinia": "^2.1.3",
