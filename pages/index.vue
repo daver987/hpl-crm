@@ -8,10 +8,10 @@ const {
   data: quotes,
   pending,
   error,
-  refresh,
 } = await useFetch('/api/quotes', {
   method: 'GET',
 })
+console.log('[QUOTES]', quotes.value)
 </script>
 
 <template>
@@ -20,7 +20,7 @@ const {
       <n-grid :cols="1" :y-gap="12">
         <n-grid-item>
           <n-card title="Quotes Overview">
-            <QuotesOverview :pending="pending" :quotes="quotes" />
+            <!--            <QuotesOverview :pending="pending" :quotes="quotes" />-->
           </n-card>
         </n-grid-item>
         <n-grid-item>

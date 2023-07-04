@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { darkTheme } from 'naive-ui'
+
 useHead({
   title: 'High Park Livery CRM',
   meta: [

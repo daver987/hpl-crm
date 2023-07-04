@@ -11,23 +11,25 @@ import {
   getUnixTime,
 } from 'date-fns'
 import { ComputedRef, Ref } from 'vue'
-import {
-  QuoteReturnedPickedSchema,
-  ReturnedQuote,
-  ReturnedQuoteSchema,
-} from '~/schema/QuoteFormSchema'
+// import { ReturnedQuote } from '~/schema/QuoteFormSchema'
 import { computed } from '#imports'
+import { useStorage } from '@vueuse/core'
+//
+// interface Props {
+//   quotes: ReturnedQuote[]
+//   pending: boolean
+// }
+//
+//
+//
+// const props = defineProps<Props>()
+//
+// const pickedQuotes = computed(() => {
+//   return props.quotes
+// })
 
-interface Props {
-  quotes: ReturnedQuote
-  pending: boolean
-}
-
-const props = defineProps<Props>()
-
-const pickedQuotes = computed(() => {
-  return props.quotes
-})
+const defaults = {}
+const pickedQuotes = useStorage('quotes', defaults)
 
 const startOfWeekTimestamp = getUnixTime(startOfWeek(new Date()))
 const endOfWeekTimestamp = getUnixTime(endOfWeek(new Date()))
@@ -56,7 +58,7 @@ const filteredQuotes = computed(() => {
   if (!startDate.value || !endDate.value) {
     return []
   }
-  return pickedQuotes.value.filter((quote) => {
+  return pickedQuotes.filter((quote: any) => {
     let quoteDate = quote.created_at
     return (
       (isAfter(quoteDate, startDate.value!) ||
@@ -70,7 +72,7 @@ const filteredQuotes = computed(() => {
 const totalQuotes = computed(() => {
   return (
     filteredQuotes.value.reduce(
-      (total: number, obj) => total + obj.quote_total,
+      (total: number, obj: any) => total + obj.quote_total,
       0
     ) || 0
   ).toFixed(2)
@@ -87,7 +89,7 @@ const itemCount = computed(() => {
 
 const todayItemCount = computed(() => {
   return (
-    filteredQuotes.value.filter((quote) => {
+    filteredQuotes.value.filter((quote: any) => {
       let quoteDate = quote.created_at
       return isToday(quoteDate)
     }).length || 0

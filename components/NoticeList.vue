@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import type { ListItem } from './data'
+
+withDefaults(
+  defineProps<{
+    list?: ListItem[]
+    loading?: boolean
+    titleRows?: number
+    descRows?: number
+  }>(),
+  {
+    list: () => [],
+    loading: false,
+    titleRows: 1,
+    descRows: 2,
+  }
+)
+
+const handleTitleClick = (item: ListItem) => {
+  item.read = true
+}
+</script>
+
 <template>
   <n-scrollbar style="max-height: 360px">
     <NList v-loading="loading">
@@ -57,26 +80,3 @@
     </NList>
   </n-scrollbar>
 </template>
-
-<script setup lang="ts">
-import type { ListItem } from './data'
-
-withDefaults(
-  defineProps<{
-    list?: ListItem[]
-    loading?: boolean
-    titleRows?: number
-    descRows?: number
-  }>(),
-  {
-    list: () => [],
-    loading: false,
-    titleRows: 1,
-    descRows: 2,
-  }
-)
-
-const handleTitleClick = (item: ListItem) => {
-  item.read = true
-}
-</script>

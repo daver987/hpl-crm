@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fieldReference", "jsonProtocol", "clientExtensions"]
+  previewFeatures = ["fieldReference", "jsonProtocol"]
 }
 
 datasource db {
@@ -287,8 +287,6 @@ model Flight {
 
   @@index([trip_id])
 }
-
-
 
 model Service {
   id               String   @id @unique @default(uuid())

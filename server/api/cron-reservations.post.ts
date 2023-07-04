@@ -13,8 +13,10 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const accessToken = await fasttrakAuth()
     const currentYear = new Date().getFullYear()
-    const startDate = new Date(currentYear, 0, 1)
-    const endDate = new Date(currentYear, 11, 31)
+    // const startDate = new Date(currentYear, 0, 1)
+    // const endDate = new Date(currentYear, 11, 31)
+    const startDate = new Date(2015, 0, 1) // November 1, 2022
+    const endDate = new Date(2023, 11, 31) // December 31, 2023
 
     const requestOptions: FasttrakRequestOptions = {
       method: 'POST',
@@ -36,8 +38,8 @@ export default defineEventHandler(async (event) => {
 
     await event.context.prisma.fasttrak.upsert({
       where: { id: 1 },
-      update: { reservations: parsedReservations },
-      create: { reservations: parsedReservations },
+      update: { reservations: fasttrakData.items },
+      create: { reservations: fasttrakData.items },
     })
 
     return {
