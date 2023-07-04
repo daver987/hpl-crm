@@ -1,0 +1,26 @@
+{
+  "$schema": "https://app.flightcontrol.dev/schema.json",
+  "environments": [
+    {
+      "id": "production",
+      "name": "Production",
+      "region": "us-west-2",
+      "source": {
+        "branch": "main"
+      },
+      "services": [
+        {
+          "id": "nitro",
+          "buildType": "nixpacks",
+          "name": "hpl-crm",
+          "type": "fargate",
+          "domain": "drobertson.pro",
+          "outputDirectory": ".output",
+          "startCommand": "node .output/server/index.mjs",
+          "cpu": 0.25,
+          "memory": 0.5
+        }
+      ]
+    }
+  ]
+}

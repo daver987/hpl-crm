@@ -1,4 +1,4 @@
-import { Stripe } from 'https://esm.sh/stripe@12.11.0?target=deno&no-check'
+import Stripe from 'stripe'
 import { PrismaClient, User } from '@prisma/client'
 
 interface GetOrCreateStripCustomer {
