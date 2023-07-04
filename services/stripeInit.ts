@@ -1,4 +1,4 @@
-import { Stripe } from 'https://esm.sh/stripe@12.11.0?target=deno&no-check'
+import Stripe from 'stripe'
 
 const STRIPE_SECRET_KEY = useRuntimeConfig().STRIPE_SECRET_KEY
 

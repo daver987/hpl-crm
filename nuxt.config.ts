@@ -56,6 +56,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     FASTTRACK_PARTNER_ACCESS_KEY: process.env.FASTTRACK_PARTNER_ACCESS_KEY,
@@ -67,6 +68,7 @@ export default defineNuxtConfig({
     public: {
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       WEBSITE_URL: process.env.WEBSITE_URL,
+      CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
     },
   },
 
@@ -83,6 +85,6 @@ export default defineNuxtConfig({
   },
   devtools: true,
   nitro: {
-    preset: 'deno-deploy',
+    preset: 'flight-control',
   },
 })
