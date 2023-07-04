@@ -333,7 +333,7 @@ const filteredData = computed(() => {
 })
 
 async function handleQuoteEmailReply(event: RowData) {
-  const d = dialog.warning({
+  dialog.warning({
     title: 'Confirm Generate Reply Email',
     content: 'Are you sure you want to generate a reply email',
     positiveText: 'Confirm',
@@ -715,16 +715,13 @@ async function handleBook(event: QuoteRow) {
   })
 
   try {
-    const { data: bookingResult, pending } = await useFetch(
-      '/api/reservation',
-      {
-        method: 'POST',
-        body: {
-          reservationDetail: reservationDetails,
-          customerSummary: customerSummary.value,
-        },
-      }
-    )
+    const { data: bookingResult } = await useFetch('/api/reservation', {
+      method: 'POST',
+      body: {
+        reservationDetail: reservationDetails,
+        customerSummary: customerSummary.value,
+      },
+    })
 
     console.log('Booked Result', bookingResult.value)
 

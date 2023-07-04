@@ -15,7 +15,6 @@ import { NButton, useMessage, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import type { ComputedRef, Ref } from 'vue'
 import { SingleReservation } from '~/composables'
-import chalk from 'chalk'
 
 definePageMeta({
   name: 'Fasttrak',
@@ -106,7 +105,7 @@ async function handlePushReservation(evt: SingleReservation) {
 }
 
 async function handlePreAuth(stripeCustomerId: string, amountToAuth: number) {
-  const data = await $fetch('/api/payment-preauth', {
+  await $fetch('/api/payment-preauth', {
     method: 'POST',
     body: {
       stripeCustomerId: stripeCustomerId,

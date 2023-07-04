@@ -13,4 +13,3 @@ node_modules
 .netlify
 prisma/generated
 .cache
-.env.prod
