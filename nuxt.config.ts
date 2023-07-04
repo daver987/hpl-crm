@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       },
     ],
   ],
-
+  //@ts-ignore
   nuxtIcon: {
     size: '32px',
     class: 'icon',
