@@ -110,8 +110,8 @@ async function handlePreAuth(stripeCustomerId: string, amountToAuth: number) {
     method: 'POST',
     body: {
       stripeCustomerId: stripeCustomerId,
-      totalToAuth: amountToAuth
-    }
+      totalToAuth: amountToAuth,
+    },
   })
 }
 
@@ -224,7 +224,8 @@ const createColumns = (): DataTableColumns<SingleReservation> => [
           strong: true,
           tertiary: true,
           size: 'small',
-          onClick: () => handlePreAuth(row.user.stripe_customer_id,),
+          onClick: () =>
+            handlePreAuth(row.user.stripe_customer_id, row.quote_total),
         },
         { default: () => 'Pre-Auth' }
       )

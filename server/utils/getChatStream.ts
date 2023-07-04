@@ -4,7 +4,7 @@ export const getChatStream = async (openai: OpenAIApi, body: string) => {
   const response = await openai.createChatCompletion(
     {
       max_tokens: 2048,
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo-0613',
       temperature: 0.5,
       messages: [
         {

@@ -15,7 +15,7 @@ import { NButton, NP, NTag, useDialog } from 'naive-ui'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import type { Ref } from 'vue'
 import type { QuoteRow } from '~/schema/QuoteRowSchema'
-
+import { useStorage } from '@vueuse/core'
 
 type ArrayElementType<T extends ReadonlyArray<any> | null | undefined> =
   T extends ReadonlyArray<infer ElementType> ? ElementType : never
@@ -37,7 +37,7 @@ const searchInput = ref('')
 const checkedRowKeysRef = ref<DataTableRowKey[]>([])
 const isDeleting = ref(true)
 const isBooking = ref(true)
-const filterSearch = () => { }
+const filterSearch = () => {}
 const dialog = useDialog()
 const message = useMessage()
 const showModal = ref(false)
@@ -53,6 +53,13 @@ const {
 })
 
 const quotes = computed(() => quoteData.value)
+if (typeof window !== 'undefined') {
+  localStorage.setItem('quotes', JSON.stringify(quotes.value))
+}
+
+const state = useStorage('quotes', quotes.value)
+console.log('State', state.value)
+
 const rowKey = (row: RowData) => row.quote_number
 
 function handleCheck(rowKeys: DataTableRowKey[]) {
@@ -102,9 +109,6 @@ async function handlePrompt(row: RowData) {
 }
 
 const createColumns = (): DataTableColumns<RowData> => [
-  // {
-  //   type: 'selection',
-  // },
   {
     key: 'info',
     title: 'Info',
@@ -116,7 +120,7 @@ const createColumns = (): DataTableColumns<RowData> => [
           textColor: '#fff',
           type: 'primary',
           style: {
-            marginLeft: '12px'
+            marginLeft: '12px',
           },
           //@ts-ignore
           onClick: () => QuoteRowDetails(row),
@@ -194,21 +198,6 @@ const createColumns = (): DataTableColumns<RowData> => [
     },
   },
   {
-    key: 'phone_number',
-    title: 'Phone',
-    render(row) {
-      return h(
-        'a',
-        {
-          href: `tel:${row.user.phone_number}`,
-          style: { color: '#93c5fd' },
-        },
-        row.user.phone_number
-      )
-    },
-    width: 175,
-  },
-  {
     key: 'origin',
     title: 'Pickup',
     render(row) {
@@ -229,22 +218,6 @@ const createColumns = (): DataTableColumns<RowData> => [
     ellipsis: {
       tooltip: true,
     },
-  },
-  {
-    key: 'service_label',
-    title: 'Service Type',
-    render(row) {
-      return row.service.label
-    },
-    width: 150,
-  },
-  {
-    key: 'vehicle_label',
-    title: 'Vehicle Type',
-    render(row) {
-      return row.vehicle.label
-    },
-    width: 135,
   },
   {
     key: 'quote_total',
@@ -454,7 +427,6 @@ async function handleBook(event: QuoteRow) {
   const toAddressParsed = parseAddress(toLocation.formatted_address)
   const fromAddressParsed = parseAddress(fromLocation.formatted_address)
   const customerId = await checkForCustomer(event.user.email_address)
-
 
   if (
     vehicle.fasttrak_id !== null &&
