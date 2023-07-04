@@ -3,7 +3,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-vitest',
     '@nuxt/devtools',
-    '@huntersofbook/naive-ui-nuxt',
+    '@daver987/naive-ui-nuxt',
     '@nuxtjs/color-mode',
     'nuxt-icon',
     '@unocss/nuxt',
