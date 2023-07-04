@@ -113,6 +113,9 @@ model DriverPay {
   tripId     String
   amount     Float
   is_paid    Boolean
+
+  @@index([driverId])
+  @@index([tripId])
 }
 
 model VerificationToken {
