@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/color-mode',
     'nuxt-icon',
+    '@unocss/nuxt',
     [
       '@pinia/nuxt',
       {
@@ -18,7 +19,6 @@ export default defineNuxtConfig({
     size: '32px',
     class: 'icon',
   },
-
   build: {
     transpile:
       process.env.NODE_ENV === 'production'
@@ -35,6 +35,7 @@ export default defineNuxtConfig({
             '@googlemaps/js-api-loader',
             'trpc-nuxt',
             'echarts',
+            'dayjs',
           ],
   },
   typescript: {
@@ -80,9 +81,8 @@ export default defineNuxtConfig({
           : [],
     },
   },
-  //@ts-ignore
   devtools: true,
   nitro: {
-    preset: 'digital-ocean',
+    preset: 'deno-deploy',
   },
 })

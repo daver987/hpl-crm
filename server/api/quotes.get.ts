@@ -1,24 +1,44 @@
-import chalk from 'chalk'
-import { parse, isFuture } from 'date-fns'
+// import { isToday, isFuture } from 'date-fns'
+// import useDayjs from 'dayjs-nuxt'
 
 export default defineEventHandler(async (event) => {
-  const now = new Date()
   const prisma = event.context.prisma
+  // const dayjs = useDayjs()
 
-  const allRecords = await prisma.quote.findMany()
-  // Filter records to only include those with a pickup_date and pickup_time that is today or in the future
-  const filteredRecords = allRecords.filter((record) => {
-    const pickupDateTime = parse(
-      `${record.pickup_date} ${record.pickup_time}`,
-      'MMMM do, yyyy h:mm aa',
-      new Date()
-    )
-
-    return (
-      isFuture(pickupDateTime) || pickupDateTime.getTime() === now.getTime()
-    )
+  const allRecords = await prisma.quote.findMany({
+    include: {
+      user: true,
+      trips: true,
+    },
   })
-  console.log('Filtered records', filteredRecords)
+  console.log('prisma return quotes', allRecords)
+  // Filter records to only include those with a pickup_date and pickup_time that is today or in the future
+
+  // const filteredRecords = allRecords.filter((record) => {
+  // Parse the date
+  //
+  // const pickupDate = dayjs(record.trips[0].pickup_date!, 'MMM Do, YYYY')
+  // console.log('pickup date', pickupDate)
+
+  // Format the date to 'yyyy-MM-dd'
+  // const formattedPickupDate = format(pickupDate, 'yyyy-MM-dd')
+
+  // // Parse the formatted date back to a Date object
+  // const pickupDateTime = parse(
+  //   `${formattedPickupDate} ${record.trips[0].pickup_time}`,
+  //   'yyyy-MM-dd h:mm aa',
+  //   new Date()
+  // )
+
+  // Verify the parsed date is valid
+  //   if (pickupDate instanceof Date) {
+  //     return isFuture(pickupDate) || isToday(pickupDate)
+  //   } else {
+  //     console.error(`Invalid date and/or time: ${record.trips[0].pickup_date}`)
+  //   }
+  // })
+
+  // console.log('Filtered records', filteredRecords)
 
   // const quotes = await prisma.quote.findMany({
   //   orderBy: {
@@ -68,5 +88,5 @@ export default defineEventHandler(async (event) => {
   // console.log(
   //   chalk.magentaBright(`[QUOTES_RETURNED] ${JSON.stringify(quotes)}`)
   // )
-  return filteredRecords
+  return allRecords
 })

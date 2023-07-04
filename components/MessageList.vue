@@ -15,7 +15,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const formatMessageData = (messageData: Messages) => {
+const formatMessageData = (messageData: Message) => {
   return {
     id: messageData.user.id,
     first_name: messageData.user.first_name,
