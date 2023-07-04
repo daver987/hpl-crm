@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
     const accessToken = await fasttrakAuth()
-    const currentYear = new Date().getFullYear()
+    // const currentYear = new Date().getFullYear()
     // const startDate = new Date(currentYear, 0, 1)
     // const endDate = new Date(currentYear, 11, 31)
     const startDate = new Date(2015, 0, 1) // November 1, 2022
@@ -32,9 +32,9 @@ export default defineEventHandler(async (event) => {
     const fasttrakData: ReservationResponse = await fasttrakRequest(
       requestOptions
     )
-    const parsedReservations = ReservationDateAndTotalSchema.array().parse(
-      fasttrakData.items
-    )
+    // const parsedReservations = ReservationDateAndTotalSchema.array().parse(
+    //   fasttrakData.items
+    // )
 
     await event.context.prisma.fasttrak.upsert({
       where: { id: 1 },
