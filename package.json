@@ -56,7 +56,7 @@
   "dependencies": {
     "@prisma/client": "^4.16.2",
     "@trpc/client": "^10.33.0",
-    "@trpc/server": "^10.33.0",
+    "@trpc/server": "^10.33.1",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/compiler-dom": "^3.3.4",
     "@clerk/clerk-js": "^4.51.0",
