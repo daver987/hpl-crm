@@ -18,7 +18,7 @@ export const fasttrakAuth = async (): Promise<string> => {
   const config = (partnerAccessKey: string, systemId: string) => ({
     headers: {
       'Partner-Access-Key': partnerAccessKey,
-      'Partner-Api-Version': 'v2.1',
+      'Partner-Api-Version': 'v2.2',
       'System-Id': systemId,
       'Content-Type': 'application/json',
     },
@@ -119,7 +119,7 @@ export const fasttrakAuth = async (): Promise<string> => {
 // } => ({
 //   headers: {
 //     'Partner-Access-Key': partnerAccessKey,
-//     'Partner-Api-Version': 'v2.1',
+//     'Partner-Api-Version': 'v2.2',
 //     'System-Id': systemId,
 //     'Content-Type': 'application/json',
 //   },
