@@ -31,7 +31,7 @@ export async function fasttrakRequest(
   ) => ({
     headers: {
       'Partner-Access-Key': partnerAccessKey,
-      'Partner-Api-Version': 'v2.1',
+      'Partner-Api-Version': 'v2.2',
       'System-Id': systemId,
       'Content-Type': options.useJsonPatchContentType
         ? 'application/json-patch+json'
