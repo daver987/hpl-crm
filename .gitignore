@@ -12,3 +12,4 @@ node_modules
 .netlify
 prisma/generated
 .cache
+.DS_Store
